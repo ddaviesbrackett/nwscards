@@ -1,0 +1,10 @@
+.form-group.individual-classes
+{
+	margin-bottom:0;
+	display:none;
+}
+
+.individual-classes label
+{
+	white-space:nowrap;
+}
