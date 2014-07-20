@@ -9,6 +9,13 @@ $(function(){
 			$classes.find('input[type="checkbox"]').attr('checked',false);
 		}
 	});
+
+	$('input:radio[name="payment"]').on('click', function(ev){
+		var val = this.value;
+		$('.row.payment.'+val).fadeIn(400);
+		$('.row.payment:not(.'+val+')').hide();
+	});
+
 	$('form.new-order').submit(function(ev){
 		if($('#indiv-class-classes').is(":checked")) {
 			if(!$('.individual-classes input[type="checkbox"]:checked').length) {

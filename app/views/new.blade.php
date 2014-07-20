@@ -146,6 +146,21 @@
 				</div>
 			</div>
 		</div>
+		<div class="well">
+			<div class="form-group">
+				<label class="col-sm-2 text-right">Payment:</label>
+				<div class="col-sm-8">
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" checked/>Direct Debit (we make more money with debit!)</label></div>
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit"/>Credit Card</label></div>
+				</div>
+			</div>
+			<div class="row payment debit">
+				debit row is here
+			</div>
+			<div class="row payment credit">
+				credit row is here
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-sm-offset-2 col-sm-8">
 				<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
