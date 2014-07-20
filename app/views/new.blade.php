@@ -56,7 +56,7 @@
 		<div class='form-group{{$errors->has("address1")?" has-error":"";}}'>
 			<label for='address1' class='col-sm-2 text-right'>Address:</label>
 			<div class='col-sm-8'>
-				<input type='tel' class='form-control' placeholder='your mailing address' id='address1' name='address1' value="{{Form::getValueAttribute('address1', '')}}">
+				<input type='text' class='form-control' placeholder='your mailing address' id='address1' name='address1' value="{{Form::getValueAttribute('address1', '')}}">
 				@if($errors->has('address1'))
 					<span class='help-block'>{{{$errors->first('address1')}}}</span>
 				@endif
@@ -65,7 +65,7 @@
 		<div class='form-group{{$errors->has("address2")?" has-error":"";}}'>
 			<label for='address2' class='col-sm-2 text-right'>Address 2:</label>
 			<div class='col-sm-8'>
-				<input type='tel' class='form-control'  id='address2' name='address2' value="{{Form::getValueAttribute('address2', '')}}">
+				<input type='text' class='form-control' id='address2' name='address2' value="{{Form::getValueAttribute('address2', '')}}">
 				@if($errors->has('address2'))
 					<span class='help-block'>{{{$errors->first('address2')}}}</span>
 				@endif
@@ -74,14 +74,14 @@
 		<div class='form-group{{$errors->has("city") || $errors->has("postal_code")?" has-error":"";}}'>
 			<label for='city' class='col-sm-2 text-right'>City:</label>
 			<div class='col-sm-3'>
-				<input type='tel' class='form-control' placeholder='Nelson? Ymir? Salmo? Slocan?' id='city' name='city' value="{{Form::getValueAttribute('city', '')}}">
+				<input type='text' class='form-control' placeholder='Nelson? Ymir? Salmo? Slocan?' id='city' name='city' value="{{Form::getValueAttribute('city', '')}}">
 				@if($errors->has('city'))
 					<span class='help-block'>{{{$errors->first('city')}}}</span>
 				@endif
 			</div>
 			<label for='postal_code' class='col-sm-2 text-right'>Postal Code:</label>
 			<div class='col-sm-3'>
-				<input type='tel' class='form-control' placeholder='V1A 1A1' id='postal_code' name='postal_code' value="{{Form::getValueAttribute('postal_code', '')}}">
+				<input type='text' class='form-control' placeholder='V1A 1A1' id='postal_code' name='postal_code' value="{{Form::getValueAttribute('postal_code', '')}}">
 				@if($errors->has('postal_code'))
 					<span class='help-block'>{{{$errors->first('postal_code')}}}</span>
 				@endif
@@ -90,7 +90,7 @@
 		<div class='form-group{{$errors->has("postal_code")?" has-error":"";}}'>
 
 		</div>
-		<div class="row">
+		<div class="form-group">
 			<label class="col-sm-2 text-right">Classes to support:</label>
 			<div class="col-sm-8">
 				<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" checked/>I want to support the whole school</label></div>
@@ -115,6 +115,36 @@
 			<div class="col-sm-offset-2 col-md-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_7'>Class 7 (Ms. Thayer)</label></div></div>
 			<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
 		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 text-right">Schedule:</label>
+			<div class="col-sm-8">
+				<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 Weeks</label></div>
+				<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Every 4 Weeks</label></div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 text-right">Cards to Order:</label>
+			<div class="col-sm-8">
+				<label class="col-xs-2" for="saveon">Save-On:</label>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
+						<span class="input-group-addon">x $100</span>
+					</div>
+				</div>
+
+				<label class="col-xs-2" for="coop">Co-op:</label>
+				<div class="col-xs-4">
+					<div class="input-group">
+						<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
+						<span class="input-group-addon">x $100</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
 	{{Form::close()}}
 </div>
