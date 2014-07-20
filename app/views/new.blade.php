@@ -16,7 +16,7 @@
 	<p>
 		The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money!
 	</p>
-	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal'])}}
+	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 		<div class='form-group{{$errors->has("name")?" has-error":"";}}'>
 			<label for='name' class='col-sm-2 text-right'>Name:</label>
 			<div class='col-sm-8'>
