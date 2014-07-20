@@ -29,8 +29,8 @@ Route::post('/new', array('before' => 'csrf', function()
 			'address1'	=> 'required',
 			'city'		=> 'required',
 			'postal_code'	=> 'required|regex:/^\w\d\w ?\d\w\d$/',
-			'saveon'	=> 'digits',
-			'coop'		=> 'digits',
+			'saveon'	=> 'digits_between:1,2',
+			'coop'		=> 'digits_between:1,2',
 		);
   	$in = Input::all();
   	//store phone as a number, but allow people to type ( and ) and - and space in it
