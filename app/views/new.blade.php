@@ -144,8 +144,12 @@
 				</div>
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-sm-offset-2 col-sm-8">
+				<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
+			</div>
+		</div>
 
-		<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
 	{{Form::close()}}
 </div>
 @stop
