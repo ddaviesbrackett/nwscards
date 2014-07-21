@@ -29,8 +29,10 @@ Route::post('/new', array('before' => 'csrf', function()
 			'address1'	=> 'required',
 			'city'		=> 'required',
 			'postal_code'	=> 'required|regex:/^\w\d\w ?\d\w\d$/',
-			'saveon'	=> 'digits_between:1,2',
-			'coop'		=> 'digits_between:1,2',
+			'schedule'	=> 'required|in:biweekly,4weekly',
+			'saveon'	=> 'digits_between:1,2|required_without:coop',
+			'coop'		=> 'digits_between:1,2|required_without:saveon',
+			'payment'	=> 'required|in:debit,credit',
 		);
   	$in = Input::all();
   	//store phone as a number, but allow people to type ( and ) and - and space in it
@@ -69,7 +71,7 @@ Route::post('/new', array('before' => 'csrf', function()
 		));
 
 		// redirect
-		Session::flash('message', 'Successfully created nerd!');
+		Session::flash('message', 'Order created!');
 		return Redirect::to('/');
 	}
 }));

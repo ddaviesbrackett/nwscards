@@ -117,15 +117,18 @@
 			</div>
 		</div>
 		<div class="well">
-			<div class="form-group">
+			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Schedule:</label>
 				<div class="col-sm-8">
 					<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 Weeks</label></div>
 					<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Every 4 Weeks</label></div>
+					@if($errors->has('schedule'))
+						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
+					@endif
 				</div>
 			</div>
 
-			<div class="form-group">
+			<div class='form-group{{$errors->has("saveon") || $errors->has("coop")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Cards to Order:</label>
 				<div class="col-sm-8">
 					<label class="col-xs-2" for="saveon">Save-On:</label>
@@ -134,6 +137,9 @@
 							<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
 							<span class="input-group-addon">x $100</span>
 						</div>
+						@if($errors->has('saveon'))
+							<span class='help-block'>{{{$errors->first('saveon')}}}</span>
+						@endif
 					</div>
 
 					<label class="col-xs-2" for="coop">Co-op:</label>
@@ -142,6 +148,9 @@
 							<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
 							<span class="input-group-addon">x $100</span>
 						</div>
+						@if($errors->has('coop'))
+							<span class='help-block'>{{{$errors->first('coop')}}}</span>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -154,10 +163,37 @@
 					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit"/>Credit Card</label></div>
 				</div>
 			</div>
-			<div class="row payment debit">
-				debit row is here
+			<div class="payment debit">
+				<div class="form-group">
+					<div class="col-sm-offset-2">
+						<img src="images/void_cheque.gif" alt="Void Cheque showing location of branch, institution, and account numbers" class="img-thumbnail img-responsive"/>
+					</div>
+				</div>
+				<div class='form-group{{$errors->has("debit-transit") || $errors->has("debit-institution") || $errors->has("debit-account")?" has-error":"";}}'>
+					<label class="col-sm-2 text-right" for="debit-transit">Branch Number:</label>
+					<div class="col-sm-1">
+						<input type='text' class='form-control' placeholder='' id='debit-transit' name='debit-transit' value="{{Form::getValueAttribute('debit-transit', '')}}">
+						@if($errors->has('debit-transit'))
+							<span class='help-block'>{{{$errors->first('debit-transit')}}}</span>
+						@endif
+					</div>
+					<label class="col-sm-1 text-right" for="debit-institution">Institution Number:</label>
+					<div class="col-sm-1">
+						<input type='text' class='form-control' placeholder='' id='debit-institution' name='debit-institution' value="{{Form::getValueAttribute('debit-institution', '')}}">
+						@if($errors->has('debit-institution'))
+							<span class='help-block'>{{{$errors->first('debit-institution')}}}</span>
+						@endif
+					</div>
+					<label class="col-sm-1 text-right" for="debit-account">Account Number:</label>
+					<div class="col-sm-2">
+						<input type='text' class='form-control' placeholder='' id='debit-account' name='debit-account' value="{{Form::getValueAttribute('debit-account', '')}}">
+						@if($errors->has('debit-account'))
+							<span class='help-block'>{{{$errors->first('debit-account')}}}</span>
+						@endif
+					</div>
+				</div>
 			</div>
-			<div class="row payment credit">
+			<div class="payment credit">
 				credit row is here
 			</div>
 		</div>

@@ -12,8 +12,8 @@ $(function(){
 
 	$('input:radio[name="payment"]').on('click', function(ev){
 		var val = this.value;
-		$('.row.payment.'+val).fadeIn(400);
-		$('.row.payment:not(.'+val+')').hide();
+		$('.payment.'+val).fadeIn(400);
+		$('.payment:not(.'+val+')').hide();
 	});
 
 	$('form.new-order').submit(function(ev){
