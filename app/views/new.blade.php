@@ -173,22 +173,29 @@
 					<label class="col-sm-2 text-right" for="debit-transit">Branch Number:</label>
 					<div class="col-sm-1">
 						<input type='text' class='form-control' placeholder='' id='debit-transit' name='debit-transit' value="{{Form::getValueAttribute('debit-transit', '')}}">
-						@if($errors->has('debit-transit'))
-							<span class='help-block'>{{{$errors->first('debit-transit')}}}</span>
-						@endif
 					</div>
 					<label class="col-sm-1 text-right" for="debit-institution">Institution Number:</label>
 					<div class="col-sm-1">
 						<input type='text' class='form-control' placeholder='' id='debit-institution' name='debit-institution' value="{{Form::getValueAttribute('debit-institution', '')}}">
-						@if($errors->has('debit-institution'))
-							<span class='help-block'>{{{$errors->first('debit-institution')}}}</span>
-						@endif
 					</div>
 					<label class="col-sm-1 text-right" for="debit-account">Account Number:</label>
 					<div class="col-sm-2">
 						<input type='text' class='form-control' placeholder='' id='debit-account' name='debit-account' value="{{Form::getValueAttribute('debit-account', '')}}">
+					</div>
+					<div style="clear:both;"></div>
+					<div class="col-sm-3">
+						@if($errors->has('debit-transit'))
+							<div class='help-block text-right'>{{{$errors->first('debit-transit')}}}</div>
+						@endif
+					</div>
+					<div class="col-sm-2">
+						@if($errors->has('debit-institution'))
+							<div class='help-block text-right'>{{{$errors->first('debit-institution')}}}</div>
+						@endif
+					</div>
+					<div class="col-sm-3">
 						@if($errors->has('debit-account'))
-							<span class='help-block'>{{{$errors->first('debit-account')}}}</span>
+							<div class='help-block text-right'>{{{$errors->first('debit-account')}}}</div>
 						@endif
 					</div>
 				</div>
@@ -202,7 +209,6 @@
 				<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
 			</div>
 		</div>
-
 	{{Form::close()}}
 </div>
 @stop
