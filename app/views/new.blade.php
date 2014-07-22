@@ -131,8 +131,8 @@
 			<div class='form-group{{$errors->has("saveon") || $errors->has("coop")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Cards to Order:</label>
 				<div class="col-sm-8">
-					<label class="col-xs-2" for="saveon">Save-On:</label>
-					<div class="col-xs-4">
+					<label class="col-sm-2" for="saveon">Save-On:</label>
+					<div class="col-sm-4">
 						<div class="input-group">
 							<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
 							<span class="input-group-addon">x $100</span>
@@ -142,8 +142,8 @@
 						@endif
 					</div>
 
-					<label class="col-xs-2" for="coop">Co-op:</label>
-					<div class="col-xs-4">
+					<label class="col-sm-2" for="coop">Co-op:</label>
+					<div class="col-sm-4">
 						<div class="input-group">
 							<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
 							<span class="input-group-addon">x $100</span>
