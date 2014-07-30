@@ -59,7 +59,7 @@ class OrderController extends BaseController {
 				'class_6' => array_key_exists('class_6', $in),
 				'class_7' => array_key_exists('class_7', $in),
 				'class_8' => array_key_exists('class_8', $in),
-			));
+			), true);
 
 			// redirect
 			Session::flash('message', 'Order created!');
