@@ -2,6 +2,16 @@
 
 class OrderController extends BaseController {
 
+	public function getAccount()
+	{
+		return View::make('account');
+	}
+
+	public function postAccount()
+	{
+		return View::make('account');
+	}
+
 	public function getNew()
 	{
 		return View::make('new');

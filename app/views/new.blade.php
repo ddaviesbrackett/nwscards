@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('title')
-	Welcome
+	New Order
 @stop
 
 @section('head-extra')
