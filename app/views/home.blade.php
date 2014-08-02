@@ -13,7 +13,7 @@
 @section('content')
 <div class="masthead">
 	<h1>Buy Cards,  Help Kids</h1>
-	<h3>We have raised {{{$total}}} so far. Help us raise more.</h3>
+	<h3>We've raised {{{$total}}} so far. Help us raise more.</h3>
 	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Cards Now</a>
 	<div class="container-fluid">
 		<div class="col-sm-4 col-sm-offset-2">
