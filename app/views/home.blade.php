@@ -6,8 +6,6 @@
 
 @section('head-extra')
 	<link rel="stylesheet" href="/styles/home.css"/>
-
-	<script src="/script/home.js"></script>
 @stop
 
 @section('content')
@@ -26,5 +24,8 @@
 			For each $100 card you buy through us, the grocery store donates a percentage.
 		</div>
 	</div>
+</div>
+<div class-"container-fluid">
+
 </div>
 @stop
