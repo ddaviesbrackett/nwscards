@@ -1,0 +1,11 @@
+.mainnav {
+	margin-bottom:0;
+}
+.mainnav a
+{
+	color:#d9534f;
+}
+.mainnav .icon-bar
+{
+	background-color:#d9534f;
+}
