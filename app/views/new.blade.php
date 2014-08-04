@@ -8,16 +8,56 @@
 	<link rel="stylesheet" href="/styles/new.css"/>
 
 	<script src="/script/new.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
 @stop
 
 @section('content')
+<div class="masthead">
+	<h1>Your support means a lot to us!</h1>
+		<p>
+			The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money
+		</p>
+	</div>
 <div class="container-fluid">
-	<h1>Thank You for supporting students and teachers at the Nelson Waldorf School</h1>
-	<p>
-		The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money!
-	</p>
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
-		<div class="well">
+		<div class="callout">
+			<div class='form-group{{$errors->has("saveon") || $errors->has("coop")?" has-error":"";}}'>
+				<label class="col-sm-2 text-right">Order:</label>
+				<div class="col-sm-8">
+					<label class="col-sm-2" for="coop">Co-op:</label>
+					<div class="col-sm-4">
+						<div class="input-group">
+							<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
+							<span class="input-group-addon">x $100</span>
+						</div>
+						@if($errors->has('coop'))
+							<span class='help-block'>{{{$errors->first('coop')}}}</span>
+						@endif
+					</div>
+					<label class="col-sm-2" for="saveon">Save-On:</label>
+					<div class="col-sm-4">
+						<div class="input-group">
+							<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
+							<span class="input-group-addon">x $100</span>
+						</div>
+						@if($errors->has('saveon'))
+							<span class='help-block'>{{{$errors->first('saveon')}}}</span>
+						@endif
+					</div>
+				</div>
+			</div>
+			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
+				<label class="col-sm-2 text-right">Schedule:</label>
+				<div class="col-sm-8">
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks, starting {{{$next2weeks}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$nextmonth}}}</label></div>
+					@if($errors->has('schedule'))
+						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
+					@endif
+				</div>
+			</div>
+		</div>
+		<div class="callout">
 			<div class='form-group{{$errors->has("name")?" has-error":"";}}'>
 				<label for='name' class='col-sm-2 text-right'>Name:</label>
 				<div class='col-sm-8'>
@@ -89,7 +129,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="well">
+		<div class="callout">
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Classes to support:</label>
 				<div class="col-sm-8">
@@ -116,46 +156,8 @@
 				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
 			</div>
 		</div>
-		<div class="well">
-			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
-				<label class="col-sm-2 text-right">Schedule:</label>
-				<div class="col-sm-8">
-					<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks</label></div>
-					<div class="col-xs-6 radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month</label></div>
-					@if($errors->has('schedule'))
-						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
-					@endif
-				</div>
-			</div>
-
-			<div class='form-group{{$errors->has("saveon") || $errors->has("coop")?" has-error":"";}}'>
-				<label class="col-sm-2 text-right">Cards to Order:</label>
-				<div class="col-sm-8">
-					<label class="col-sm-2" for="saveon">Save-On:</label>
-					<div class="col-sm-4">
-						<div class="input-group">
-							<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
-							<span class="input-group-addon">x $100</span>
-						</div>
-						@if($errors->has('saveon'))
-							<span class='help-block'>{{{$errors->first('saveon')}}}</span>
-						@endif
-					</div>
-
-					<label class="col-sm-2" for="coop">Co-op:</label>
-					<div class="col-sm-4">
-						<div class="input-group">
-							<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
-							<span class="input-group-addon">x $100</span>
-						</div>
-						@if($errors->has('coop'))
-							<span class='help-block'>{{{$errors->first('coop')}}}</span>
-						@endif
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="well">
+		
+		<div class="callout">
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Payment:</label>
 				<div class="col-sm-8">
@@ -201,7 +203,9 @@
 				</div>
 			</div>
 			<div class="payment credit">
-				credit row is here
+				<p>
+					
+				</p>
 			</div>
 		</div>
 		<div class="row">
@@ -211,4 +215,7 @@
 		</div>
 	{{Form::close()}}
 </div>
+<script>
+	Stripe.setPublishableKey('pk_test_JNPaJxAuLSeYN8biyB09Cb5O');
+</script>
 @stop

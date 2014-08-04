@@ -14,7 +14,10 @@ class OrderController extends BaseController {
 
 	public function getNew()
 	{
-		return View::make('new');
+		
+		$nextmonth = 'next month';
+		$next2weeks = '2 weeks from now';
+		return View::make('new', array('nextmonth' => $nextmonth, 'next2weeks' => $next2weeks));
 	}
 
 	public function postNew()
