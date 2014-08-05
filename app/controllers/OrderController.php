@@ -12,12 +12,32 @@ class OrderController extends BaseController {
 		return View::make('account');
 	}
 
+	private function formatDelivery($row)
+	{
+		$date = new DateTime($row->cutoff);
+		$date->add(new DateInterval('P8D'));
+		return $date->format('l, F jS');
+	}
+
+	private function getDeliveries( $target) {;
+		$ret = array();
+		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
+		$cutoff = $cutoffs[0];
+		$ret['biweekly'] = $this->formatDelivery($cutoff);
+		if($cutoff->monthly) {
+			$ret['monthly'] = $this->formatDelivery($cutoff);
+		}
+		else
+		{
+			$ret['monthly'] = $this->formatDelivery($cutoffs[1]);
+		}
+		return $ret;
+	}
+
 	public function getNew()
 	{
 		
-		$nextmonth = 'next month';
-		$next2weeks = '2 weeks from now';
-		return View::make('new', array('nextmonth' => $nextmonth, 'next2weeks' => $next2weeks));
+		return View::make('new', array('delivery' => $this->getDeliveries(date('Y-m-d'))));
 	}
 
 	public function postNew()

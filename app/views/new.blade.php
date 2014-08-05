@@ -49,8 +49,8 @@
 			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Schedule:</label>
 				<div class="col-sm-8">
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks, starting {{{$next2weeks}}}</label></div>
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$nextmonth}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks, starting {{{$delivery['biweekly']}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$delivery['monthly']}}}</label></div>
 					@if($errors->has('schedule'))
 						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
 					@endif
