@@ -14,6 +14,9 @@ $(function(){
 		var val = this.value;
 		$('.payment.'+val).fadeIn(400);
 		$('.payment:not(.'+val+')').hide();
+	}).each(function(){
+		var val = this.value;
+		$('.payment.' + val).toggle(this.checked);
 	});
 
 	$('form.new-order').submit(function(ev){
@@ -30,4 +33,36 @@ $(function(){
 			}
 		}
 	})
+	var $form = $('form.new-order');
+
+	var stripeResponseHandler = function(status, response)
+	{
+		if(response.error)
+		{
+			$form.find('.payment-errors').text(response.error.message);
+			$form.find('.payment-errors-group').show();
+    		$form.find('button').prop('disabled', false);
+		}
+		else
+		{
+			// response contains id and card, which contains additional card details
+			var token = response.id;
+			// Insert the token into the form so it gets submitted to the server
+			$form.append($('<input type="hidden" name="stripeToken" />').val(token));
+			// and submit
+			$form.get(0).submit();
+		}
+	};
+
+	$form.submit(function(ev) {
+		// Disable the submit button to prevent repeated clicks
+		$form.find('button').prop('disabled', true);
+		if($('#payment_credit').is(':checked')) {
+
+			Stripe.card.createToken($form, stripeResponseHandler);
+
+			// Prevent the form from submitting with the default action
+			return false;
+		}
+	});
 });

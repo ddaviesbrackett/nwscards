@@ -58,11 +58,18 @@ class OrderController extends BaseController {
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
 			);
+
+	 	$messages = array(
+	 			'debit-transit.required_if' => 'branch number is required.',
+	 			'debit-institution.required_if' => 'institution is required.',
+	 			'debit-account.required_if' => 'account number is required.',
+	 		);
+
 	  	$in = Input::all();
 	  	//store phone as a number, but allow people to type ( and ) and - and space in it
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
-		$validator = Validator::make($in, $rules);
+		$validator = Validator::make($in, $rules, $messages);
 
 		// process the login
 		if ($validator->fails()) {
@@ -92,6 +99,7 @@ class OrderController extends BaseController {
 				'class_6' => array_key_exists('class_6', $in),
 				'class_7' => array_key_exists('class_7', $in),
 				'class_8' => array_key_exists('class_8', $in),
+				//stripe_token => $in['stripeToken'],
 			), true);
 
 			// redirect

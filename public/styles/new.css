@@ -9,9 +9,9 @@
 	white-space:nowrap;
 }
 
-.payment.credit
-{
-	display:none;
+.row .form-group.cc-smallnumbers {
+	margin-right:-30px;
+	margin-left:-30px;
 }
 
 .masthead

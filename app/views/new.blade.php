@@ -161,7 +161,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Payment:</label>
 				<div class="col-sm-8">
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" checked/>Direct Debit (we make more money with debit!)</label></div>
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" checked/>Direct Debit (we make more money with debit)</label></div>
 					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit"/>Credit Card</label></div>
 				</div>
 			</div>
@@ -202,10 +202,34 @@
 					</div>
 				</div>
 			</div>
-			<div class="payment credit">
-				<p>
-					
-				</p>
+			<div class="payment credit row">
+				<div class="col-sm-4 col-sm-offset-2">
+					<div class="form-group has-error payment-errors-group">
+						<div class='help-block payment-errors'></div>
+					</div>
+					<div class="form-group">
+	                    <label>Cardholder's Name</label>
+	                    <input type="text" class="form-control">
+	                </div>
+	                <div class="form-group">
+	                    <label>Card Number</label>
+	                    <input type="text" class="form-control" data-stripe="number">
+	                </div>
+	                <div class="form-group cc-smallnumbers">
+	                    <div class="col-sm-4">
+	                            <label>Exp Month</label>
+	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month">
+	                    </div>
+	                    <div class="col-sm-4">
+	                            <label>Exp Year</label>
+	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year">
+	                    </div>
+	                    <div class="col-sm-4">
+	                            <label>CVC</label>
+	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc">
+	                    </div>
+	                </div>
+                </div>
 			</div>
 		</div>
 		<div class="row">
