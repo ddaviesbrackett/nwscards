@@ -12,37 +12,45 @@ class OrderController extends BaseController {
 		return View::make('account');
 	}
 
-	private function formatDelivery($row)
+	private function formatCutoffs($interval, array $cutoffDates)
 	{
-		$date = new DateTime($row->cutoff);
-		$date->add(new DateInterval('P8D'));
-		return $date->format('l, F jS');
+		foreach($cutoffDates as $k => $v) {
+			$date = new DateTime($v);
+			$date->add(new DateInterval($interval));
+			$cutoffDates[$k] = $date->format('l, F jS');
+		}
+		return $cutoffDates;
 	}
 
-	private function getDeliveries( $target) {;
+	/*
+	* cutoff dates are the last day on which we can accept an order; orders are charged 6 days later, and delivered 8 days later (so, 2 days after charge).
+	*/
+	private function getCutoffs( $target = NULL ) {;
+		if(is_null($target)){
+			$target = date('Y-m-d');
+		}
 		$ret = array();
 		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
 		$cutoff = $cutoffs[0];
-		$ret['biweekly'] = $this->formatDelivery($cutoff);
+		$ret['biweekly'] = $cutoff->cutoff;
 		if($cutoff->monthly) {
-			$ret['monthly'] = $this->formatDelivery($cutoff);
+			$ret['4weekly'] = $cutoff->cutoff;
 		}
 		else
 		{
-			$ret['monthly'] = $this->formatDelivery($cutoffs[1]);
+			$ret['4weekly'] = $cutoffs[1]->cutoff;
 		}
 		return $ret;
 	}
 
 	public function getNew()
 	{
-		
-		return View::make('new', array('delivery' => $this->getDeliveries(date('Y-m-d'))));
+		return View::make('new', array('delivery' => $this->formatCutoffs('P8D',$this->getCutoffs())));
 	}
 
 	public function postNew()
 	{
-	 	$rules = array(
+	 	$rules = [
 				'name'		=> 'required',
 				'email'		=> 'required|email|unique:users',
 				'phone'		=> 'required|digits:10',
@@ -57,13 +65,13 @@ class OrderController extends BaseController {
 				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
-			);
+			];
 
-	 	$messages = array(
+	 	$messages = [
 	 			'debit-transit.required_if' => 'branch number is required.',
 	 			'debit-institution.required_if' => 'institution is required.',
 	 			'debit-account.required_if' => 'account number is required.',
-	 		);
+	 		];
 
 	  	$in = Input::all();
 	  	//store phone as a number, but allow people to type ( and ) and - and space in it
@@ -77,7 +85,7 @@ class OrderController extends BaseController {
 				->withErrors($validator)
 				->withInput(Input::except('password'));
 		} else {
-			Sentry::register(array(
+			$user = Sentry::register([
 				'email'		=>$in['email'],
 				'password'	=>$in['password'],
 				'name'		=>$in['name'],
@@ -99,12 +107,23 @@ class OrderController extends BaseController {
 				'class_6' => array_key_exists('class_6', $in),
 				'class_7' => array_key_exists('class_7', $in),
 				'class_8' => array_key_exists('class_8', $in),
-				//stripe_token => $in['stripeToken'],
-			), true);
+			], true);
 
-			// redirect
-			Session::flash('message', 'Order created!');
-			return Redirect::to('/');
+			$plan = '';
+			if($in['schedule'] == 'biweekly'){
+				$plan = '14days';
+			}
+			else if ($in['schedule'] == '4weekly') {
+				$plan = '28days';
+			}
+			if($plan != '') {
+				$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
+				$cutoffDate->add(new DateInterval('P6D'));
+				$user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop'])->create($in['stripeToken']);
+				// redirect
+				Session::flash('message', 'Order created!');
+				return Redirect::to('/');
+			}			
 		}
 	}
 }

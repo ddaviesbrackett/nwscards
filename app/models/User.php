@@ -4,23 +4,30 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Laravel\Cashier\BillableTrait;
+use Laravel\Cashier\BillableInterface;
+use Cartalyst\Sentry\Users\Eloquent\User as SentryUser;
 
-class User extends Eloquent implements UserInterface, RemindableInterface {
+class User extends SentryUser implements UserInterface, RemindableInterface, BillableInterface {
 
-	use UserTrait, RemindableTrait;
+	use UserTrait, RemindableTrait, BillableTrait;
+
+	//billable dates
+	protected $dates = ['trial_ends_at', 'subscription_ends_at'];
+
+	public function getCurrency()
+	{
+		return 'cad';
+	}
 
 	/**
-	 * The database table used by the model.
+	 * Get the locale for the currency used by the entity.
 	 *
-	 * @var string
+	 * @return string
 	 */
-	protected $table = 'users';
-
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array('password', 'remember_token');
+	public function getCurrencyLocale()
+	{
+		return 'en_CA';
+	}
 
 }

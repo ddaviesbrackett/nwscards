@@ -50,7 +50,7 @@
 				<label class="col-sm-2 text-right">Schedule:</label>
 				<div class="col-sm-8">
 					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks, starting {{{$delivery['biweekly']}}}</label></div>
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$delivery['monthly']}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$delivery['4weekly']}}}</label></div>
 					@if($errors->has('schedule'))
 						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
 					@endif
@@ -209,24 +209,24 @@
 					</div>
 					<div class="form-group">
 	                    <label>Cardholder's Name</label>
-	                    <input type="text" class="form-control">
+	                    <input type="text" class="form-control" value="whocares">
 	                </div>
 	                <div class="form-group">
 	                    <label>Card Number</label>
-	                    <input type="text" class="form-control" data-stripe="number">
+	                    <input type="text" class="form-control" data-stripe="number" value="4242424242424242">
 	                </div>
 	                <div class="form-group cc-smallnumbers">
 	                    <div class="col-sm-4">
 	                            <label>Exp Month</label>
-	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month">
+	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="09">
 	                    </div>
 	                    <div class="col-sm-4">
 	                            <label>Exp Year</label>
-	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year">
+	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="2017">
 	                    </div>
 	                    <div class="col-sm-4">
 	                            <label>CVC</label>
-	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc">
+	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="998">
 	                    </div>
 	                </div>
                 </div>
