@@ -122,7 +122,7 @@ return array(
 		'Illuminate\View\ViewServiceProvider',
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
-		'Former\FormerServiceProvider',
+		'Laravel\Cashier\CashierServiceProvider',
 	),
 
 	/*
@@ -190,7 +190,6 @@ return array(
 		'Validator'       => 'Illuminate\Support\Facades\Validator',
 		'View'            => 'Illuminate\Support\Facades\View',
 		'Sentry'          => 'Cartalyst\Sentry\Facades\Laravel\Sentry',
-		'Former'          => 'Former\Facades\Former',
 	),
 
 );

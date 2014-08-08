@@ -6,8 +6,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"cartalyst/sentry": "2.1.*",
-		"anahkiasen/former": "dev-master",
-		"doctrine/dbal": "2.4.*"
+		"doctrine/dbal": "2.4.*",
+		"laravel/cashier": "~2.0"
 	},
 	"autoload": {
 		"classmap": [
