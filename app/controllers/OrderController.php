@@ -109,21 +109,27 @@ class OrderController extends BaseController {
 				'class_8' => array_key_exists('class_8', $in),
 			], true);
 
-			$plan = '';
+			$plan = null;
 			if($in['schedule'] == 'biweekly'){
 				$plan = '14days';
 			}
 			else if ($in['schedule'] == '4weekly') {
 				$plan = '28days';
 			}
-			if($plan != '') {
-				$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
-				$cutoffDate->add(new DateInterval('P6D'));
-				$user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop'])->create($in['stripeToken']);
-				// redirect
-				Session::flash('message', 'Order created!');
-				return Redirect::to('/');
-			}			
+			$cardToken = null;
+			if(isset($in['stripeToken'])){
+				$cardToken = $in['stripeToken'];
+			}
+			$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
+			$cutoffDate->add(new DateInterval('P6D'));
+			$gateway = $user->subscription($plan);
+			if(isset($plan)) {
+					$gateway->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
+			}
+			$gateway->create($cardToken);
+			// redirect
+			Session::flash('message', 'Order created!');
+			return Redirect::to('/');			
 		}
 	}
 }

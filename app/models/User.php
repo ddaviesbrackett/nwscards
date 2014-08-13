@@ -30,4 +30,17 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return 'en_CA';
 	}
 
+	/**
+	 * Get a new billing gateway instance for the given plan. Overridden to avoid a Laravel Cashier bug with stripe customers who don't have cards.
+	 *
+	 * @param  \Laravel\Cashier\PlanInterface|string|null  $plan
+	 * @return \Laravel\Cashier\StripeGateway
+	 */
+	public function subscription($plan = null)
+	{
+		if ($plan instanceof PlanInterface) $plan = $plan->getStripeId();
+
+		return new NWSCardsStripeGateWay($this, $plan);
+	}
+
 }
