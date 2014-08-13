@@ -70,19 +70,28 @@
 			<div class='form-group{{{$errors->has("email")?" has-error":""}}}'>
 				<label for='email' class='col-sm-2 text-right'>Email:</label>
 				<div class='col-sm-8'>
-					<input type='email' class='form-control' placeholder='someone@somewhere.com' id='email' name='email' value="{{Form::getValueAttribute('email', '')}}">	
+					<input type='email' class='form-control' placeholder='someone@somewhere.com' id='email' name='email' value="{{Form::getValueAttribute('email', '')}}">
 				@if($errors->has('email'))
 					<span class='help-block'>{{{$errors->first('email')}}}</span>
 				@endif
 				</div>
 			</div>
-			<!-- TODO remember password,maybe even double it up here -->
+			<!-- TODO remember password, maybe even double it up here -->
 			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
 				<label for='password' class='col-sm-2 text-right'>Password:</label>
 				<div class='col-sm-8'>
-					<input type='password' class='form-control' placeholder='(so you can manage your order)' id='password' name='password' value="">
+					<input type='password' class='form-control' placeholder='(so you can manage your order)' id='password' name='password' value="{{Form::getValueAttribute('password', '')}}">
 					@if($errors->has('password'))
 						<span class='help-block'>{{{$errors->first('password')}}}</span>
+					@endif
+				</div>
+			</div>
+			<div class='form-group{{$errors->has("password-repeat")?" has-error":"";}}'>
+				<label for='password' class='col-sm-2 text-right'>Password (again):</label>
+				<div class='col-sm-8'>
+					<input type='password' class='form-control' id='password-repeat' name='password-repeat' value="{{Form::getValueAttribute('password-repeat', '')}}">
+					@if($errors->has('password'))
+						<span class='help-block'>{{{$errors->first('password-repeat')}}}</span>
 					@endif
 				</div>
 			</div>
@@ -134,11 +143,11 @@
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Classes to support:</label>
 				<div class="col-sm-8">
-					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', '') == 'school'?'checked':''}}/>I want to support the whole school</label></div>
+					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', 'school') == 'school'?'checked':''}}/>I want to support the whole school</label></div>
 					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes" value="class" {{Form::getValueAttribute('indiv-class', '') == 'class'?'checked':''}}/>I want to support the whole school <strong>and</strong> one or more classes</label></div>
 				</div>
 			</div>
-			<!-- TODO set a default on first load for radios that need defaults, check form::getvalueattribute for the checkboxes here -->
+			<!-- TODO check form::getvalueattribute for the checkboxes here -->
 			<div class="form-group individual-classes">
 				<div class="col-sm-offset-2 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='marigold'>Marigold Daycare</label></div></div>
 				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='daisy'>Daisy Daycare</label></div></div>
@@ -163,7 +172,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Payment:</label>
 				<div class="col-sm-8">
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', 'debit') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
 					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
 				</div>
 			</div>

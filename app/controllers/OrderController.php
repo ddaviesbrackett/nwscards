@@ -55,6 +55,7 @@ class OrderController extends BaseController {
 				'email'		=> 'required|email|unique:users',
 				'phone'		=> 'required|digits:10',
 				'password'	=> 'required',
+				'password-repeat'	=> 'required|same:password',
 				'address1'	=> 'required',
 				'city'		=> 'required',
 				'postal_code'	=> 'required|regex:/^\w\d\w ?\d\w\d$/',
