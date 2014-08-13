@@ -49,8 +49,8 @@
 			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Schedule:</label>
 				<div class="col-sm-8">
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly"/>Every 2 weeks, starting {{{$delivery['biweekly']}}}</label></div>
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly"/>Once a month, starting {{{$delivery['4weekly']}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly" {{Form::getValueAttribute('schedule', '') == 'biweekly'?'checked':''}} />Every 2 weeks, starting {{{$delivery['biweekly']}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_4weekly" value="4weekly" {{Form::getValueAttribute('schedule', '') == '4weekly'?'checked':''}} />Once a month, starting {{{$delivery['4weekly']}}}</label></div>
 					@if($errors->has('schedule'))
 						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
 					@endif
@@ -76,6 +76,7 @@
 				@endif
 				</div>
 			</div>
+			<!-- TODO remember password,maybe even double it up here -->
 			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
 				<label for='password' class='col-sm-2 text-right'>Password:</label>
 				<div class='col-sm-8'>
@@ -133,10 +134,11 @@
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Classes to support:</label>
 				<div class="col-sm-8">
-					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" checked/>I want to support the whole school</label></div>
-					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes"/>I want to support the whole school <strong>and</strong> one or more classes</label></div>
+					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', '') == 'school'?'checked':''}}/>I want to support the whole school</label></div>
+					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes" value="class" {{Form::getValueAttribute('indiv-class', '') == 'class'?'checked':''}}/>I want to support the whole school <strong>and</strong> one or more classes</label></div>
 				</div>
 			</div>
+			<!-- TODO set a default on first load for radios that need defaults, check form::getvalueattribute for the checkboxes here -->
 			<div class="form-group individual-classes">
 				<div class="col-sm-offset-2 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='marigold'>Marigold Daycare</label></div></div>
 				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='daisy'>Daisy Daycare</label></div></div>
@@ -161,8 +163,8 @@
 			<div class="form-group">
 				<label class="col-sm-2 text-right">Payment:</label>
 				<div class="col-sm-8">
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" checked/>Direct Debit (we make more money with debit)</label></div>
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit"/>Credit Card</label></div>
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
 				</div>
 			</div>
 			<div class="payment debit">
@@ -209,24 +211,24 @@
 					</div>
 					<div class="form-group">
 	                    <label>Cardholder's Name</label>
-	                    <input type="text" class="form-control" value="whocares">
+	                    <input type="text" class="form-control" value="">
 	                </div>
 	                <div class="form-group">
 	                    <label>Card Number</label>
-	                    <input type="text" class="form-control" data-stripe="number" value="4242424242424242">
+	                    <input type="text" class="form-control" data-stripe="number" value="">
 	                </div>
 	                <div class="form-group cc-smallnumbers">
 	                    <div class="col-sm-4">
 	                            <label>Exp Month</label>
-	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="09">
+	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="">
 	                    </div>
 	                    <div class="col-sm-4">
 	                            <label>Exp Year</label>
-	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="2017">
+	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="">
 	                    </div>
 	                    <div class="col-sm-4">
 	                            <label>CVC</label>
-	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="998">
+	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="">
 	                    </div>
 	                </div>
                 </div>

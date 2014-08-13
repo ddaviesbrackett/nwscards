@@ -8,7 +8,7 @@ $(function(){
 			$classes.fadeOut(400);
 			$classes.find('input[type="checkbox"]').attr('checked',false);
 		}
-	});
+	}); //TODO show the right one here on load
 
 	$('input:radio[name="payment"]').on('click', function(ev){
 		var val = this.value;
