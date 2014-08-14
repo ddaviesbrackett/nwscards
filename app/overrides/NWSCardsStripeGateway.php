@@ -11,7 +11,7 @@ class NWSCardsStripeGateWay extends \Laravel\Cashier\StripeGateway {
 	 */
 	protected function getLastFourCardDigits($customer)
 	{
-		if(isset($customer_default_card))
+		if(isset($customer->default_card))
 		{
 			return $customer->cards->retrieve($customer->default_card)->last4;
 		}

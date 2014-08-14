@@ -42,9 +42,9 @@ class OrderController extends BaseController {
 	 			'debit-institution.required_if' => 'institution is required.',
 	 			'debit-account.required_if' => 'account number is required.',
 	 		];
+	  	//store phone as a number, but allow people to type ( and ) and - and space in it
 
 	  	$in = Input::all();
-	  	//store phone as a number, but allow people to type ( and ) and - and space in it
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
 		$validator = Validator::make($in, $rules, $messages);
@@ -53,7 +53,7 @@ class OrderController extends BaseController {
 		if ($validator->fails()) {
 			return Redirect::to('/new')
 				->withErrors($validator)
-				->withInput(Input::except('password'));
+				->withInput(Input::all());
 		} else {
 			$user = Sentry::register([
 				'email'		=>$in['email'],
@@ -77,6 +77,9 @@ class OrderController extends BaseController {
 				'class_6' => array_key_exists('class_6', $in),
 				'class_7' => array_key_exists('class_7', $in),
 				'class_8' => array_key_exists('class_8', $in),
+				'saveon' => $in['saveon'],
+				'coop' => $in['coop'],
+				'payment' => $in['payment'] == 'credit',
 			], true);
 
 			$plan = null;

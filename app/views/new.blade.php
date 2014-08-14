@@ -14,10 +14,10 @@
 @section('content')
 <div class="masthead">
 	<h1>Your support means a lot to us!</h1>
-		<p>
-			The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money
-		</p>
-	</div>
+	<p>
+		The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money
+	</p>
+</div>
 <div class="container-fluid">
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 		<div class="callout">
