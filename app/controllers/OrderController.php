@@ -12,37 +12,6 @@ class OrderController extends BaseController {
 		return View::make('account');
 	}
 
-	private function formatCutoffs($interval, array $cutoffDates)
-	{
-		foreach($cutoffDates as $k => $v) {
-			$date = new DateTime($v);
-			$date->add(new DateInterval($interval));
-			$cutoffDates[$k] = $date->format('l, F jS');
-		}
-		return $cutoffDates;
-	}
-
-	/*
-	* cutoff dates are the last day on which we can accept an order; orders are charged 6 days later, and delivered 8 days later (so, 2 days after charge).
-	*/
-	private function getCutoffs( $target = NULL ) {;
-		if(is_null($target)){
-			$target = date('Y-m-d');
-		}
-		$ret = array();
-		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
-		$cutoff = $cutoffs[0];
-		$ret['biweekly'] = $cutoff->cutoff;
-		if($cutoff->monthly) {
-			$ret['4weekly'] = $cutoff->cutoff;
-		}
-		else
-		{
-			$ret['4weekly'] = $cutoffs[1]->cutoff;
-		}
-		return $ret;
-	}
-
 	public function getNew()
 	{
 		return View::make('new', array('delivery' => $this->formatCutoffs('P8D',$this->getCutoffs())));
@@ -121,16 +90,62 @@ class OrderController extends BaseController {
 			if(isset($in['stripeToken'])){
 				$cardToken = $in['stripeToken'];
 			}
-			$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
-			$cutoffDate->add(new DateInterval('P6D'));
-			$gateway = $user->subscription($plan);
-			if(isset($plan)) {
-					$gateway->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
+			$gateway = null;
+			if(isset($cardToken)) {
+					$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
+					$cutoffDate->add(new DateInterval('P6D'));
+					$gateway = $user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
 			}
-			$gateway->create($cardToken);
+			else {
+				$gateway = $user->subscription(null); //just create them with no subs if they don't have a card
+			}
+			$extras = [
+				'email' => $user->email, 
+				'description' => $user->name,
+			];
+			if(!isset($cardToken))
+			{
+				$extras['metadata'] = [
+					'debit-transit'=>$in['debit-transit'],
+					'debit-institution'=>$in['debit-institution'],
+					'debit-account'=>$in['debit-account'],
+				];
+			}
+			$gateway->create($cardToken, $extras);
 			// redirect
 			Session::flash('message', 'Order created!');
 			return Redirect::to('/');			
 		}
+	}
+
+	private function formatCutoffs($interval, array $cutoffDates)
+	{
+		foreach($cutoffDates as $k => $v) {
+			$date = new DateTime($v);
+			$date->add(new DateInterval($interval));
+			$cutoffDates[$k] = $date->format('l, F jS');
+		}
+		return $cutoffDates;
+	}
+
+	/*
+	* cutoff dates are the last day on which we can accept an order; orders are charged 6 days later, and delivered 8 days later (so, 2 days after charge).
+	*/
+	private function getCutoffs( $target = NULL ) {;
+		if(is_null($target)){
+			$target = date('Y-m-d');
+		}
+		$ret = array();
+		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
+		$cutoff = $cutoffs[0];
+		$ret['biweekly'] = $cutoff->cutoff;
+		if($cutoff->monthly) {
+			$ret['4weekly'] = $cutoff->cutoff;
+		}
+		else
+		{
+			$ret['4weekly'] = $cutoffs[1]->cutoff;
+		}
+		return $ret;
 	}
 }

@@ -6,6 +6,11 @@ class HomeController extends BaseController {
 		return View::make('home', array('total'=>'$674')); //TODO pull the total from the DB order aggregates
 	}
 
+
+	public function getLogin() {
+		return View::make('login');
+	}
+
 	public function postLogin()
 	{
 		$credentials = Input::only('email', 'password');
@@ -16,27 +21,27 @@ class HomeController extends BaseController {
 		}
 		catch (Cartalyst\Sentry\Users\LoginRequiredException $e)
 		{
-		    echo 'Login failed.';
+		    $error ='Login failed.';
 		}
 		catch (Cartalyst\Sentry\Users\PasswordRequiredException $e)
 		{
-		    echo 'Login failed.';
+		    $error ='Login failed.';
 		}
 		catch (Cartalyst\Sentry\Users\WrongPasswordException $e)
 		{
-		    echo 'Login failed.';
+		    $error ='Login failed.';
 		}
 		catch (Cartalyst\Sentry\Users\UserNotFoundException $e)
 		{
-		    echo 'Login failed.';
+		    $error ='Login failed.';
 		}
 		catch (Cartalyst\Sentry\Users\UserNotActivatedException $e)
 		{
-		    echo 'Login failed.';
+		    $error ='Login failed.';
 		}
 		if(! empty($error))
 		{
-			return View::make('home');
+			return View::make('login');
 		}
 		else
 		{

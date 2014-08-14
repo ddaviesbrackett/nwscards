@@ -1,6 +1,8 @@
 <?php
 
 Route::get('/', 'HomeController@getHome');
+
+Route::get('/login', 'HomeController@getLogin');
 Route::post('/login', 'HomeController@postLogin');
 
 Route::get('/account', array('before' => 'auth', 'uses' => 'OrderController@getAccount'));

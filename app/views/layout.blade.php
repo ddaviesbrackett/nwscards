@@ -25,7 +25,11 @@
 				</div>
 				<div class="collapse navbar-collapse" id="mainnav-collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li><a href="/account">My Account</a></li>
+						@if(Sentry::check())
+							<li><a href="/account">My Account</a></li>
+						@else
+							<li><a href="/login">Log In</a></li>
+						@endif
 					</ul>
 				</div>
 			</div>

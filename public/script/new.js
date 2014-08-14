@@ -19,7 +19,9 @@ $(function(){
 		$('.payment.' + val).toggle(this.checked);
 	});
 
-	$('form.new-order').submit(function(ev){
+	var $form = $('form.new-order');
+
+	$form.submit(function(ev){
 		if($('#indiv-class-classes').is(":checked")) {
 			if(!$('.individual-classes input[type="checkbox"]:checked').length) {
 				if(confirm('You said you wanted to support individual classes, but didn\'t select any. '+
@@ -28,12 +30,12 @@ $(function(){
 				}
 				else {
 					$('.individual-classes input[type="checkbox"]').eq(0).focus();
+					$form.find('button').prop('disabled', false);
 					return false;
 				}
 			}
 		}
 	})
-	var $form = $('form.new-order');
 
 	var stripeResponseHandler = function(status, response)
 	{

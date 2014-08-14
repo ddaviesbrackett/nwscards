@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('title')
-	Account
+	My Account
 @stop
 
 @section('head-extra')
@@ -12,5 +12,6 @@
 
 @section('content')
 <div class="container-fluid">
+	there should be some content here.
 </div>
 @stop
