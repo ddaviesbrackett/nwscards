@@ -4,7 +4,12 @@ class OrderController extends BaseController {
 
 	public function getAccount()
 	{
-		return View::make('account', ['user' => Sentry::getUser(), 'delivery' => $this->formatCutoffs('P8D',$this->getCutoffs())]);
+		$cutoffs = $this->getCutoffs();
+		return View::make('account', [
+			'user' => Sentry::getUser(), 
+			'delivery' => $this->formatCutoffs('P8D',$cutoffs),
+			'payment' => $this->formatCutoffs('P6D',$cutoffs),
+			]);
 	}
 
 	public function postAccount()

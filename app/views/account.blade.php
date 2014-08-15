@@ -21,17 +21,14 @@
 		<div class="col-sm-6"><b>{{{$user->name}}}</b></div>
 	</div>
 	<div class="row">
-		<div class="col-sm-3 text-right">Kootenay Co-op cards:</div>
-		<div class="col-sm-6"><b>{{{$user->coop}}}</b></div>
+		<div class="col-sm-3 text-right">Cards:</div>
+		<div class="col-sm-6"><b>{{{$user->coop}}}</b> Kooteny Co-op cards and <b>{{{$user->saveon}}}</b> Save On More cards, <b>{{{$user->schedule}}}</b></div>
 	</div>
 	<div class="row">
-		<div class="col-sm-3 text-right">Save On More cards:</div>
-		<div class="col-sm-6"><b>{{{$user->saveon}}}</b></div>
+		<div class="col-sm-3 text-right">Next Order:</div>
+		<div class="col-sm-6">Charged <b>{{{$payment[$user->schedule]}}}</b>, available <b>{{{$delivery[$user->schedule]}}}</b></div>
 	</div>
-	<div class="row">
-		<div class="col-sm-3 text-right">Order Frequency:</div>
-		<div class="col-sm-6"><b>{{{$user->schedule}}}</b></div>
-	</div>
-	
+	<p>Watch this space for the ability to change your order, coming soon!</p>
+	<p>Watch this space for past deliveries, along with where the money went, coming soon!</p>
 </div>
 @stop
