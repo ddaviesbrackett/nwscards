@@ -17,6 +17,7 @@ class AddPaymentInfo extends Migration {
 			$table->tinyInteger('payment'); //0 debit, 1 credit
 			$table->integer('saveon');
 			$table->integer('coop');
+			$table->string('schedule');
 		});
 	}
 
@@ -30,7 +31,7 @@ class AddPaymentInfo extends Migration {
 		Schema::table('users', function(Blueprint $table)
 		{
 			$table->dropColumn(
-				'payment', 'saveon', 'coop'
+				'payment', 'saveon', 'coop', 'schedule'
 			);
 		});
 	}

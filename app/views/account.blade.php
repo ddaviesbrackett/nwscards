@@ -5,13 +5,33 @@
 @stop
 
 @section('head-extra')
-	<link rel="stylesheet" href="/styles/account.css"/>
-
-	<script src="/script/account.js"></script>
 @stop
 
 @section('content')
+<div class="masthead">
+	<h1>Thanks for your support!</h1>
+	<p>
+		Your order is already helping.
+	</p>
+</div>
 <div class="container-fluid">
-	there should be some content here.
+	<h3>Your standing order</h3>
+	<div class="row">
+		<div class="col-sm-3 text-right">Name:</div>
+		<div class="col-sm-6"><b>{{{$user->name}}}</b></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3 text-right">Kootenay Co-op cards:</div>
+		<div class="col-sm-6"><b>{{{$user->coop}}}</b></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3 text-right">Save On More cards:</div>
+		<div class="col-sm-6"><b>{{{$user->saveon}}}</b></div>
+	</div>
+	<div class="row">
+		<div class="col-sm-3 text-right">Order Frequency:</div>
+		<div class="col-sm-6"><b>{{{$user->schedule}}}</b></div>
+	</div>
+	
 </div>
 @stop

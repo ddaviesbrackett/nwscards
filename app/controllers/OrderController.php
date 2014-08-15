@@ -4,7 +4,7 @@ class OrderController extends BaseController {
 
 	public function getAccount()
 	{
-		return View::make('account');
+		return View::make('account', ['user' => Sentry::getUser(), 'delivery' => $this->formatCutoffs('P8D',$this->getCutoffs())]);
 	}
 
 	public function postAccount()
@@ -28,7 +28,7 @@ class OrderController extends BaseController {
 				'address1'	=> 'required',
 				'city'		=> 'required',
 				'postal_code'	=> 'required|regex:/^\w\d\w ?\d\w\d$/',
-				'schedule'	=> 'required|in:biweekly,4weekly',
+				'schedule'	=> 'required|in:biweekly,monthly',
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
 				'payment'	=> 'required|in:debit,credit',
@@ -80,13 +80,14 @@ class OrderController extends BaseController {
 				'saveon' => $in['saveon'],
 				'coop' => $in['coop'],
 				'payment' => $in['payment'] == 'credit',
+				'schedule' => $in['schedule'],
 			], true);
 
 			$plan = null;
 			if($in['schedule'] == 'biweekly'){
 				$plan = '14days';
 			}
-			else if ($in['schedule'] == '4weekly') {
+			else if ($in['schedule'] == 'monthly') {
 				$plan = '28days';
 			}
 			$cardToken = null;
@@ -143,11 +144,11 @@ class OrderController extends BaseController {
 		$cutoff = $cutoffs[0];
 		$ret['biweekly'] = $cutoff->cutoff;
 		if($cutoff->monthly) {
-			$ret['4weekly'] = $cutoff->cutoff;
+			$ret['monthly'] = $cutoff->cutoff;
 		}
 		else
 		{
-			$ret['4weekly'] = $cutoffs[1]->cutoff;
+			$ret['monthly'] = $cutoffs[1]->cutoff;
 		}
 		return $ret;
 	}

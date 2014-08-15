@@ -2,6 +2,7 @@
 
 use Laravel\Cashier;
 
+/*This class shouldn't have to exist.  But there are bugs in Cashier that this is going around.*/
 class NWSCardsStripeGateWay extends \Laravel\Cashier\StripeGateway {
 	/**
 	 * Get the last four credit card digits for a customer.
