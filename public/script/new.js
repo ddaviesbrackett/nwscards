@@ -9,15 +9,18 @@ $(function(){
 			$classes.find('input[type="checkbox"]').attr('checked',false);
 		}
 	}); //TODO show the right one here on load
-
-	$('input:radio[name="payment"]').on('click', function(ev){
-		var val = this.value;
-		$('.payment.'+val).fadeIn(400);
-		$('.payment:not(.'+val+')').hide();
-	}).each(function(){
-		var val = this.value;
-		$('.payment.' + val).toggle(this.checked);
-	});
+	function radioSection(radioname){
+		$('input:radio[name="'+radioname+'"]').on('click', function(ev){
+			var val = this.value;
+			$('.'+radioname+'.'+val).fadeIn(400);
+			$('.'+radioname+':not(.'+val+')').hide();
+		}).each(function(){
+			var val = this.value;
+			$('.'+radioname+'.' + val).toggle(this.checked);
+		});
+	}
+	radioSection('payment');
+	radioSection('deliverymethod');
 
 	var $form = $('form.new-order');
 

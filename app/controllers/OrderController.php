@@ -40,6 +40,7 @@ class OrderController extends BaseController {
 				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
+				'mailwaiver'	=>'required_if:deliverymethod,mail',
 			];
 
 	 	$messages = [

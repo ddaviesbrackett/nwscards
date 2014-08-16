@@ -76,7 +76,6 @@
 				@endif
 				</div>
 			</div>
-			<!-- TODO remember password, maybe even double it up here -->
 			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
 				<label for='password' class='col-sm-2 text-right'>Password:</label>
 				<div class='col-sm-8'>
@@ -241,6 +240,32 @@
 	                    </div>
 	                </div>
                 </div>
+			</div>
+		</div>
+		<div class="callout">
+			<div class='form-group{{$errors->has("deliverymethod")?" has-error":"";}}'>
+				<label class="col-sm-2 text-right">Delivery method:</label>
+				<div class="col-sm-8">
+					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_pickup" value="pickup" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Pickup at the Nelson Waldorf School</label></div>
+					<div class="deliverymethod pickup form-group">
+						<div class="col-sm-8">
+							<input type='text' class='form-control' placeholder='Is someone else picking up your order?' id='pickupalt' name='pickupalt' value="{{Form::getValueAttribute('pickupalt', '')}}">
+							<span class="help-block">You'll have to sign for your cards.  If someone else can sign for them, enter their name here.</span>
+						</div>
+					</div>
+					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Mail to address above</label></div>
+					<div class="deliverymethod mail form-group{{$errors->has('mailwaiver')?' has-error':'';}}">
+						<div class="col-sm-8">
+							<div class="checkbox"><label><input type='checkbox' name='mailwaiver'>I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
+							@if($errors->has('mailwaiver'))
+								<span class='help-block'>You must agree to this waiver to complete your order.</span>
+							@endif
+						</div>
+					</div>
+					@if($errors->has('deliverymethod'))
+						<span class='help-block'>{{{$errors->first('deliverymethod')}}}</span>
+					@endif
+				</div>
 			</div>
 		</div>
 		<div class="row">

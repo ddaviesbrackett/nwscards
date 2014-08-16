@@ -12,7 +12,7 @@
 <div class="masthead">
 	<h1>Buy Cards,  Help Kids</h1>
 	<h3>We've raised {{{$total}}} so far. Help us raise more.</h3>
-	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Cards Now</a>
+	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Cards Now</a>&nbsp;<a class="btn btn-outline-inverse btn-lg" href="/account">Check on Your Order</a>
 	<div class="container-fluid">
 		<div class="col-sm-4 col-sm-offset-2">
 			<h4>How your order helps</h4>

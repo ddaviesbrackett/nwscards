@@ -48,4 +48,10 @@ class HomeController extends BaseController {
 			return Redirect::to(Session::pull('url.intended', '/account'));
 		}
 	}
+
+	public function getLogout()
+	{
+		Sentry::logout();
+		return Redirect::to('/');
+	}
 }

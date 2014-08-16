@@ -4,6 +4,7 @@ Route::get('/', 'HomeController@getHome');
 
 Route::get('/login', 'HomeController@getLogin');
 Route::post('/login', 'HomeController@postLogin');
+Route::get('/logout', 'HomeController@getLogout');
 
 Route::get('/account', array('before' => 'auth', 'uses' => 'OrderController@getAccount'));
 Route::post('/account', array('before' => 'csrf', 'uses' =>'OrderController@postAccount'));
