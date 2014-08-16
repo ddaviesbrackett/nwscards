@@ -3,16 +3,16 @@
 }
 .mainnav a
 {
-	color:#d9534f;
+	color:#a40016;
 }
 .mainnav .icon-bar
 {
-	background-color:#d9534f;
+	background-color:#a40016;
 }
 
 .masthead{
 	text-align:center;
-	background-color:#d9534f;
+	background-color:#a40016;
 	padding:20px 0;
 	color:#fff;
 }
@@ -25,7 +25,7 @@
 }
 
 .masthead .btn-outline-inverse:hover{
-	color:#d9534f;
+	color:#a40016;
 	background-color:#fff;
 }
 
