@@ -169,81 +169,83 @@
 			<div class="form-group individual-classes" style="margin-top:10px;">
 				<label for="referrer" class="col-sm-3 text-right">Referring Family:</label>
 				<div class="col-sm-8">
-					<input type='text' class='form-control' placeholder='' id='referrer' name='referrer' value="{{Form::getValueAttribute('referrer', '')}}">
+					<input type='text' class='form-control' placeholder='optional - who told you about this program?' id='referrer' name='referrer' value="{{Form::getValueAttribute('referrer', '')}}">
 				</div>
 			</div>
 		</div>
 		<h4 class="callout-title">Choose Payment</h4>
 		<div class="callout">
 			<div class="form-group">
-				<div class="col-xs-7 col-xs-offset-1 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', 'debit') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
-				<div class="col-xs-4 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
-			</div>
-			<div class="payment debit">
-				<div class="form-group">
-					<div class="col-sm-offset-2">
-						<img src="images/void_cheque.gif" alt="Void Cheque showing location of branch, institution, and account numbers" class="img-thumbnail img-responsive"/>
+				<div class="col-sm-12">
+					<div class="radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+					<div class="payment debit">
+						<div class="form-group">
+							<div class="col-sm-offset-2">
+								<img src="images/void_cheque.gif" alt="Void Cheque showing location of branch, institution, and account numbers" class="img-thumbnail img-responsive"/>
+							</div>
+						</div>
+						<div class='debitnumbers form-group{{$errors->has("debit-transit") || $errors->has("debit-institution") || $errors->has("debit-account")?" has-error":"";}}'>
+							<label class="col-sm-2 text-right" for="debit-transit">Branch Number:</label>
+							<div class="col-sm-2">
+								<input type='text' class='form-control' placeholder='' id='debit-transit' name='debit-transit' value="{{Form::getValueAttribute('debit-transit', '')}}">
+							</div>
+							<label class="col-sm-2 text-right" for="debit-institution">Institution Number:</label>
+							<div class="col-sm-2">
+								<input type='text' class='form-control' placeholder='' id='debit-institution' name='debit-institution' value="{{Form::getValueAttribute('debit-institution', '')}}">
+							</div>
+							<label style="padding-left:5px;" class="col-sm-1 text-right" for="debit-account">Account Number:</label>
+							<div class="col-sm-3">
+								<input type='text' class='form-control' placeholder='' id='debit-account' name='debit-account' value="{{Form::getValueAttribute('debit-account', '')}}">
+							</div>
+							<div style="clear:both;"></div>
+							<div class="col-sm-4">
+								@if($errors->has('debit-transit'))
+									<div class='help-block text-right'>{{{$errors->first('debit-transit')}}}</div>
+								@endif
+							</div>
+							<div class="col-sm-4">
+								@if($errors->has('debit-institution'))
+									<div class='help-block text-right'>{{{$errors->first('debit-institution')}}}</div>
+								@endif
+							</div>
+							<div class="col-sm-4">
+								@if($errors->has('debit-account'))
+									<div class='help-block text-right'>{{{$errors->first('debit-account')}}}</div>
+								@endif
+							</div>
+						</div>
+					</div>
+					<div class="radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
+					<div class="payment credit row">
+						<div class="col-sm-6 col-sm-offset-3">
+							<div class="form-group has-error payment-errors-group">
+								<div class='help-block payment-errors'></div>
+							</div>
+							<div class="form-group">
+			                    <label>Cardholder's Name</label>
+			                    <input type="text" class="form-control" value="">
+			                </div>
+			                <div class="form-group">
+			                    <label>Card Number</label>
+			                    <input type="text" class="form-control" data-stripe="number" value="">
+			                </div>
+			                <div class="form-group cc-smallnumbers">
+			                    <div class="col-sm-4">
+			                            <label>Exp Month</label>
+			                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="">
+			                    </div>
+			                    <div class="col-sm-4">
+			                            <label>Exp Year</label>
+			                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="">
+			                    </div>
+			                    <div class="col-sm-4">
+			                            <label>CVC</label>
+			                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="">
+			                    </div>
+			                </div>
+		                </div>
 					</div>
 				</div>
-				<div class='form-group{{$errors->has("debit-transit") || $errors->has("debit-institution") || $errors->has("debit-account")?" has-error":"";}}'>
-					<label class="col-sm-2 text-right" for="debit-transit">Branch Number:</label>
-					<div class="col-sm-1">
-						<input type='text' class='form-control' placeholder='' id='debit-transit' name='debit-transit' value="{{Form::getValueAttribute('debit-transit', '')}}">
-					</div>
-					<label class="col-sm-1 text-right" for="debit-institution">Institution Number:</label>
-					<div class="col-sm-1">
-						<input type='text' class='form-control' placeholder='' id='debit-institution' name='debit-institution' value="{{Form::getValueAttribute('debit-institution', '')}}">
-					</div>
-					<label class="col-sm-1 text-right" for="debit-account">Account Number:</label>
-					<div class="col-sm-2">
-						<input type='text' class='form-control' placeholder='' id='debit-account' name='debit-account' value="{{Form::getValueAttribute('debit-account', '')}}">
-					</div>
-					<div style="clear:both;"></div>
-					<div class="col-sm-3">
-						@if($errors->has('debit-transit'))
-							<div class='help-block text-right'>{{{$errors->first('debit-transit')}}}</div>
-						@endif
-					</div>
-					<div class="col-sm-2">
-						@if($errors->has('debit-institution'))
-							<div class='help-block text-right'>{{{$errors->first('debit-institution')}}}</div>
-						@endif
-					</div>
-					<div class="col-sm-3">
-						@if($errors->has('debit-account'))
-							<div class='help-block text-right'>{{{$errors->first('debit-account')}}}</div>
-						@endif
-					</div>
-				</div>
-			</div>
-			<div class="payment credit row">
-				<div class="col-sm-6 col-sm-offset-3">
-					<div class="form-group has-error payment-errors-group">
-						<div class='help-block payment-errors'></div>
-					</div>
-					<div class="form-group">
-	                    <label>Cardholder's Name</label>
-	                    <input type="text" class="form-control" value="">
-	                </div>
-	                <div class="form-group">
-	                    <label>Card Number</label>
-	                    <input type="text" class="form-control" data-stripe="number" value="">
-	                </div>
-	                <div class="form-group cc-smallnumbers">
-	                    <div class="col-sm-4">
-	                            <label>Exp Month</label>
-	                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="">
-	                    </div>
-	                    <div class="col-sm-4">
-	                            <label>Exp Year</label>
-	                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="">
-	                    </div>
-	                    <div class="col-sm-4">
-	                            <label>CVC</label>
-	                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="">
-	                    </div>
-	                </div>
-                </div>
 			</div>
 		</div>
 		<h4 class="callout-title">Choose Delivery</h4>
