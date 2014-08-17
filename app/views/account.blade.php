@@ -9,46 +9,49 @@
 
 @section('content')
 <div class="masthead">
-	<h1>Thanks for your support!</h1>
-	<p>
-		Your order is already helping.
-	</p>
+	<h1>Thanks for your support</h1>
+	<h3>Here's what's happening</h3>
 </div>
-<div class="container-fluid">
-	<h3>Your standing order</h3>
-	<div class="row">
-		<div class="col-sm-3 text-right">Name:</div>
-		<div class="col-sm-6"><b>{{{$user->name}}}</b></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-3 text-right">Cards:</div>
-		<div class="col-sm-6"><b>{{{$user->coop}}}</b> Kooteny Co-op cards and <b>{{{$user->saveon}}}</b> Save On More cards, <b>{{{$user->schedule}}}</b></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-3 text-right">Next Order:</div>
-		<div class="col-sm-6">Charged <b>{{{$payment[$user->schedule]}}}</b>, available <b>{{{$delivery[$user->schedule]}}}</b></div>
-	</div>
-	<div class="row">
-		<div class="col-sm-3 text-right">Delivery Method:</div>
-		<div class="col-sm-6">
-			@if($user->deliverymethod)
-				Cards will be <b>mailed</b> to:<br/>
-				{{{$user->name}}}<br/>
+<div class="container-fluid text-center">
+	<h2>Your next order</h2>
+	<p>Your cards will be available on <b>{{{$delivery[$user->schedule]}}}</b>.
+	@if($user->deliverymethod)
+		<p>Your cards will be mailed to you that day.  They generally arrive on Thursday or Friday.</p>
+	@else
+		<p>You can pick your order up between 8AM and 8:30AM or 2:30PM and 3PM that day, at the bottom of the main stairs.</p>
+	@endif
+
+	<hr>
+
+	<h2>Your recurring order</h2>
+	<p>
+		You have ordered<br/>
+		<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
+		<b>${{{$user->saveon}}}00 from Save-On</b><br/>
+	</p>
+	<p>
+		<b style="text-transform:capitalize;">{{{$user->schedule}}}</b><br/>
+	</p>
+
+	<p>
+		Your cards are being
+		@if($user->deliverymethod)
+			<b>mailed to you</b> at<br/>
+			{{{$user->name}}}<br/>
 				{{{$user->address1}}}<br/>
-				{{{$user->address2}}}<br/>
+				{{{$user->address2?$user->address2 + '<br/>':''}}}
 				{{{$user->city}}},
 				{{{$user->province}}}<br/>
 				{{{$user->postal_code}}}
-			@else
-				Cards will be <b>picked up at the school</b> by <b>{{{$user->name}}}</b>
-				@if(($user->pickupalt))
+		@else
+			<b>picked up at the school</b> by you
+			@if(($user->pickupalt))
 					or by <b>{{{$user->pickupalt}}}</b>
-				@endif
-				at the bottom of the steps at the Waldorf School either between 8AM and 8:30AM or between 2:30PM and 3:00PM
 			@endif
-		</div>
-	</div>
-	<p>Watch this space for the ability to change your order, coming soon!</p>
-	<p>Watch this space for past deliveries, along with where the money went, coming soon!</p>
+		@endif
+	</p>
+
+	<h2>Your order history</h2>
+	(coming soon)
 </div>
 @stop
