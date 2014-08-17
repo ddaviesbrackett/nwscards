@@ -8,15 +8,23 @@
 	<link rel="stylesheet" href="/styles/home.css"/>
 @stop
 
+@section('nav-extra')
+	<li><a href="#about">About</a></li>
+	<li><a href="#method">How it Works</a></li>
+	<li><a href="#faq">FAQ</a></li>
+	<li><a href="#contact">Contact</a></li>
+@stop
+
 @section('content')
 <div class="masthead">
 	<h1>Buy Grocery Cards<br/>Raise Money</h1>
 	<h3>We've raised {{{$total}}} so far<br/>Help us raise more &mdash; <em>without spending any extra!</em></h3>
-	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Cards Now</a>
+	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Now</a>
 	<a class="link order" href="/account">Checking on an existing order? Click here</a>
 </div>
 <div class="container-fluid text-center">
-	<h2>Waldorf Education for All</h2>
+	<a name="about"></a>
+	<h2>Waldorf Education for Anyone</h2>
 	<p>
 		Did you know the Nelson Waldorf School has a generous tuition reduction program? 
 		No family is turned away for financial reasons. 
@@ -30,6 +38,7 @@
 		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; 
 		<a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>.
 	</p>
+	<a name="method"></a>
 	<h2>How we raise money from your groceries</h2>
 	<p>
 		When you purchase a grocery card through the Nelson Waldorf Parent Association, the store donates a percentage of its profit to us. 
@@ -37,6 +46,7 @@
 	<p>
 		We raise money and it doesn’t cost you a cent – the money comes out of the store’s pocket.
 	</p>
+	<a name="faq"></a>
 	<h2>Frequently Asked Questions</h2>
 
 	<div class="panel-group" id="accordion">
@@ -301,6 +311,8 @@
 	    </div>
 	  </div>
 	</div>
+
+	<a name="contact"></a>
 	<h2>Got another question? We've got answers</h2>
 	<p>
 		We'd love to hear from you.
