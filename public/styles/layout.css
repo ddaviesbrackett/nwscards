@@ -17,7 +17,7 @@ h1, h2 {
 	font-size:48pt;
 }
 h2 {
-	font-size:36pt;
+	font-size:30pt;
 }
 
 p {
@@ -29,7 +29,8 @@ p {
 }
 .mainnav a
 {
-	color:#a40016;
+	color:#000;
+	font-size:12pt;
 }
 .mainnav .icon-bar
 {
