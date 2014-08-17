@@ -1,3 +1,11 @@
+
+h1, h2, h3, h4, h5, h6 {
+	font-family:'Oswald', Verdana, sans-serif;
+}
+h1, h2 {
+	text-transform:uppercase;
+}
+
 .mainnav {
 	margin-bottom:0;
 }
@@ -27,6 +35,10 @@
 .masthead .btn-outline-inverse:hover{
 	color:#a40016;
 	background-color:#fff;
+}
+
+.masthead a {
+	color:#fff;
 }
 
 .callout
