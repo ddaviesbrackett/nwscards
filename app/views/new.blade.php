@@ -13,41 +13,41 @@
 
 @section('content')
 <div class="masthead">
-	<h1>Your support means a lot to us!</h1>
+	<h1>Your support means a lot</h1>
 	<p>
-		The All-School Grocery Card Fundraiser is an amazing opportunity to support students without spending any extra money
+		Raise  money for students and teachers at Nelson Waldorf without spending any extra money
 	</p>
 </div>
 <div class="container-fluid">
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
+		<h4 class="callout-title">Make a Recurring Order</h4>
 		<div class="callout">
-			<div class='form-group{{$errors->has("saveon") || $errors->has("coop")?" has-error":"";}}'>
-				<label class="col-sm-2 text-right">Order:</label>
-				<div class="col-sm-8">
-					<label class="col-sm-2" for="coop">Co-op:</label>
-					<div class="col-sm-4">
-						<div class="input-group">
-							<input type="number" min="0" step="1" class="form-control" placeholder="# of Kootenay Co-op cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
-							<span class="input-group-addon">x $100</span>
-						</div>
-						@if($errors->has('coop'))
-							<span class='help-block'>{{{$errors->first('coop')}}}</span>
-						@endif
+			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
+				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+				<div class='col-sm-8'>
+					<div class="input-group">
+						<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
+						<span class="input-group-addon">x $100</span>
 					</div>
-					<label class="col-sm-2" for="saveon">Save-On:</label>
-					<div class="col-sm-4">
-						<div class="input-group">
-							<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
-							<span class="input-group-addon">x $100</span>
-						</div>
-						@if($errors->has('saveon'))
-							<span class='help-block'>{{{$errors->first('saveon')}}}</span>
-						@endif
+					@if($errors->has('coop'))
+						<span class='help-block'>{{{$errors->first('coop')}}}</span>
+					@endif
+				</div>
+			</div>
+			<div class='form-group{{$errors->has("saveon")?" has-error":"";}}'>
+				<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
+				<div class='col-sm-8'>
+					<div class="input-group">
+						<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
+						<span class="input-group-addon">x $100</span>
 					</div>
+					@if($errors->has('saveon'))
+						<span class='help-block'>{{{$errors->first('saveon')}}}</span>
+					@endif
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
-				<label class="col-sm-2 text-right">Schedule:</label>
+				<label class="col-sm-3 text-right">Schedule:</label>
 				<div class="col-sm-8">
 					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly" {{Form::getValueAttribute('schedule', '') == 'biweekly'?'checked':''}} />Every 2 weeks, starting <b>{{{$delivery['biweekly']}}}</b></label></div>
 					<div class="radio"><label><input type="radio" name="schedule" id="schedule_monthly" value="monthly" {{Form::getValueAttribute('schedule', '') == 'monthly'?'checked':''}} />Once a month, starting <b>{{{$delivery['monthly']}}}</b></label></div>
@@ -57,9 +57,10 @@
 				</div>
 			</div>
 		</div>
+		<h4 class="callout-title">Enter Your Information</h4>
 		<div class="callout">
 			<div class='form-group{{$errors->has("name")?" has-error":"";}}'>
-				<label for='name' class='col-sm-2 text-right'>Name:</label>
+				<label for='name' class='col-sm-3 text-right'>Name:</label>
 				<div class='col-sm-8'>
 					<input type='text' class='form-control' placeholder='your name' id='name' name='name' value="{{Form::getValueAttribute('name', '')}}">
 					@if($errors->has('name'))
@@ -68,7 +69,7 @@
 				</div>
 			</div>
 			<div class='form-group{{{$errors->has("email")?" has-error":""}}}'>
-				<label for='email' class='col-sm-2 text-right'>Email:</label>
+				<label for='email' class='col-sm-3 text-right'>Email:</label>
 				<div class='col-sm-8'>
 					<input type='email' class='form-control' placeholder='someone@somewhere.com' id='email' name='email' value="{{Form::getValueAttribute('email', '')}}">
 				@if($errors->has('email'))
@@ -77,7 +78,7 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
-				<label for='password' class='col-sm-2 text-right'>Password:</label>
+				<label for='password' class='col-sm-3 text-right'>Password:</label>
 				<div class='col-sm-8'>
 					<input type='password' class='form-control' placeholder='(so you can manage your order)' id='password' name='password' value="{{Form::getValueAttribute('password', '')}}">
 					@if($errors->has('password'))
@@ -86,7 +87,7 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("password-repeat")?" has-error":"";}}'>
-				<label for='password' class='col-sm-2 text-right'>Password (again):</label>
+				<label for='password' class='col-sm-3 text-right'>Password (again):</label>
 				<div class='col-sm-8'>
 					<input type='password' class='form-control' id='password-repeat' name='password-repeat' value="{{Form::getValueAttribute('password-repeat', '')}}">
 					@if($errors->has('password'))
@@ -95,7 +96,7 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("phone")?" has-error":"";}}'>
-				<label for='phone' class='col-sm-2 text-right'>Phone Number:</label>
+				<label for='phone' class='col-sm-3 text-right'>Phone Number:</label>
 				<div class='col-sm-8'>
 					<input type='tel' class='form-control' placeholder='(250) 555-5555' id='phone' name='phone' value="{{Form::getValueAttribute('phone', '')}}">
 					@if($errors->has('phone'))
@@ -104,7 +105,7 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("address1")?" has-error":"";}}'>
-				<label for='address1' class='col-sm-2 text-right'>Address:</label>
+				<label for='address1' class='col-sm-3 text-right'>Address:</label>
 				<div class='col-sm-8'>
 					<input type='text' class='form-control' placeholder='your mailing address' id='address1' name='address1' value="{{Form::getValueAttribute('address1', '')}}">
 					@if($errors->has('address1'))
@@ -113,7 +114,7 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("address2")?" has-error":"";}}'>
-				<label for='address2' class='col-sm-2 text-right'>Address 2:</label>
+				<label for='address2' class='col-sm-3 text-right'>Address 2:</label>
 				<div class='col-sm-8'>
 					<input type='text' class='form-control' id='address2' name='address2' value="{{Form::getValueAttribute('address2', '')}}">
 					@if($errors->has('address2'))
@@ -122,15 +123,15 @@
 				</div>
 			</div>
 			<div class='form-group{{$errors->has("city") || $errors->has("postal_code")?" has-error":"";}}'>
-				<label for='city' class='col-sm-2 text-right'>City:</label>
+				<label for='city' class='col-sm-3 text-right'>City:</label>
 				<div class='col-sm-3'>
 					<input type='text' class='form-control' placeholder='Nelson? Ymir? Salmo? Slocan?' id='city' name='city' value="{{Form::getValueAttribute('city', '')}}">
 					@if($errors->has('city'))
 						<span class='help-block'>{{{$errors->first('city')}}}</span>
 					@endif
 				</div>
-				<label for='postal_code' class='col-sm-2 text-right'>Postal Code:</label>
-				<div class='col-sm-3'>
+				<label for='postal_code' class='col-sm-3 text-right'>Postal Code:</label>
+				<div class='col-sm-2'>
 					<input type='text' class='form-control' placeholder='V1A 1A1' id='postal_code' name='postal_code' value="{{Form::getValueAttribute('postal_code', '')}}">
 					@if($errors->has('postal_code'))
 						<span class='help-block'>{{{$errors->first('postal_code')}}}</span>
@@ -138,48 +139,45 @@
 				</div>
 			</div>
 		</div>
+		<h4 class="callout-title">Decide who to Support</h4>
 		<div class="callout">
 			<div class="form-group">
-				<label class="col-sm-2 text-right">Classes to support:</label>
-				<div class="col-sm-8">
+				<div class="col-sm-12">
 					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', 'school') == 'school'?'checked':''}}/>I want to support the whole school</label></div>
 					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes" value="class" {{Form::getValueAttribute('indiv-class', '') == 'class'?'checked':''}}/>I want to support the whole school <strong>and</strong> one or more classes</label></div>
 				</div>
 			</div>
 			<!-- TODO check form::getvalueattribute for the checkboxes here -->
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='marigold'>Marigold Daycare</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='daisy'>Daisy Daycare</label></div></div>
-				<div class="col-sm-offset-2 col-md-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='sunflower'>Sunflower Kindergarten</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='bluebell'>Bluebell Kindergarten</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='marigold'>Marigold Daycare</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='daisy'>Daisy Daycare</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='sunflower'>Sunflower Kindergarten</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='bluebell'>Bluebell Kindergarten</label></div></div>
 			</div>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_1'>Class 1 (Mr. Lunde)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_2'>Class 2 (Ms. Longson)</label></div></div>
-				<div class="col-sm-offset-2 col-md-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_3'>Class 3 (Mr. Fukada)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_4'>Class 4 (Ms. Guthrie)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_1'>Class 1 (Mr. Lunde)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_2'>Class 2 (Ms. Longson)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_3'>Class 3 (Mr. Fukada)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_4'>Class 4 (Ms. Guthrie)</label></div></div>
 			</div>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_5'>Class 5 (Ms. Mulligan)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_6'>Class 6 (Mr. Goncalves)</label></div></div>
-				<div class="col-sm-offset-2 col-md-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_7'>Class 7 (Ms. Thayer)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_5'>Class 5 (Ms. Mulligan)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_6'>Class 6 (Mr. Goncalves)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_7'>Class 7 (Ms. Thayer)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
 			</div>
 			<div class="form-group individual-classes" style="margin-top:10px;">
-				<label for="referrer" class="col-sm-2 text-right">Referring Family:</label>
+				<label for="referrer" class="col-sm-3 text-right">Referring Family:</label>
 				<div class="col-sm-8">
 					<input type='text' class='form-control' placeholder='' id='referrer' name='referrer' value="{{Form::getValueAttribute('referrer', '')}}">
 				</div>
 			</div>
 		</div>
-		
+		<h4 class="callout-title">Choose Payment</h4>
 		<div class="callout">
 			<div class="form-group">
-				<label class="col-sm-2 text-right">Payment:</label>
-				<div class="col-sm-8">
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', 'debit') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
-					<div class="col-xs-6 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
-				</div>
+				<div class="col-xs-7 col-xs-offset-1 radio"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', 'debit') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+				<div class="col-xs-4 radio"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
 			</div>
 			<div class="payment debit">
 				<div class="form-group">
@@ -219,7 +217,7 @@
 				</div>
 			</div>
 			<div class="payment credit row">
-				<div class="col-sm-4 col-sm-offset-2">
+				<div class="col-sm-6 col-sm-offset-3">
 					<div class="form-group has-error payment-errors-group">
 						<div class='help-block payment-errors'></div>
 					</div>
@@ -248,20 +246,20 @@
                 </div>
 			</div>
 		</div>
+		<h4 class="callout-title">Choose Delivery</h4>
 		<div class="callout">
 			<div class='form-group{{$errors->has("deliverymethod")?" has-error":"";}}'>
-				<label class="col-sm-2 text-right">Delivery method:</label>
-				<div class="col-sm-8">
+				<div class="col-sm-12">
 					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_pickup" value="pickup" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Pickup at the Nelson Waldorf School</label></div>
 					<div class="deliverymethod pickup form-group">
-						<div class="col-sm-8">
+						<div class="col-sm-12">
 							<input type='text' class='form-control' placeholder='Is someone else picking up your order?' id='pickupalt' name='pickupalt' value="{{Form::getValueAttribute('pickupalt', '')}}">
 							<span class="help-block">You'll have to sign for your cards.  If someone else can sign for them, enter their name here.</span>
 						</div>
 					</div>
 					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Mail to address above</label></div>
 					<div class="deliverymethod mail form-group{{$errors->has('mailwaiver')?' has-error':'';}}">
-						<div class="col-sm-8">
+						<div class="col-sm-12">
 							<div class="checkbox"><label><input type='checkbox' name='mailwaiver'>I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
 							@if($errors->has('mailwaiver'))
 								<span class='help-block'>You must agree to this waiver to complete your order.</span>
