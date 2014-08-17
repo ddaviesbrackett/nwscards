@@ -49,8 +49,8 @@
 			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
 				<label class="col-sm-2 text-right">Schedule:</label>
 				<div class="col-sm-8">
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly" {{Form::getValueAttribute('schedule', '') == 'biweekly'?'checked':''}} />Every 2 weeks, starting {{{$delivery['biweekly']}}}</label></div>
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_monthly" value="monthly" {{Form::getValueAttribute('schedule', '') == 'monthly'?'checked':''}} />Once a month, starting {{{$delivery['monthly']}}}</label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly" {{Form::getValueAttribute('schedule', '') == 'biweekly'?'checked':''}} />Every 2 weeks, starting <b>{{{$delivery['biweekly']}}}</b></label></div>
+					<div class="radio"><label><input type="radio" name="schedule" id="schedule_monthly" value="monthly" {{Form::getValueAttribute('schedule', '') == 'monthly'?'checked':''}} />Once a month, starting <b>{{{$delivery['monthly']}}}</b></label></div>
 					@if($errors->has('schedule'))
 						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
 					@endif
@@ -164,6 +164,12 @@
 				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_6'>Class 6 (Mr. Goncalves)</label></div></div>
 				<div class="col-sm-offset-2 col-md-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_7'>Class 7 (Ms. Thayer)</label></div></div>
 				<div class="col-sm-offset-2 col-sm-offset-0 col-sm-4 col-md-2"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
+			</div>
+			<div class="form-group individual-classes" style="margin-top:10px;">
+				<label for="referrer" class="col-sm-2 text-right">Referring Family:</label>
+				<div class="col-sm-8">
+					<input type='text' class='form-control' placeholder='' id='referrer' name='referrer' value="{{Form::getValueAttribute('referrer', '')}}">
+				</div>
 			</div>
 		</div>
 		

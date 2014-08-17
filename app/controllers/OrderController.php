@@ -87,6 +87,9 @@ class OrderController extends BaseController {
 				'coop' => $in['coop'],
 				'payment' => $in['payment'] == 'credit',
 				'schedule' => $in['schedule'],
+				'deliverymethod' => $in['deliverymethod'] == 'mail',
+				'referrer' => $in['referrer'],
+				'pickupalt' => $in['pickupalt'],
 			], true);
 
 			$plan = null;
