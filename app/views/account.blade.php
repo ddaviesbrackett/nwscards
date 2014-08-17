@@ -50,7 +50,7 @@
 			@endif
 		@endif
 	</p>
-
+	<hr>
 	<h2>Your order history</h2>
 	(coming soon)
 </div>

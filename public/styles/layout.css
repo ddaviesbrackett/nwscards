@@ -1,6 +1,12 @@
+/*TODO at some point this should probably get organized*/
+
 body {
 	font-family:'Open Sans',sans-serif;
 	font-size:14pt;
+}
+
+.container-fluid {
+	max-width:860px;
 }
 
 .panel-title {
