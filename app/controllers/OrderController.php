@@ -6,9 +6,7 @@ class OrderController extends BaseController {
 	{
 		$cutoffs = $this->getCutoffs();
 		return View::make('account', [
-			'user' => Sentry::getUser(), 
-			'delivery' => $this->formatCutoffs('P8D',$cutoffs),
-			'payment' => $this->formatCutoffs('P6D',$cutoffs),
+			'user' => Sentry::getUser(),
 			]);
 	}
 
@@ -19,7 +17,7 @@ class OrderController extends BaseController {
 
 	public function getNew()
 	{
-		return View::make('new', array('delivery' => $this->formatCutoffs('P8D',$this->getCutoffs())));
+		return View::make('new');
 	}
 
 	public function postNew()
@@ -40,6 +38,7 @@ class OrderController extends BaseController {
 				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
+				'debitterms' 	=> 'required_if:payment,debit',
 				'mailwaiver'	=>'required_if:deliverymethod,mail',
 			];
 
@@ -47,6 +46,7 @@ class OrderController extends BaseController {
 	 			'debit-transit.required_if' => 'branch number is required.',
 	 			'debit-institution.required_if' => 'institution is required.',
 	 			'debit-account.required_if' => 'account number is required.',
+	 			'debitterms.required_if' => 'You must agree to the terms to pay by pre-authorized debit.',
 	 		];
 	  	//store phone as a number, but allow people to type ( and ) and - and space in it
 
@@ -129,36 +129,5 @@ class OrderController extends BaseController {
 			Session::flash('message', 'Order created!');
 			return Redirect::to('/');			
 		}
-	}
-
-	private function formatCutoffs($interval, array $cutoffDates)
-	{
-		foreach($cutoffDates as $k => $v) {
-			$date = new DateTime($v);
-			$date->add(new DateInterval($interval));
-			$cutoffDates[$k] = $date->format('l, F jS');
-		}
-		return $cutoffDates;
-	}
-
-	/*
-	* cutoff dates are the last day on which we can accept an order; orders are charged 6 days later, and delivered 8 days later (so, 2 days after charge).
-	*/
-	private function getCutoffs( $target = NULL ) {;
-		if(is_null($target)){
-			$target = date('Y-m-d');
-		}
-		$ret = array();
-		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
-		$cutoff = $cutoffs[0];
-		$ret['biweekly'] = $cutoff->cutoff;
-		if($cutoff->monthly) {
-			$ret['monthly'] = $cutoff->cutoff;
-		}
-		else
-		{
-			$ret['monthly'] = $cutoffs[1]->cutoff;
-		}
-		return $ret;
 	}
 }

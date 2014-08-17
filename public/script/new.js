@@ -21,6 +21,7 @@ $(function(){
 	}
 	radioSection('payment');
 	radioSection('deliverymethod');
+	radioSection('schedule');
 
 	var $form = $('form.new-order');
 
