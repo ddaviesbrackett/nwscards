@@ -1,14 +1,18 @@
 $(function(){
-	$('input:radio[name="indiv-class"]').on('click', function(ev){
-		var $classes = $('.form-group.individual-classes');
-		if(this.id == 'indiv-class-classes') {
-			$classes.fadeIn(400);
+	function fadeClassCheck(ev){
+		if(this.checked) {
+			var $classes = $('.form-group.individual-classes');
+			if(this.id == 'indiv-class-classes') {
+				$classes.fadeIn(400);
+			}
+			else {
+				$classes.fadeOut(400);
+				$classes.find('input[type="checkbox"]').attr('checked',false);
+			}
 		}
-		else {
-			$classes.fadeOut(400);
-			$classes.find('input[type="checkbox"]').attr('checked',false);
-		}
-	}); //TODO show the right one here on load
+	}
+	$('input:radio[name="indiv-class"]').on('click', fadeClassCheck ).each(fadeClassCheck);
+	
 	function radioSection(radioname){
 		$('input:radio[name="'+radioname+'"]').on('click', function(ev){
 			var val = this.value;
@@ -23,8 +27,13 @@ $(function(){
 	radioSection('deliverymethod');
 	radioSection('schedule');
 
-	var $form = $('form.new-order');
+	$('.order input[type="number"]').on('blur', function(ev){
+		var $this = $(this);
+		var val = parseInt($this.val(), 10);
+		$this.closest('.form-group').find('.alert').toggleClass('hidden', val < 10).find('.amt').text(val);
+	});
 
+	var $form = $('form.new-order');
 	$form.submit(function(ev){
 		if($('#indiv-class-classes').is(":checked")) {
 			if(!$('.individual-classes input[type="checkbox"]:checked').length) {

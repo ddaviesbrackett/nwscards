@@ -39,5 +39,9 @@
 			</div>
 		</header>
 		@yield('content')
+		<div class='text-center footer'>
+			<hr/>
+			We appreciate your support<br> This fundraiser is presented and adminstered by the <a href="mailto:grocerycards@nelsonwaldorf.org">Nelson Waldorf School Parent Association</a>
+		</div>
 	</body>
 </html>

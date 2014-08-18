@@ -21,3 +21,9 @@ label {
 .debitnumbers label {
 	font-size:12pt;
 }
+
+.alert-warning {
+	font-size:12pt;
+	padding:5px;
+	margin-bottom:0;
+}

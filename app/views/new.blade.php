@@ -21,14 +21,22 @@
 <div class="container-fluid">
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 		<h4 class="callout-title">Make a Recurring Order</h4>
-		<div class="callout">
+		<div class="callout order">
 			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
-				<div class='col-sm-8'>
+				<div class='col-sm-3'>
 					<div class="input-group">
-						<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
+						<input type="number" min="0" step="1" class="form-control" placeholder="" id="coop" name="coop" value="{{Form::getValueAttribute('coop', '0')}}"/>
 						<span class="input-group-addon">x $100</span>
 					</div>
+				</div>
+				<div class='col-sm-6'>
+					<div class="alert alert-warning alert-dismissible hidden" role="alert">
+					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					  That's $<span class="amt"></span>00 in cards!
+					</div>
+				</div>
+				<div class='col-sm-12 text-warning'>
 					@if($errors->has('coop'))
 						<span class='help-block'>{{{$errors->first('coop')}}}</span>
 					@endif
@@ -36,11 +44,19 @@
 			</div>
 			<div class='form-group{{$errors->has("saveon")?" has-error":"";}}'>
 				<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
-				<div class='col-sm-8'>
+				<div class='col-sm-3'>
 					<div class="input-group">
-						<input type="number" min="0" step="1" class="form-control" placeholder="# of Save On More cards" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
+						<input type="number" min="0" step="1" class="form-control" placeholder="" id="saveon" name="saveon" value="{{Form::getValueAttribute('saveon', '0')}}"/>
 						<span class="input-group-addon">x $100</span>
 					</div>
+				</div>
+				<div class='col-sm-6'>
+					<div class="alert alert-warning alert-dismissible hidden" role="alert">
+					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+					  That's $<span class="amt"></span> in cards!
+					</div>
+				</div>
+				<div class='col-sm-12'>
 					@if($errors->has('saveon'))
 						<span class='help-block'>{{{$errors->first('saveon')}}}</span>
 					@endif
@@ -289,8 +305,8 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-sm-offset-2 col-sm-8">
-				<button type='submit' class='btn btn-primary'>Sign Me Up!</button>
+			<div class="col-sm-12 text-center" style="padding-top:3em; padding-bottom:3em;">
+				<button type='submit' class='btn btn-danger btn-lg'>Sign Me Up!</button>
 			</div>
 		</div>
 	{{Form::close()}}
@@ -315,15 +331,18 @@
 	       	<li>monthly, commencing on {{{$dates['charge']['monthly']}}} and ending on June 3, 2015</li>
        	</ul>
        	as selected on this form.
+       	<p>
        	Each withdrawal will correspond to a fixed amount equal to the total stated on this form.  
        	I understand my account will be debited two business days before the published delivery dates for my order frequency. 
+       	</p>
        	</p>
        	<h4>WAIVER</h4>  
        	<p>
        	I hereby waive any and all requirements for pre-notification of debiting.  
-       	I have received a copy of this Agreement and waive all other confirmation before the first payment.  
-       	I guarantee that all persons whose signatures are required for this account have signed this agreement. 
+       	I will receive a copy of this Agreement by email and waive all other confirmation before the first payment.  
        	</p>
+       	<h4>SIGNATURES</h4>
+       	<b>I guarantee that all persons whose signatures are required for this account have authorized this agreement.</b>
 
 		<h4>CHANGE AND/OR CANCELLATION: </h4>
 

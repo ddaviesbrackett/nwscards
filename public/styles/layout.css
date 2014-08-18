@@ -84,3 +84,12 @@ p {
 	margin:1.5em 0 0.5em 0;
 	font-size:18pt;
 }
+
+.footer, .footer a{
+	color:#fff;
+	background-color:#666;
+	text-transform:uppercase;
+	font-size:10pt;
+
+	padding-bottom:2em;
+}
