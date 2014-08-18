@@ -93,24 +93,6 @@
 				@endif
 				</div>
 			</div>
-			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
-				<label for='password' class='col-sm-3 text-right'>Password:</label>
-				<div class='col-sm-8'>
-					<input type='password' class='form-control' placeholder='(so you can manage your order)' id='password' name='password' value="{{Form::getValueAttribute('password', '')}}">
-					@if($errors->has('password'))
-						<span class='help-block'>{{{$errors->first('password')}}}</span>
-					@endif
-				</div>
-			</div>
-			<div class='form-group{{$errors->has("password-repeat")?" has-error":"";}}'>
-				<label for='password' class='col-sm-3 text-right'>Password (again):</label>
-				<div class='col-sm-8'>
-					<input type='password' class='form-control' id='password-repeat' name='password-repeat' value="{{Form::getValueAttribute('password-repeat', '')}}">
-					@if($errors->has('password'))
-						<span class='help-block'>{{{$errors->first('password-repeat')}}}</span>
-					@endif
-				</div>
-			</div>
 			<div class='form-group{{$errors->has("phone")?" has-error":"";}}'>
 				<label for='phone' class='col-sm-3 text-right'>Phone Number:</label>
 				<div class='col-sm-8'>
@@ -151,6 +133,25 @@
 					<input type='text' class='form-control' placeholder='V1A 1A1' id='postal_code' name='postal_code' value="{{Form::getValueAttribute('postal_code', '')}}">
 					@if($errors->has('postal_code'))
 						<span class='help-block'>{{{$errors->first('postal_code')}}}</span>
+					@endif
+				</div>
+			</div>
+			<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
+				<label for='password' class='col-sm-3 text-right'>Password:</label>
+				<div class='col-sm-8'>
+					<input type='password' class='form-control' placeholder='' id='password' name='password' value="{{Form::getValueAttribute('password', '')}}">
+					@if($errors->has('password'))
+						<span class='help-block'>{{{$errors->first('password')}}}</span>
+					@endif
+					<span class='help-block'>please choose a new, strong password. You'll be able to change your order with it.</span>
+				</div>
+			</div>
+			<div class='form-group{{$errors->has("password-repeat")?" has-error":"";}}'>
+				<label for='password' class='col-sm-3 text-right'>Password (again):</label>
+				<div class='col-sm-8'>
+					<input type='password' class='form-control' id='password-repeat' name='password-repeat' value="{{Form::getValueAttribute('password-repeat', '')}}">
+					@if($errors->has('password'))
+						<span class='help-block'>{{{$errors->first('password-repeat')}}}</span>
 					@endif
 				</div>
 			</div>
