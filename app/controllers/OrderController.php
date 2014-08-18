@@ -91,40 +91,45 @@ class OrderController extends BaseController {
 				'referrer' => $in['referrer'],
 				'pickupalt' => $in['pickupalt'],
 			], true);
-
-			$plan = null;
-			if($in['schedule'] == 'biweekly'){
-				$plan = '14days';
-			}
-			else if ($in['schedule'] == 'monthly') {
-				$plan = '28days';
-			}
-			$cardToken = null;
-			if(isset($in['stripeToken'])){
-				$cardToken = $in['stripeToken'];
-			}
-			$gateway = null;
-			if(isset($cardToken)) {
-					$cutoffDate = new DateTime($this->getCutoffs()[$in['schedule']]);
-					$cutoffDate->add(new DateInterval('P6D'));
-					$gateway = $user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
-			}
-			else {
-				$gateway = $user->subscription(null); //just create them with no subs if they don't have a card
-			}
-			$extras = [
-				'email' => $user->email, 
-				'description' => $user->name,
-			];
-			if(!isset($cardToken))
-			{
-				$extras['metadata'] = [
-					'debit-transit'=>$in['debit-transit'],
-					'debit-institution'=>$in['debit-institution'],
-					'debit-account'=>$in['debit-account'],
+			try {
+				$plan = null;
+				if($in['schedule'] == 'biweekly'){
+					$plan = '14days';
+				}
+				else if ($in['schedule'] == 'monthly') {
+					$plan = '28days';
+				}
+				$cardToken = null;
+				if(isset($in['stripeToken'])){
+					$cardToken = $in['stripeToken'];
+				}
+				$gateway = null;
+				if(isset($cardToken)) {
+						$cutoffDate = new DateTime(BaseController::getDates()['charge'][$in['schedule']]);
+						$gateway = $user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
+				}
+				else {
+					$gateway = $user->subscription(null); //just create them with no subs if they don't have a card
+				}
+				$extras = [
+					'email' => $user->email, 
+					'description' => $user->name,
 				];
+				if(!isset($cardToken))
+				{
+					$extras['metadata'] = [
+						'debit-transit'=>$in['debit-transit'],
+						'debit-institution'=>$in['debit-institution'],
+						'debit-account'=>$in['debit-account'],
+					];
+				}
+			
+				$gateway->create($cardToken, $extras);
 			}
-			$gateway->create($cardToken, $extras);
+			catch(\Exception $e) {
+				$user->delete();
+				throw $e;
+			}
 			// redirect
 			Session::flash('message', 'Order created!');
 			return Redirect::to('/');			
