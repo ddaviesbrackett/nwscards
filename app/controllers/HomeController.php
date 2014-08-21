@@ -60,6 +60,7 @@ class HomeController extends BaseController {
 		$name = Input::get('nm', '(not provided)');
 		$data = Input::only('msg', 'nm', 'em');
 		Mail::send('emails.contact', $data, function($message) use ($email, $name){
+			$message->subject('Home Page contact request');
 			$message->to('grocerycards@nelsonwaldorf.org', 'Nelson Waldorf School Grocery Cards');
 			$message->from($email, $name);
 		});
