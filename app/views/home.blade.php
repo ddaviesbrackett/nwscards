@@ -6,6 +6,7 @@
 
 @section('head-extra')
 	<link rel="stylesheet" href="/styles/home.css"/>
+	<script src="/script/home.js"></script>
 @stop
 
 @section('nav-extra')
@@ -168,7 +169,7 @@
 	    </div>
 	    <div id="faq7" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Contact us using this form [link to below] – and we’ll help you out.</p>
+	        <p>Contact us using <a href="#contact">the form below</a> – and we’ll help you out.</p>
 			<p>Please note we require 10 days’ notice to change an order.</p>
 	      </div>
 	    </div>
@@ -183,7 +184,7 @@
 	    </div>
 	    <div id="faq8" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Contact us using this form [link to below] – and we’ll help you out.</p>
+	        <p>Contact us using <a href="#contact">the form below</a> – and we’ll help you out.</p>
 			<p>Please note we require 10 days’ notice to cancel an order.</p>
 	      </div>
 	    </div>
@@ -334,10 +335,30 @@
 	<p>
 		We'd love to hear from you.
 	</p>
-	<p>
-		If you have a question or a concern about your order, you can reach us at grocerycards{AT}nelsonwaldorf.org or use the form below.
+	<p>"
+			If you have a question or a concern about your order, you can reach us at grocerycards{AT}nelsonwaldorf.org or use the form below.
 	</p>
-	FORM HERE
+	{{Form::open(['url'=>'/contact', 'method'=>'POST', 'class'=>'form contact'])}}
+		<div class="row">
+		<div class="col-sm-8 col-sm-push-2">
+			<div class="callout" style='margin-top:20px;'>
+			  <div class="form-group">
+			    <label for="nm">Name</label>
+			    <input type="text" class="form-control nm" id="nm" name="nm" placeholder="your name">
+			  </div>
+			  <div class="form-group">
+			    <label for="password">Email address</label>
+			    <input type="email" class="form-control em" id="em" name="em" placeholder="your email address">
+			  </div>
+			  <div class="form-group">
+			    <label for="password">Message</label>
+			    <textarea class="form-control msg" id="msg" name="msg" placeholder="your message" rows="6"></textarea>
+			  </div>
+			  <button type="submit" class="btn btn-primary">Send</button>
+			</div>
+		</div>
+		</div>
+	{{Form::close()}}
 	<p>	We will get back to you as soon as possible – usually the same day, but definitely within two business days.</p>
 	<p>
 		Please do not phone the Nelson Waldorf School unless it has been much longer than that. 

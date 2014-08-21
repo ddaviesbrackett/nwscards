@@ -11,4 +11,6 @@ Route::post('/account', array('before' => 'csrf', 'uses' =>'OrderController@post
 Route::get('/new', 'OrderController@getNew');
 Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'));
 
+Route::post('/contact', array('before' => 'csrf', 'uses' =>'HomeController@postContact'));
+
 View::share('dates', BaseController::getDates());

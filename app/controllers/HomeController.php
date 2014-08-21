@@ -49,9 +49,21 @@ class HomeController extends BaseController {
 		}
 	}
 
-	public function getLogout()
-	{
+	public function getLogout()	{
 		Sentry::logout();
 		return Redirect::to('/');
+	}
+
+	public function postContact() {
+		$status = 'failure';
+		$email = Input::get('em', '(not provided)');
+		$name = Input::get('nm', '(not provided)');
+		$data = Input::only('msg', 'nm', 'em');
+		Mail::send('emails.contact', $data, function($message) use ($email, $name){
+			$message->to('grocerycards@nelsonwaldorf.org', 'Nelson Waldorf School Grocery Cards');
+			$message->from($email, $name);
+		});
+		$status = 'success';
+		return Response::json(['r' =>['status' => $status]]);
 	}
 }
