@@ -342,6 +342,10 @@
 		<div class="row">
 		<div class="col-sm-8 col-sm-push-2">
 			<div class="callout" style='margin-top:20px;'>
+			  <div class="error alert alert-danger alert-dismissible hidden" role="alert">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<span class="content"></span>
+			  </div>
 			  <div class="form-group">
 			    <label for="nm">Name</label>
 			    <input type="text" class="form-control nm" id="nm" name="nm" placeholder="your name">
@@ -355,6 +359,10 @@
 			    <textarea class="form-control msg" id="msg" name="msg" placeholder="your message" rows="6"></textarea>
 			  </div>
 			  <button type="submit" class="btn btn-primary">Send</button>
+			</div>
+			<div class="success alert alert-success alert-dismissible hidden" role="alert">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+				<span class="content"></span>
 			</div>
 		</div>
 		</div>
