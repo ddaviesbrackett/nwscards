@@ -24,15 +24,18 @@
 </div>
 <div class="container-fluid text-center">
 	<a name="about"></a>
-	<h2>Waldorf Education for Anyone</h2>
+	<h2>Waldorf Education for Every Child</h2>
 	<p>
 		Did you know the Nelson Waldorf School has a generous tuition reduction program? 
 		No family is turned away for financial reasons. 
 	</p>
 	<p>
-		Starting in the 2014/2015 school year, the Nelson Waldorf School Parent Association
-		is running a school-wide grocery card fundraiser to support tuition reduction,
+		To ensure that accessibility contuinues, the Nelson Waldorf School Parent Association
+		is running a school-wide grocery card fundraiser to support a tuition reduction fund,
 		individual classes and other all-school projects, such as playground maintenance and improvement.  
+	</p>
+	<p>
+		Your grocery card order helps keep the Nelson Waldorf School available to all families who want it.
 	</p>
 	<p>
 		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; 
@@ -60,9 +63,23 @@
 	    </div>
 	    <div id="faqOne" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>The funds are being distributed between the classes, a tuition reduction fund and the Parent Association. The Parent Association amount will cover administrative costs for this fundraiser as well as fund other projects that benefit the whole school.</p>
+	        <p>The funds are being distributed between the classes, the tuition reduction fund and the Parent Association. The Parent Association amount will cover administrative costs for this fundraiser as well as fund other projects that benefit the whole school.</p>
 			<p>All of the profits will be held and managed by the Parent Association until it is donated to the school or distributed to an individual class.</p>
 	      </div>
+	    </div>
+	  </div>
+	  <div class="">
+	    <div class="panel-heading">
+	      <h4 class="panel-title">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#faqTwo">
+	          What stores can I buy cards from - and are you adding more?
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="faqTwo" class="panel-collapse collapse">
+	      <div class="panel-body">
+	        <p>We are currently selling cards from the Kootenay Co-Op and Save-On Foods.  Once this fundraiser is established, we may approach other stores.</p>
+		</div>
 	    </div>
 	  </div>
 	  <div class="">
@@ -76,8 +93,8 @@
 	    <div id="faqTwo" class="panel-collapse collapse">
 	      <div class="panel-body">
 	        <p>You can pay by direct debit or credit card.</p>
-			<p>However because of the fees associated with using a credit card, we do not receive the full amount of what you are charged. This means your order raises less money than the same order paid with by debit.</p>
-			<p>But that doesn’t mean it’s always better to pay with debit. If you were going to order $700 and pay by credit card, that would raise more money than a $400 order paid for with debit. </p>
+			<p>However because of the fees associated with using a credit card, we do not receive the full amount of what you are charged. This means your order raises less money than the same order paid with by direct debit.</p>
+			<p>But that doesn’t mean it’s always better to pay with debit. If paying by credit card allows you to make a larger order, then credit card is better.  The larger the order, the more money is raised.</p>
 		</div>
 	    </div>
 	  </div>
@@ -91,7 +108,7 @@
 	    </div>
 	    <div id="faqThree" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Regardless of your method of payment, you will be charged 2 business days before your cards will be available.</p>
+	        <p>Regardless of your method of payment, you will be charged 2 business days before your cards are available.</p>
 			<p>If there is a problem with your payment, we will contact you. Credit card orders can be retried – or you may bring cash to pick-up. Debit orders cannot be retried and can only be picked up with cash.</p>
 	      </div>
 	    </div>
@@ -122,8 +139,8 @@
 	    </div>
 	    <div id="faq5" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>You can pick up your cards on the Wednesday following your charge dates (which depends on whether you have ordered bi-weekly or monthly).</p>
-			<p>We will be at the bottom of the main stairs between 8 – 8.30am and 2.30 – 3pm under the grocery cards banner.   </p>
+	        <p>You can pick up your cards on the Wednesday following your charge dates (which depends on whether you have ordered bi-weekly or monthly). You will recieve and email a few days before reminding you of the pickup day.</p>
+			<p>We will be at the bottom of the main stairs between 8 – 8.30am and 2.30 – 3pm under the grocery cards banner.</p>
 	      </div>
 	    </div>
 	  </div>
@@ -196,8 +213,8 @@
 	    </div>
 	    <div id="faq10" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Because we received such a small amount for each card sold, the best way to raise money is to have regular, repeated orders.</p>
-			<p>We may have some cards available for cash purchases on pick-up days. However, these sales will not be track for class accounts – all of the proceeds will go to the tuition reduction fund and PAC.</p>
+	        <p>Because we receive such a small amount for each card sold, the best way to raise money is to have recurring orders.</p>
+			<p>We may have some cards available for cash purchases on pick-up days. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to the tuition reduction fund and PAC.</p>
 			<p>Some classes may also have cards available for cash purchases – and those sales will support that particular class.</p>
 	      </div>
 	    </div>
@@ -213,7 +230,7 @@
 	    <div id="faq11" class="panel-collapse collapse">
 	      <div class="panel-body">
 	        <p>Your class teacher and class rep can request money from us when it’s needed. Requests need to be submitted to grocerycards{AT}nelsonwaldorf.org. </p>
-			<p>Because this fundraiser requires a larger amount of up-front cash, all of the money raised will be held by the Parent Association until the class needs it.</p>
+			<p>Because this fundraiser requires a larger amount of cash to float each purchase of cards, all the money raised will be held by the Parent Association and used for that purpose until the class needs it.</p>
 	      </div>
 	    </div>
 	  </div>
@@ -227,7 +244,7 @@
 	    </div>
 	    <div id="faq12" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>We will be providing a monthly report to the class teacher and class rep. Reports will also be published in the bulletin and on this website. </p>
+	        <p>We will have updated amounts on a monthly basis.  Your teacher or class rep can request a report as needed. Reports will also be published in the bulletin and on this website. </p>
 	      </div>
 	    </div>
 	  </div>
@@ -258,9 +275,9 @@
 	      <div class="panel-body">
 	        <p>You can increase the funds in your class accounts by
 	        <ul>
-				<li>Increase your current orders </li>
-				<li>Encourage more families in your class to participate</li>
-				<li>Sign up friends, neighbours and family to support your class</li>
+				<li>Increasing your current orders </li>
+				<li>Encouraging more families in your class to participate</li>
+				<li>Signing up friends, neighbours and family to support your class</li>
 			</ul>
 			</p>
 	      </div>
