@@ -4,7 +4,6 @@ class OrderController extends BaseController {
 
 	public function getAccount()
 	{
-		$cutoffs = $this->getCutoffs();
 		return View::make('account', [
 			'user' => Sentry::getUser(),
 			]);
@@ -132,7 +131,8 @@ class OrderController extends BaseController {
 			}
 			// redirect
 			Session::flash('message', 'Order created!');
-			return Redirect::to('/');			
+			Sentry::login($user, false);
+			return Redirect::to('/account');			
 		}
 	}
 }

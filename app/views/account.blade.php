@@ -14,8 +14,8 @@
 </div>
 <div class="container-fluid text-center">
 	<h2>Your next order</h2>
-	<p>You will be charged on <b>{{{$dates[charge][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b>.
-	<p>Your cards will be available on <b>{{{$dates[delivery][$user->schedule]}}}</b>.
+	<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b>.
+	<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.
 	@if($user->deliverymethod)
 		<p>Your cards will be mailed to you that day.  They generally arrive on Thursday or Friday.</p>
 	@else
