@@ -6,6 +6,7 @@ class OrderController extends BaseController {
 	{
 		return View::make('account', [
 			'user' => Sentry::getUser(),
+			'message' => Session::get('ordermessage'),
 			]);
 	}
 
@@ -124,13 +125,18 @@ class OrderController extends BaseController {
 				}
 			
 				$gateway->create($cardToken, $extras);
+
+				Mail::send('emails.newconfirmation', ['user' => $user], function($message) use ($user){
+					$message->subject('Grocery card order confirmation');
+					$message->to($user->email, $user->name);
+				});
 			}
 			catch(\Exception $e) {
 				$user->delete();
 				throw $e;
 			}
 			// redirect
-			Session::flash('message', 'Order created!');
+			Session::flash('ordermessage', 'order created');
 			Sentry::login($user, false);
 			return Redirect::to('/account');			
 		}

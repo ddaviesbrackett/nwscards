@@ -9,10 +9,18 @@
 
 @section('content')
 <div class="masthead">
-	<h1>Thanks for your support</h1>
+	@if($message == 'order created')
+		<h1>Your order succeeded</h1>
+	@else
+		<h1>Thanks for your support</h1>
+	@endif
 	<h3>Here's what's happening</h3>
 </div>
 <div class="container-fluid text-center">
+	@if($message == 'order created')
+		<h2>Confirmation</h2>
+		<p>You'll receive an email shortly (to {{{$user->email}}}) with your order details.</p>
+	@endif
 	<h2>Your next order</h2>
 	<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b>.
 	<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.
