@@ -86,12 +86,12 @@
 	  <div class="">
 	    <div class="panel-heading">
 	      <h4 class="panel-title">
-	        <a data-toggle="collapse" data-parent="#accordion" href="#faqTwo">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#faqTwoA">
 	          How can I pay?
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="faqTwo" class="panel-collapse collapse">
+	    <div id="faqTwoA" class="panel-collapse collapse">
 	      <div class="panel-body">
 	        <p>You can pay by direct debit or credit card.</p>
 			<p>However because of the fees associated with using a credit card, we do not receive the full amount of what you are charged. This means your order raises less money than the same order paid with by direct debit.</p>
@@ -335,7 +335,7 @@
 	<p>
 		We'd love to hear from you.
 	</p>
-	<p>"
+	<p>
 			If you have a question or a concern about your order, you can reach us at grocerycards{AT}nelsonwaldorf.org or use the form below.
 	</p>
 	{{Form::open(['url'=>'/contact', 'method'=>'POST', 'class'=>'form contact'])}}
