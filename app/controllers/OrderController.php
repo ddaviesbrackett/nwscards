@@ -17,7 +17,7 @@ class OrderController extends BaseController {
 
 	public function getNew()
 	{
-		return View::make('new');
+		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']]);
 	}
 
 	public function postNew()
@@ -129,6 +129,12 @@ class OrderController extends BaseController {
 				Mail::send('emails.newconfirmation', ['user' => $user], function($message) use ($user){
 					$message->subject('Grocery card order confirmation');
 					$message->to($user->email, $user->name);
+					if($user->payment)
+					{
+						$agreementView = View::make('partials.debitagreement');
+						$agreement = '<html><body>'.$agreementView->render().'</body></html>';
+						$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
+					}
 				});
 			}
 			catch(\Exception $e) {

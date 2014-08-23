@@ -150,7 +150,7 @@
 				<label for='password' class='col-sm-3 text-right'>Password (again):</label>
 				<div class='col-sm-8'>
 					<input type='password' class='form-control' id='password-repeat' name='password-repeat' value="{{Form::getValueAttribute('password-repeat', '')}}">
-					@if($errors->has('password'))
+					@if($errors->has('password-repeat'))
 						<span class='help-block'>{{{$errors->first('password-repeat')}}}</span>
 					@endif
 				</div>
@@ -283,14 +283,14 @@
 		<div class="callout">
 			<div class='form-group{{$errors->has("deliverymethod")?" has-error":"";}}'>
 				<div class="col-sm-12">
-					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_pickup" value="pickup" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Pickup at the Nelson Waldorf School</label></div>
+					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_pickup" value="pickup" {{Form::getValueAttribute('deliverymethod', '') == 'pickup'?'checked':''}} />Pickup at the Nelson Waldorf School</label></div>
 					<div class="deliverymethod pickup form-group">
 						<div class="col-sm-12">
 							<input type='text' class='form-control' placeholder='Is someone else picking up your order?' id='pickupalt' name='pickupalt' value="{{Form::getValueAttribute('pickupalt', '')}}">
 							<span class="help-block">You'll have to sign for your cards.  If someone else can sign for them, enter their name here.</span>
 						</div>
 					</div>
-					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{Form::getValueAttribute('schedule', '') == 'pickup'?'checked':''}} />Mail to address above</label></div>
+					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{Form::getValueAttribute('deliverymethod', '') == 'mail'?'checked':''}} />Mail to address above</label></div>
 					<div class="deliverymethod mail form-group{{$errors->has('mailwaiver')?' has-error':'';}}">
 						<div class="col-sm-12">
 							<div class="checkbox"><label><input type='checkbox' name='mailwaiver'>I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
@@ -313,7 +313,7 @@
 	{{Form::close()}}
 </div>
 <script>
-	Stripe.setPublishableKey('pk_test_JNPaJxAuLSeYN8biyB09Cb5O');
+	Stripe.setPublishableKey('{{{$stripeKey}}}');
 </script>
 
 <div class="modal fade" id="debitterms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

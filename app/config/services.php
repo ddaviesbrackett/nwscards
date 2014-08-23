@@ -20,12 +20,12 @@ return array(
 	),
 
 	'mandrill' => array(
-		'secret' => 'IhtJs94dRAmpq06Vo7NMcw',
+		'secret' => $_ENV['mandrill_key'],
 	),
 
 	'stripe' => array(
 		'model'  => 'User',
-		'secret' => '',
+		'secret' => $_ENV['stripe_secret_key'],
 	),
 
 );

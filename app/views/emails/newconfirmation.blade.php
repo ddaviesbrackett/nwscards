@@ -29,6 +29,9 @@
 			@endif
 		@endif
 	</p>
+	@if(!$user->payment)
+		<p>A copy of the Pre-Authorized Debit Agreement is attached to this email.</p>
+	@endif
 	<p>
 		Thank you ever so much,<br/>
 		The Nelson Waldorf School Grocery Card Fundraiser Staff
