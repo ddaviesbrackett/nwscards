@@ -27,7 +27,8 @@ $app = new Illuminate\Foundation\Application;
 $env = $app->detectEnvironment(array(
 
 	'local' => array('homestead'),
-	'blue' => array('box903.bluehost.com', 'nwscards.daviesbrackett.com'),
+	'blue' => array('box903.bluehost.com'),
+	'dream' => array('benjamin-harrison'),
 ));
 
 /*
