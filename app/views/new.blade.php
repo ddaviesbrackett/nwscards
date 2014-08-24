@@ -160,28 +160,29 @@
 		<div class="callout">
 			<div class="form-group">
 				<div class="col-sm-12">
-					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', 'school') == 'school'?'checked':''}}/>I want to support the whole school</label></div>
-					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes" value="class" {{Form::getValueAttribute('indiv-class', '') == 'class'?'checked':''}}/>I want to support the whole school <strong>and</strong> one or more classes</label></div>
+					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-school" value="school" {{Form::getValueAttribute('indiv-class', 'school') == 'school'?'checked':''}}/>Whole School</label></div>
+					<div class="radio"><label><input type="radio" name="indiv-class" id="indiv-class-classes" value="class" {{Form::getValueAttribute('indiv-class', '') == 'class'?'checked':''}}/><strong>Class(es)</strong> and whole school</label></div>
 				</div>
 			</div>
 			<!-- TODO check form::getvalueattribute for the checkboxes here -->
+			<span class='help-block individual-classes'>If you select more than one class, proceeds will be divided equally between the classes.</span>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='marigold'>Marigold Daycare</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='daisy'>Daisy Daycare</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='sunflower'>Sunflower Kindergarten</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='bluebell'>Bluebell Kindergarten</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='marigold' {{Form::getValueAttribute('marigold', '') == 'on'?'checked':''}}/>Marigold Daycare</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='daisy' {{Form::getValueAttribute('daisy', '') == 'on'?'checked':''}}/>Daisy Daycare</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='sunflower' {{Form::getValueAttribute('sunflower', '') == 'on'?'checked':''}}/>Sunflower Kindergarten</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='bluebell' {{Form::getValueAttribute('bluebell', '') == 'on'?'checked':''}}/>Bluebell Kindergarten</label></div></div>
 			</div>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_1'>Class 1 (Mr. Lunde)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_2'>Class 2 (Ms. Longson)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_3'>Class 3 (Mr. Fukada)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_4'>Class 4 (Ms. Guthrie)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_1' {{Form::getValueAttribute('class_1', '') == 'on'?'checked':''}}/>Class 1 (Mr. Lunde)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_2' {{Form::getValueAttribute('class_2', '') == 'on'?'checked':''}}/>Class 2 (Ms. Longson)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_3' {{Form::getValueAttribute('class_3', '') == 'on'?'checked':''}}/>Class 3 (Mr. Fukada)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_4' {{Form::getValueAttribute('class_4', '') == 'on'?'checked':''}}/>Class 4 (Ms. Guthrie)</label></div></div>
 			</div>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_5'>Class 5 (Ms. Mulligan)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_6'>Class 6 (Mr. Goncalves)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_7'>Class 7 (Ms. Thayer)</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_8'>Class 8 (Ms. Oese-Lloyd)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_5' {{Form::getValueAttribute('class_5', '') == 'on'?'checked':''}}/>Class 5 (Ms. Mulligan)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_6' {{Form::getValueAttribute('class_6', '') == 'on'?'checked':''}}/>Class 6 (Mr. Goncalves)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_7' {{Form::getValueAttribute('class_7', '') == 'on'?'checked':''}}/>Class 7 (Ms. Thayer)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_8' {{Form::getValueAttribute('class_8', '') == 'on'?'checked':''}}/>Class 8 (Ms. Oese-Lloyd)</label></div></div>
 			</div>
 			<div class="form-group individual-classes" style="margin-top:10px;">
 				<label for="referrer" class="col-sm-3 text-right">Referring Family:</label>
@@ -239,7 +240,7 @@
 						</div>
 						<div class="form-group{{$errors->has('debitterms')?' has-error ':''}}">
 							<div class="col-sm-offset-1 col-sm-11">
-								<div class="checkbox"><label><input type='checkbox' name='debitterms'>I have read and agree to the <a data-toggle="modal" data-target="#debitterms">terms of the Payor's Personal Pre-Authorized Debit (PAD) Agreement</a></label></div>
+								<div class="checkbox"><label><input type='checkbox' name='debitterms' {{Form::getValueAttribute('debitterms', '') == 'on'?'checked':''}}/>I have read and agree to the <a data-toggle="modal" data-target="#debitterms">terms of the Payor's Personal Pre-Authorized Debit (PAD) Agreement</a></label></div>
 								@if($errors->has('debit-account'))
 									<div class='help-block'>{{{$errors->first('debitterms')}}}</div>
 								@endif
@@ -293,7 +294,7 @@
 					<div class="radio"><label><input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{Form::getValueAttribute('deliverymethod', '') == 'mail'?'checked':''}} />Mail to address above</label></div>
 					<div class="deliverymethod mail form-group{{$errors->has('mailwaiver')?' has-error':'';}}">
 						<div class="col-sm-12">
-							<div class="checkbox"><label><input type='checkbox' name='mailwaiver'>I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
+							<div class="checkbox"><label><input type='checkbox' name='mailwaiver' {{Form::getValueAttribute('mailwaiver', '') == 'on'?'checked':''}}/>I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
 							@if($errors->has('mailwaiver'))
 								<span class='help-block'>You must agree to this waiver to complete your order.</span>
 							@endif

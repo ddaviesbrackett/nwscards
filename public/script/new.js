@@ -1,7 +1,7 @@
 $(function(){
 	function fadeClassCheck(ev){
 		if(this.checked) {
-			var $classes = $('.form-group.individual-classes');
+			var $classes = $('.individual-classes');
 			if(this.id == 'indiv-class-classes') {
 				$classes.fadeIn(400);
 			}

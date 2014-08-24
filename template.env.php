@@ -4,8 +4,10 @@ return array(
 
     'stripe_pub_key' => 'INVALID',
     'stripe_secret_key' => 'INVALID',
+    'db_hostname' => 'INVALID',
+    'db_dbname' => 'INVALID',
     'db_username' => 'INVALID',
     'db_password' => 'INVALID',
-    'mandrill_key' => '',
+    'mandrill_key' => 'INVALID',
 
 );
