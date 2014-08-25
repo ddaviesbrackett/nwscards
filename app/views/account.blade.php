@@ -16,13 +16,12 @@
 	@endif
 	<h3>Here's what's happening</h3>
 </div>
-<div class="container-fluid">
+<div class="container-fluid text-center">
 	@if($message == 'order created')
 		<h2>Confirmation</h2>
 		<p>You'll receive an email shortly (to {{{$user->email}}}) with your order details.</p>
 	@endif
 	<div class="row">
-		<div class="col-sm-6">
 			<h2>Your next order</h2>
 			<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
 			<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.</p>
@@ -31,8 +30,7 @@
 			@else
 				<p>You can pick your order up between 8AM and 8:30AM or 2:30PM and 3PM that day, at the bottom of the main stairs.</p>
 			@endif
-		</div>
-		<div class="col-sm-6">
+		<hr>
 			<h2>Your recurring order</h2>
 			<p>
 				You have a <b style="text-transform:capitalize;">{{{$user->schedule}}}</b> order of<br/>
@@ -40,7 +38,7 @@
 				<b>${{{$user->saveon}}}00 from Save-On</b>
 			</p>
 			Supporting:
-			<ul style='list-style-type:none;'>
+			<ul style='list-style-type:none;padding-left:0;'>
 				<li><b>the Tuition Reduction Fund</b></li>
 				@foreach ($user->classesSupported() as $class => $supp)
 					{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}
