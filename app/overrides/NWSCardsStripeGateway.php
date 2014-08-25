@@ -18,7 +18,13 @@ class NWSCardsStripeGateWay extends \Laravel\Cashier\StripeGateway {
 		}
 		else
 		{
-			return null;
+			$acct =  $customer->metadata['debit-account'];
+			if(isset($acct)){
+				return substr($acct, -4);
+			}
+			else {
+				return null;
+			}
 		}
 	}
 
