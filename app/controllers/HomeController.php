@@ -41,7 +41,7 @@ class HomeController extends BaseController {
 		}
 		if(! empty($error))
 		{
-			return View::make('login');
+			return View::make('login')->with('error', $error);
 		}
 		else
 		{

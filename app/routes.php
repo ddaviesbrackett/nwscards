@@ -13,4 +13,6 @@ Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'
 
 Route::post('/contact', array('before' => 'csrf', 'uses' =>'HomeController@postContact'));
 
+Route::controller('password', 'RemindersController');
+
 View::share('dates', BaseController::getDates());

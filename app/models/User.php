@@ -43,4 +43,32 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return new NWSCardsStripeGateWay($this, $plan);
 	}
 
+
+	public function classesSupported() {
+		return array_only((array) $this, ['marigold', 'daisy', 'sunflower', 'bluebell', 'class_1', 'class_2', 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8']);
+	}
+
+	public static function className($class) {
+		switch ($class) {
+			case 'marigold': return 'Marigolds';
+			case 'daisy': return 'Daisies';
+			case 'sunflower': return 'Sunflowers';
+			case 'bluebell': return 'Bluebells';
+			case 'class_1': return 'Class 1';
+			case 'class_2': return 'Class 2';
+			case 'class_3': return 'Class 3';
+			case 'class_4': return 'Class 4';
+			case 'class_5': return 'Class 5';
+			case 'class_6': return 'Class 6';
+			case 'class_7': return 'Class 7';
+			case 'class_8': return 'Class 8';
+		}
+	}
+
+	/* apparently this tells Laravel what hasher should be used for changing passwords*/
+	public static function boot()
+    {
+        self::$hasher = new \Cartalyst\Sentry\Hashing\NativeHasher;
+    }
+
 }
