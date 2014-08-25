@@ -43,7 +43,8 @@
 			<ul style='list-style-type:none;'>
 				<li><b>the Tuition Reduction Fund</b></li>
 				@foreach ($user->classesSupported() as $class => $supp)
-					{{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}}
+					{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}
+					
 				@endforeach
 			</ul>
 			<p>
