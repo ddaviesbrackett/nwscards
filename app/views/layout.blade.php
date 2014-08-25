@@ -32,6 +32,7 @@
 							<li><a href="/account">My Account</a></li>
 							<li><a href="/logout">Log Out</a></li>
 						@else
+							<li><a href="/new">Order Cards</a></li>
 							<li><a href="/login">Log In</a></li>
 						@endif
 					</ul>
