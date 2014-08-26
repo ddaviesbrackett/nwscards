@@ -131,7 +131,7 @@ class OrderController extends BaseController {
 					$message->to($user->email, $user->name);
 					if($user->payment)
 					{
-						$agreementView = View::make('partials.debitagreement');
+						$agreementView = View::make('partial.debitterms');
 						$agreement = '<html><body>'.$agreementView->render().'</body></html>';
 						$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
 					}
