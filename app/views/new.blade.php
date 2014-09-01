@@ -15,7 +15,7 @@
 <div class="masthead">
 	<h1>Your support means a lot</h1>
 	<p>
-		Raise  money for students and teachers at Nelson Waldorf without spending any extra money
+		Raise money for students and teachers at Nelson Waldorf without spending any extra money
 	</p>
 </div>
 <div class="container-fluid">
@@ -173,7 +173,7 @@
 				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='bluebell' {{Form::getValueAttribute('bluebell', '') == 'on'?'checked':''}}/>Bluebell Kindergarten</label></div></div>
 			</div>
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_1' {{Form::getValueAttribute('class_1', '') == 'on'?'checked':''}}/>Class 1 (Mr. Lunde)</label></div></div>
+				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_1' {{Form::getValueAttribute('class_1', '') == 'on'?'checked':''}}/>Class 1 (Ms. Kraus and Ms. Fukada)</label></div></div>
 				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_2' {{Form::getValueAttribute('class_2', '') == 'on'?'checked':''}}/>Class 2 (Ms. Longson)</label></div></div>
 				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_3' {{Form::getValueAttribute('class_3', '') == 'on'?'checked':''}}/>Class 3 (Mr. Fukada)</label></div></div>
 				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label><input type='checkbox' name='class_4' {{Form::getValueAttribute('class_4', '') == 'on'?'checked':''}}/>Class 4 (Ms. Guthrie)</label></div></div>

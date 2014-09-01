@@ -25,12 +25,12 @@ class OrderController extends BaseController {
 	 	$rules = [
 				'name'		=> 'required',
 				'email'		=> 'required|email|unique:users',
-				'phone'		=> 'required|digits:10',
+				'phone'		=> 'digits:10',
 				'password'	=> 'required',
 				'password-repeat'	=> 'required|same:password',
-				'address1'	=> 'required',
-				'city'		=> 'required',
-				'postal_code'	=> 'required|regex:/^\w\d\w ?\d\w\d$/',
+				'address1'	=> 'required_if:deliveyrmethod,mail',
+				'city'		=> 'required_if:deliverymethod,mail',
+				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
 				'schedule'	=> 'required|in:biweekly,monthly',
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
@@ -40,6 +40,7 @@ class OrderController extends BaseController {
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
 				'debitterms' 	=> 'required_if:payment,debit',
 				'mailwaiver'	=>'required_if:deliverymethod,mail',
+				'deliverymethod' => 'required',
 			];
 
 	 	$messages = [

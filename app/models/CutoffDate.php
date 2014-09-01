@@ -9,4 +9,7 @@ class CutoffDate extends Eloquent {
 	 */
 	protected $table = 'cutoffdates';
 
+	public function orders() {
+		return $this->hasMany('Order');
+	}
 }

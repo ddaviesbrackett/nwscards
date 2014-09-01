@@ -59,6 +59,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	 			 'class_8' => $this->class_8];
 	}
 
+	public function orders() {
+		return $this->hasMany('Order');
+	}
+
 	public static function className($class) {
 		switch ($class) {
 			case 'marigold': return 'Marigolds';
