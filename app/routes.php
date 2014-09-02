@@ -22,5 +22,8 @@ Route::controller('password', 'RemindersController');
 //stripe webhooks
 Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
+//Administrator treehouse
+Route::get('/admin/caft', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft']);
+
 //stuff everything needs
 View::share('dates', BaseController::getFormattedDates());

@@ -63,6 +63,18 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return $this->hasMany('Order');
 	}
 
+	public function isAdmin() {
+		$groups = $this->getGroups();
+		$isAdmin = false;
+		foreach ($groups as $group) {
+			if($group->name == 'Administrator') {
+				$isAdmin = true;
+				break;
+			}
+		}
+		return $isAdmin;
+	}
+
 	public static function className($class) {
 		switch ($class) {
 			case 'marigold': return 'Marigolds';

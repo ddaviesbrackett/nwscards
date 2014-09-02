@@ -29,6 +29,9 @@
 					<ul class="nav navbar-nav navbar-right">
 						@yield('nav-extra')
 						@if(Sentry::check())
+							@if(Sentry::getUser()->isAdmin())
+								<li><a href="/admin/caft">CAFT</a></li>
+							@endif
 							<li><a href="/account">My Account</a></li>
 							<li><a href="/logout">Log Out</a></li>
 						@else

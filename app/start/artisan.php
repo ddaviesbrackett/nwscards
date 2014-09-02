@@ -12,3 +12,4 @@
 */
 
 Artisan::add(new GenerateOrders);
+Artisan::add(new AssignAdminRights);
