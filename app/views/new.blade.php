@@ -53,7 +53,7 @@
 				<div class='col-sm-6'>
 					<div class="alert alert-warning alert-dismissible hidden" role="alert">
 					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					  That's $<span class="amt"></span> in cards!
+					  That's $<span class="amt"></span>00 in cards!
 					</div>
 				</div>
 				<div class='col-sm-12'>
