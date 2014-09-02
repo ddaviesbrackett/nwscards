@@ -135,7 +135,7 @@ class OrderController extends BaseController {
 			Mail::send('emails.newconfirmation', ['user' => $user], function($message) use ($user){
 				$message->subject('Grocery card order confirmation');
 				$message->to($user->email, $user->name);
-				if($user->payment)
+				if(! $user->payment)
 				{
 					$agreementView = View::make('partial.debitterms');
 					$agreement = '<html><body>'.$agreementView->render().'</body></html>';
