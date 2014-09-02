@@ -32,38 +32,46 @@
 			@endif
 		<hr>
 			<h2>Your recurring order</h2>
-			<p>
-				You have a <b style="text-transform:capitalize;">{{{$user->schedule}}}</b> order of<br/>
-				<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
-				<b>${{{$user->saveon}}}00 from Save-On</b>
-			</p>
-			Supporting:
-			<ul style='list-style-type:none;padding-left:0;'>
-				<li><b>the Tuition Reduction Fund</b></li>
-				@foreach ($user->classesSupported() as $class => $supp)
-					{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}
-					
-				@endforeach
-			</ul>
-			<p>
-				Your cards are being
-				@if($user->deliverymethod)
-					<b>mailed to you</b> at<br/>
-					<span class="text-left">
-					{{{$user->name}}}<br/>
-						{{{$user->address1}}}<br/>
-						{{{$user->address2?$user->address2 + '<br/>':''}}}
-						{{{$user->city}}},
-						{{{$user->province}}}<br/>
-						{{{$user->postal_code}}}
-					</span>
-				@else
-					<b>picked up at the school</b> by you
-					@if(($user->pickupalt))
-							or by <b>{{{$user->pickupalt}}}</b>
+			@if($user->coop > 0 || $user->saveon > 0)
+				<p>
+					You have a <b style="text-transform:capitalize;">{{{$user->schedule}}}</b> order of<br/>
+					@if($user->coop > 0)
+						<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
 					@endif
-				@endif
-			</p>
+					@if($user->saveon > 0)
+						<b>${{{$user->saveon}}}00 from Save-On</b>
+					@endif
+				</p>
+				Supporting:
+				<ul style='list-style-type:none;padding-left:0;'>
+					<li><b>the Tuition Reduction Fund</b></li>
+					@foreach ($user->classesSupported() as $class => $supp)
+						{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}
+						
+					@endforeach
+				</ul>
+				<p>
+					Your cards are being
+					@if($user->deliverymethod)
+						<b>mailed to you</b> at<br/>
+						<span class="text-left">
+						{{{$user->name}}}<br/>
+							{{{$user->address1}}}<br/>
+							{{{$user->address2?$user->address2 + '<br/>':''}}}
+							{{{$user->city}}},
+							{{{$user->province}}}<br/>
+							{{{$user->postal_code}}}
+						</span>
+					@else
+						<b>picked up at the school</b> by you
+						@if(($user->pickupalt))
+								or by <b>{{{$user->pickupalt}}}</b>
+						@endif
+					@endif
+				</p>
+			@else
+				You have no recurring order. You'll make more money for the school if you order more cards!
+			@endif
 		</div>
 	</div>
 	<hr>
