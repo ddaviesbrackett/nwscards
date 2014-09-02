@@ -106,8 +106,8 @@ class OrderController extends BaseController {
 				}
 				$gateway = null;
 				if(isset($cardToken)) {
-						$cutoffDate = new DateTime(BaseController::getDates()['charge'][$in['schedule']]);
-						$gateway = $user->subscription($plan)->trialFor($cutoffDate)->quantity($in['saveon']+$in['coop']);
+						$chargedate = BaseController::getDates()['charge'][$in['schedule']];
+						$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
 				}
 				else {
 					$gateway = $user->subscription(null); //just create them with no subs if they don't have a card

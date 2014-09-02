@@ -23,4 +23,4 @@ Route::controller('password', 'RemindersController');
 Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
 //stuff everything needs
-View::share('dates', BaseController::getDates());
+View::share('dates', BaseController::getFormattedDates());

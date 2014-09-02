@@ -15,22 +15,30 @@ class BaseController extends Controller {
 		}
 	}
 
+	public static function getFormattedDates() {
+		return array_map(function(array $dts){
+			return array_map(function(DateTime $d){
+				return $d->format('l, F jS'); //yay php
+			}, $dts);
+		}, BaseController::getDates());
+	}
+
 	public static function getDates() {
 		$cutoffs = BaseController::getCutoffs();
 		return [
-			'charge' => BaseController::formatCutoffs('P6D', $cutoffs),
-			'delivery' => BaseController::formatCutoffs('P8D', $cutoffs),
+			'charge' => BaseController::changeDates('P6D', $cutoffs),
+			'delivery' => BaseController::changeDates('P8D', $cutoffs),
 		];
 	}
 
-	private static function formatCutoffs($interval, array $cutoffDates)
+	private static function changeDates($interval, array $dates)
 	{
-		foreach($cutoffDates as $k => $v) {
-			$date = new DateTime($v);
+		foreach($dates as $k => $v) {
+			$date = new DateTime($v, new DateTimeZone('America/Los_Angeles'));
 			$date->add(new DateInterval($interval));
-			$cutoffDates[$k] = $date->format('l, F jS');
+			$dates[$k] = $date;
 		}
-		return $cutoffDates;
+		return $dates;
 	}
 
 	/*
