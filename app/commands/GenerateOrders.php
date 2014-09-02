@@ -42,12 +42,16 @@ class GenerateOrders extends Command {
 			$target = date('Y-m-d');
 		}
 
-		$cutoff = CutoffDate::where('cutoff', '<', $target)->orderby('cutoff', 'desc')->firstOrFail();
+		$cutoff = CutoffDate::where('cutoff', '=', $target)->orderby('cutoff', 'desc')->firstOrFail();
 		if($cutoff->orders->isEmpty()){
 			//today's the day we make orders
-			$users = User::where('stripe_active', '=', 1)->where(function($q){
+			$userquery = User::where('stripe_active', '=', 1)->where(function($q){
 				$q->where('saveon', '>', '0')->orWhere('coop','>','0');
-			})->get();
+			});
+			if( ! $cutoff->monthly) {
+				$userquery->where('schedule', '=', 'biweekly');
+			}
+			$users = $userquery->get();
 			foreach($users as $user)
 			{
 				$order = new Order([
