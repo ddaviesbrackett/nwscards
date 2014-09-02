@@ -41,7 +41,7 @@ class BaseController extends Controller {
 			$target = date('Y-m-d');
 		}
 		$ret = array();
-		$cutoffs = DB::table('cutoffdates')->where('cutoff','>',$target)->orderBy('cutoff','asc')->take(2)->get();
+		$cutoffs = DB::table('cutoffdates')->where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
 		$cutoff = $cutoffs[0];
 		$ret['biweekly'] = $cutoff->cutoff;
 		if($cutoff->monthly) {
