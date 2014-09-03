@@ -24,6 +24,7 @@ Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
 //Administrator treehouse
 Route::get('/admin/caft', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft']);
+Route::get('/admin/totals', ['before'=>['auth','admin'], 'uses' => 'AdminController@getTotals']);
 
 //stuff everything needs
 View::share('dates', BaseController::getFormattedDates());

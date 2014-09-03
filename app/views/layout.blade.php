@@ -31,6 +31,7 @@
 						@if(Sentry::check())
 							@if(Sentry::getUser()->isAdmin())
 								<li><a href="/admin/caft">CAFT</a></li>
+								<li><a href="/admin/totals">Totals</a></li>
 							@endif
 							<li><a href="/account">My Account</a></li>
 							<li><a href="/logout">Log Out</a></li>
