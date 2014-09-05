@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTrackingToOrders extends Migration {
+class AddOrderReferrers extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -14,10 +14,7 @@ class AddTrackingToOrders extends Migration {
 	{
 		Schema::table('orders', function(Blueprint $table)
 		{
-			$table->decimal('pac',6,2);
-			$table->decimal('tuitionreduction',6,2);
-			$table->decimal('profit',6,2);
-			$table->dropColumn('marigold', 'daisy', 'sunflower', 'bluebell', 'class_1', 'class_2', 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8');
+			$table->string('referrer');
 		});
 	}
 
@@ -30,7 +27,7 @@ class AddTrackingToOrders extends Migration {
 	{
 		Schema::table('orders', function(Blueprint $table)
 		{
-			$table->dropColumn('pac', 'tuitionreduction', 'profit');
+			$table->dropColumn('referrer');
 		});
 	}
 
