@@ -43,15 +43,18 @@ class GenerateOrders extends Command {
 		}
 
 		$cutoff = CutoffDate::where('cutoff', '=', $target)->orderby('cutoff', 'desc')->firstOrFail();
-		if($cutoff->orders->isEmpty()){
-			//today's the day we make orders
-			$userquery = User::where('stripe_active', '=', 1)->where(function($q){
+		$currentMonthly = $cutoff->first?'monthly':'monthly-second';
+
+		if($cutoff->orders->isEmpty()){ //don't regenerate orders that have been generated already
+			$users = User::where('stripe_active', '=', 1)
+			->where(function($q){
 				$q->where('saveon', '>', '0')->orWhere('coop','>','0');
-			});
-			if( ! $cutoff->monthly) {
-				$userquery->where('schedule', '=', 'biweekly');
-			}
-			$users = $userquery->get();
+			})
+			->where(function($q) use ($currentMonthly){
+				$q->where('schedule', '=', 'biweekly')->orWhere('schedule', '=', $currentMonthly);
+			})
+			->get();
+
 			foreach($users as $user)
 			{
 				$order = new Order([
@@ -62,7 +65,7 @@ class GenerateOrders extends Command {
 					'deliverymethod' => $user->deliverymethod,
 					]);
 
-				//calculate order profits
+				//calculate order profits - maybe this goes in a separate command?  might not have the profit per store at order generation time
 				$profit = ($user->coop * 9) + ($user->saveon * 7.8); //TODO profit per store should be pulled from the cutoff
 				if($user->payment)
 				{

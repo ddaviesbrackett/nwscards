@@ -52,11 +52,13 @@ class BaseController extends Controller {
 		$cutoffs = DB::table('cutoffdates')->where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
 		$cutoff = $cutoffs[0];
 		$ret['biweekly'] = $cutoff->cutoff;
-		if($cutoff->monthly) {
+		if($cutoff->first) {
 			$ret['monthly'] = $cutoff->cutoff;
+			$ret['monthly-second'] = $cutoffs[1]->cutoff;
 		}
 		else
 		{
+			$ret['monthly-second'] = $cutoff->cutoff;
 			$ret['monthly'] = $cutoffs[1]->cutoff;
 		}
 		return $ret;
