@@ -66,7 +66,7 @@
 				<label class="col-sm-3 text-right">Schedule:</label>
 				<div class="col-sm-8">
 					<div class="radio"><label><input type="radio" name="schedule" id="schedule_biweekly" value="biweekly" {{Form::getValueAttribute('schedule', '') == 'biweekly'?'checked':''}} />Every 2 weeks, starting <b>{{{$dates['delivery']['biweekly']}}}</b></label></div>
-					<div class="radio"><label><input type="radio" name="schedule" id="schedule_monthly" value="monthly" {{Form::getValueAttribute('schedule', '') == 'monthly'?'checked':''}} />Once a month, starting <b>{{{$dates['delivery']['monthly']}}}</b></label></div>
+					<div class="radio" style="margin-top:1em;"><label><input type="radio" name="schedule" id="schedule_monthly" value="monthly" {{Form::getValueAttribute('schedule', '') == 'monthly'?'checked':''}} />Once a month, starting <b>{{{$dates['delivery']['monthly']}}}</b></label></div>
 					<div class="radio"><label><input type="radio" name="schedule" id="schedule_monthly-second" value="monthly-second" {{Form::getValueAttribute('schedule', '') == 'monthly-second'?'checked':''}} />Once a month, starting <b>{{{$dates['delivery']['monthly-second']}}}</b></label></div>
 					@if($errors->has('schedule'))
 						<span class='help-block'>{{{$errors->first('schedule')}}}</span>

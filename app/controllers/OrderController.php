@@ -97,7 +97,7 @@ class OrderController extends BaseController {
 				if($in['schedule'] == 'biweekly'){
 					$plan = '14days';
 				}
-				else if ($in['schedule'] == 'monthly') {
+				else {
 					$plan = '28days';
 				}
 				$cardToken = null;
