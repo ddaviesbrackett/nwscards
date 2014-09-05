@@ -5,9 +5,11 @@ class AdminController extends BaseController {
 	{
 		$users = User::where('payment', '=', 0)->orderby('activated_at', 'desc')->get();
 		$viewmodel = [];
-		$users->each(function($user) use (&$viewmodel) {
+		$total = 0;
+		$users->each(function($user) use (&$viewmodel, &$total) {
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
+			$total += $user->saveon + $user->coop;
 			$viewmodel[] = [
 				'user' => $user,
 				'acct' =>$stripeCustomer->metadata['debit-account'],
@@ -15,7 +17,7 @@ class AdminController extends BaseController {
 				'institution' =>$stripeCustomer->metadata['debit-institution'],
 			];
 		});
-		return View::make('admin.caft', ['model'=>$viewmodel]); 
+		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total]); 
 	}
 
 	public function getTotals()

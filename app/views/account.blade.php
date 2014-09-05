@@ -45,9 +45,8 @@
 				Supporting:
 				<ul style='list-style-type:none;padding-left:0;'>
 					<li><b>the Tuition Reduction Fund</b></li>
-					@foreach ($user->classesSupported() as $class => $supp)
-						{{$supp?'<li><b>'.User::className($class).'</b></li>':''}}
-						
+					@foreach ($user->classesSupported() as $class)
+						<li><b>{{{User::className($class)}}}</b></li>
 					@endforeach
 				</ul>
 				<p>

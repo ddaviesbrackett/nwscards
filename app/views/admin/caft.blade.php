@@ -32,5 +32,11 @@
 		</tr>
 	@endforeach
 </table>
+<p>
+	Total rows: {{{count($model)}}}
+</p>
+<p>
+	Total amount: {{{$total}}}00
+</p>
 </div>
 @stop

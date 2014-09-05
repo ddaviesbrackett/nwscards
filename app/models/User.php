@@ -45,18 +45,21 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 
 
 	public function classesSupported() {
-		return  ['marigold' => $this->marigold,
-				 'daisy' => $this->daisy,
-				 'sunflower' => $this->sunflower,
-				 'bluebell' => $this->bluebell,
-				 'class_1' => $this->class_1,
-				 'class_2' => $this->class_2,
-				 'class_3' => $this->class_3,
-				 'class_4' => $this->class_4,
-				 'class_5' => $this->class_5,
-				 'class_6' => $this->class_6,
-				 'class_7' => $this->class_7,
-	 			 'class_8' => $this->class_8];
+		$ret = [];
+		if($this->marigold) $ret[] = 'marigold';
+		if($this->daisy) $ret[] = 'daisy';
+		if($this->sunflower) $ret[] = 'sunflower';
+		if($this->bluebell) $ret[] = 'bluebell';
+		if($this->class_1) $ret[] = 'class_1';
+		if($this->class_2) $ret[] = 'class_2';
+		if($this->class_3) $ret[] = 'class_3';
+		if($this->class_4) $ret[] = 'class_4';
+		if($this->class_5) $ret[] = 'class_5';
+		if($this->class_6) $ret[] = 'class_6';
+		if($this->class_7) $ret[] = 'class_7';
+	 	if($this->class_8) $ret[] = 'class_8';
+
+	 	return $ret;
 	}
 
 	public function orders() {
