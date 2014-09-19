@@ -17,7 +17,7 @@ class BaseController extends Controller {
 
 	public static function getFormattedDates() {
 		return array_map(function(array $dts){
-			return array_map(function(DateTime $d){
+			return array_map(function($d){
 				return $d->format('l, F jS'); //yay php
 			}, $dts);
 		}, BaseController::getDates());
@@ -26,16 +26,16 @@ class BaseController extends Controller {
 	public static function getDates() {
 		$cutoffs = BaseController::getCutoffs();
 		return [
-			'charge' => BaseController::changeDates('P6D', $cutoffs),
-			'delivery' => BaseController::changeDates('P8D', $cutoffs),
+			'charge' => BaseController::changeDates(6, $cutoffs),
+			'delivery' => BaseController::changeDates(8, $cutoffs),
 		];
 	}
 
-	private static function changeDates($interval, array $dates)
+	private static function changeDates($days, array $dates)
 	{
 		foreach($dates as $k => $v) {
-			$date = new DateTime($v, new DateTimeZone('America/Los_Angeles'));
-			$date->add(new DateInterval($interval));
+			$date = new \Carbon\Carbon($v, 'America/Los_Angeles');
+			$date->addDays($days);
 			$dates[$k] = $date;
 		}
 		return $dates;

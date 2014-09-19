@@ -14,6 +14,7 @@
 <div class="container-fluid text-center">
 <h2>Total users: {{{$totalUsers}}}</h2>
 <h2>Cards by store and order frequency</h2>
+<p>Note: Monthly totals include bi-weekly totals.</p>
 <table class='table text-left'>
 	<tr>
 		<th>frequency</th>
@@ -22,8 +23,13 @@
 	</tr>
 	<tr>
 		<td>Monthly</td>
-		<td>{{{$monthly['saveon']}}}</td>
-		<td>{{{$monthly['coop']}}}</td>
+		<td>{{{$monthly['saveon'] + $biweekly['saveon']}}}</td>
+		<td>{{{$monthly['coop'] + $biweekly['coop']}}}</td>
+	</tr>
+	<tr>
+		<td>Monthly (second) </td>
+		<td>{{{$monthlySecond['saveon'] + $biweekly['saveon']}}}</td>
+		<td>{{{$monthlySecond['coop'] + $biweekly['coop']}}}</td>
 	</tr>
 	<tr>
 		<td>Bi-weekly</td>

@@ -78,6 +78,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return $isAdmin;
 	}
 
+	public function address() {
+		return implode(' ', [$this->address1, $this->address2, $this->city, $this->province, $this->postal_code]);
+	}
+
 	public static function className($class) {
 		switch ($class) {
 			case 'marigold': return 'Marigolds';

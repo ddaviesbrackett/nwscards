@@ -8,7 +8,11 @@ body {
 .container-fluid {
 	max-width:860px;
 }
-
+@media print {
+	.container-fluid {
+		max-width:initial;
+	}
+}
 .panel-title {
 	font-size: 18pt;
 }
