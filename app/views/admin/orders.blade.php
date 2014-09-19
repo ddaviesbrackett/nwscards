@@ -14,16 +14,14 @@
 <table class='table'>
 	<tr>
 		<th></th>
-		<th>Cutoff Date</th>
-		<th>Charge Date</th>
 		<th>Delivery Date</th>
+		<th># Orders</th>
 	</tr>
 	@foreach($model as $order)
 		<tr>
 			<td><a href="{{URL::route('admin-order', ['id' => $order['id']])}}">{{{$order['id']}}}</a></td>
-			<td>{{{$order['cutoff']}}}</td>
-			<td>{{{$order['charge']}}}</td>
 			<td>{{{$order['delivery']}}}</td>
+			<td>{{{$order['orders']}}}</td>
 		</tr>
 	@endforeach
 </table>

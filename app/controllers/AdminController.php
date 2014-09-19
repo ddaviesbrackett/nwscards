@@ -42,14 +42,13 @@ class AdminController extends BaseController {
 	public function getOrders()
 	{
 		$viewmodel = [];
-		$dates = CutoffDate::all();
+		$dates = CutoffDate::has('orders')->orderby('cutoff', 'desc')->get();
 		$dates->each(function($date) use (&$viewmodel) {
 			$dt = new \Carbon\Carbon($date->cutoff);
 			$viewmodel[] = [
 				'id' => $date->id,
-				'cutoff' => $dt->format('l, F jS'),
-				'charge' => $dt->addDays(6)->format('l, F jS'),
-				'delivery' => $dt->addDays(2)->format('l, F jS'),
+				'delivery' => $dt->addDays(8)->format('l, F jS'),
+				'orders' => $date->orders->count(),
 			];
 		});
 
