@@ -16,12 +16,16 @@
 		<th></th>
 		<th>Delivery Date</th>
 		<th># Orders</th>
+		<th>Save-On Cards</th>
+		<th>Co-op Cards</th>
 	</tr>
 	@foreach($model as $order)
 		<tr>
 			<td><a href="{{URL::route('admin-order', ['id' => $order['id']])}}">{{{$order['id']}}}</a></td>
 			<td>{{{$order['delivery']}}}</td>
 			<td>{{{$order['orders']}}}</td>
+			<td>{{{$order['saveon']}}}</td>
+			<td>{{{$order['coop']}}}</td>
 		</tr>
 	@endforeach
 </table>

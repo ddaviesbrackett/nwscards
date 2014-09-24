@@ -49,6 +49,8 @@ class AdminController extends BaseController {
 				'id' => $date->id,
 				'delivery' => $dt->addDays(8)->format('l, F jS'),
 				'orders' => $date->orders->count(),
+				'saveon' => $date->orders->sum('saveon'),
+				'coop' => $date->orders->sum('coop'),
 			];
 		});
 
