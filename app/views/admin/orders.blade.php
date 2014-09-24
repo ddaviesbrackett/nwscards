@@ -21,7 +21,10 @@
 	</tr>
 	@foreach($model as $order)
 		<tr>
-			<td><a href="{{URL::route('admin-order', ['id' => $order['id']])}}">{{{$order['id']}}}</a></td>
+			<td>
+				<a href="{{URL::route('admin-order', ['id' => $order['id']])}}">Order Sheet</a> &middot;
+				<a href="{{URL::route('admin-caft', ['id' => $order['id']])}}">CAFT</a>
+			</td>
 			<td>{{{$order['delivery']}}}</td>
 			<td>{{{$order['orders']}}}</td>
 			<td>{{{$order['saveon']}}}</td>

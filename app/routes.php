@@ -23,7 +23,7 @@ Route::controller('password', 'RemindersController');
 Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
 //Administrator treehouse
-Route::get('/admin/caft', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft']);
+Route::get('/admin/caft/{id}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft', 'as' => 'admin-caft']);
 Route::get('/admin/totals', ['before'=>['auth','admin'], 'uses' => 'AdminController@getTotals']);
 Route::get('/admin/orders', ['before'=>['auth','admin'], 'uses' => 'AdminController@getOrders']);
 Route::get('/admin/order/{id}', 

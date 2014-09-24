@@ -1,9 +1,13 @@
 <?php
 
 class AdminController extends BaseController {
-	public function getCaft()
+	public function getCaft($cutoffId)
 	{
-		$users = User::where('payment', '=', 0)->orderby('activated_at', 'desc')->get();
+		$users = User::where('payment', '=', 0)->whereHas('orders', function($q) use ($cutoffId) {
+			$q->whereHas('cutoffdate', function($q) use ($cutoffId){
+				$q->where('id', '=', $cutoffId); //yay join chains
+			});
+		})->orderby('activated_at', 'desc')->get();
 		$viewmodel = [];
 		$total = 0;
 		$users->each(function($user) use (&$viewmodel, &$total) {
