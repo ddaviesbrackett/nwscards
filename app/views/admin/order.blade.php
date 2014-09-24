@@ -43,7 +43,7 @@
 		<th style="width:25%;">Name</th>
 		<th style="width:51%;">Address</th>
 		<th style="width:12%;">Save-On</th>
-		<th style="width:12%;">Coop</th>
+		<th style="width:12%;">Co-op</th>
 	</tr>
 	@foreach($mail as $order)
 		<tr>

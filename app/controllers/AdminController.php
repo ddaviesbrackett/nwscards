@@ -19,7 +19,6 @@ class AdminController extends BaseController {
 				'institution' =>$stripeCustomer->metadata['debit-institution'],
 			];
 		});
-		$this->dumpLastQuery();
 		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total]); 
 	}
 
