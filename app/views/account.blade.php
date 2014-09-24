@@ -22,15 +22,21 @@
 		<p>You'll receive an email shortly (to {{{$user->email}}}) with your order details.</p>
 	@endif
 	<div class="row">
-			<h2>Your next order</h2>
-			<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
-			<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.</p>
-			@if($user->deliverymethod)
+		@if(! is_null($mostRecentOrder) && $mostRecentOrder->created_at > (new \Carbon\Carbon())->addDays(-8))
+			<h2>Your current order</h2>
+			<p>The charge date for your current order is <b>{{{$mostRecentOrder->cutoffdate->chargedate()->diffForHumans()}}}</b>.  </p>
+			<p>Your cards will be available <b>{{{$mostRecentOrder->cutoffdate->deliverydate()->diffForHumans()}}}</b>.</p>
+			@if($mostRecentOrder->deliverymethod)
 				<p>Your cards will be mailed to you that day.  They generally arrive on Thursday or Friday.</p>
 			@else
 				<p>You can pick your order up between 8AM and 8:30AM or 2:30PM and 3PM that day, at the bottom of the main stairs.</p>
 			@endif
-		<hr>
+		<hr/>
+		@endif
+			<h2>Your next order</h2>
+			<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
+			<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.</p>
+		<hr/>
 			<h2>Your recurring order</h2>
 			@if($user->coop > 0 || $user->saveon > 0)
 				<p>

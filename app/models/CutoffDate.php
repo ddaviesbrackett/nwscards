@@ -16,4 +16,12 @@ class CutoffDate extends Eloquent {
 	public function users() {
 		return $this->belongsToMany('User', 'orders');
 	}
+
+	public function chargedate() {
+		return (new \Carbon\Carbon($this->cutoff))->addDays(6);
+	}
+
+	public function deliverydate() {
+		return (new \Carbon\Carbon($this->cutoff))->addDays(8);	
+	}
 }

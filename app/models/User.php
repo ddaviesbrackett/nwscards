@@ -63,7 +63,7 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	}
 
 	public function orders() {
-		return $this->hasMany('Order');
+		return $this->hasMany('Order')->orderBy('created_at', 'desc');
 	}
 
 	public function cutoffdates() {

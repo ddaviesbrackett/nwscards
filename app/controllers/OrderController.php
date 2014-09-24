@@ -4,9 +4,11 @@ class OrderController extends BaseController {
 
 	public function getAccount()
 	{
+		$user = Sentry::getUser();
 		return View::make('account', [
-			'user' => Sentry::getUser(),
+			'user' => $user,
 			'message' => Session::get('ordermessage'),
+			'mostRecentOrder' => $user->orders()->first(),
 			]);
 	}
 
