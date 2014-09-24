@@ -2,8 +2,8 @@
        	I authorize the Nelson Waldorf School Parent Association (hereinafter “PAC”) to make pre-authorized debits (PAD) from my account with the aforementioned 
        	financial institution, either:
        	<ul>
-	       	<li>bi-weekly, commencing on {{{$dates['charge']['biweekly']}}} and ending on June 3, 2015</li>
-	       	<li>monthly, commencing on {{{$dates['charge']['monthly']}}} and ending on June 3, 2015</li>
+	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on June 3, 2015</li>
+	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on June 3, 2015</li>
        	</ul>
        	as selected on the order form.
        	<p>

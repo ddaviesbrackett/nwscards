@@ -34,8 +34,8 @@
 		<hr/>
 		@endif
 			<h2>Your next order</h2>
-			<p>You will be charged on <b>{{{$dates['charge'][$user->schedule]}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
-			<p>Your cards will be available on <b>{{{$dates['delivery'][$user->schedule]}}}</b>.</p>
+			<p>You will be charged on <b>{{{$dates[$user->schedule]['charge']}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
+			<p>Your cards will be available on <b>{{{$dates[$user->schedule]['delivery']}}}</b>.</p>
 		<hr/>
 			<h2>Your recurring order</h2>
 			@if($user->coop > 0 || $user->saveon > 0)

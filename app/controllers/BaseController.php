@@ -24,27 +24,9 @@ class BaseController extends Controller {
 	public static function getFormattedDates() {
 		return array_map(function(array $dts){
 			return array_map(function($d){
-				return $d->format('l, F jS'); //yay php
+				return $d->format('l, F jS');
 			}, $dts);
-		}, BaseController::getDates());
-	}
-
-	public static function getDates() {
-		$cutoffs = BaseController::getCutoffs();
-		return [
-			'charge' => BaseController::changeDates(6, $cutoffs),
-			'delivery' => BaseController::changeDates(8, $cutoffs),
-		];
-	}
-
-	private static function changeDates($days, array $dates)
-	{
-		foreach($dates as $k => $v) {
-			$date = new \Carbon\Carbon($v, 'America/Los_Angeles');
-			$date->addDays($days);
-			$dates[$k] = $date;
-		}
-		return $dates;
+		}, BaseController::getCutoffs());
 	}
 
 	/*
@@ -55,17 +37,17 @@ class BaseController extends Controller {
 			$target = date('Y-m-d');
 		}
 		$ret = array();
-		$cutoffs = DB::table('cutoffdates')->where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
+		$cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
 		$cutoff = $cutoffs[0];
-		$ret['biweekly'] = $cutoff->cutoff;
+		$ret['biweekly'] = ['cutoff' => $cutoff->cutoffdate(), 'charge' => $cutoff->chargedate(), 'delivery' => $cutoff->deliverydate()];
 		if($cutoff->first) {
-			$ret['monthly'] = $cutoff->cutoff;
-			$ret['monthly-second'] = $cutoffs[1]->cutoff;
+			$ret['monthly-second'] = ['cutoff' => $cutoffs[1]->cutoffdate(), 'charge' => $cutoffs[1]->chargedate(), 'delivery' =>  $cutoffs[1]->deliverydate()];
+			$ret['monthly'] = ['cutoff' => $cutoff->cutoffdate(), 'charge' => $cutoff->chargedate(), 'delivery' =>  $cutoff->deliverydate()];
 		}
 		else
 		{
-			$ret['monthly-second'] = $cutoff->cutoff;
-			$ret['monthly'] = $cutoffs[1]->cutoff;
+			$ret['monthly-second'] = ['cutoff' => $cutoff->cutoffdate(), 'charge' => $cutoff->chargedate(), 'delivery' =>  $cutoff->deliverydate()];
+			$ret['monthly'] = ['cutoff' => $cutoffs[1]->cutoffdate(), 'charge' => $cutoffs[1]->chargedate(), 'delivery' =>  $cutoffs[1]->deliverydate()];
 		}
 		return $ret;
 	}
