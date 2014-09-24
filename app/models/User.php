@@ -66,6 +66,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return $this->hasMany('Order');
 	}
 
+	public function cutoffdates() {
+		return $this->belongsToMany('CutoffDate', 'orders');
+	}
+
 	public function isAdmin() {
 		$groups = $this->getGroups();
 		$isAdmin = false;
@@ -84,6 +88,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 
 	public function getPhone() {
 		return sprintf('(%s) %s-%s', substr($this->phone, 0, 3),substr($this->phone, 3, 3), substr($this->phone, 6)) ;
+	}
+
+	public function isMail() {
+		return $this->deliverymethod;
 	}
 
 	public static function className($class) {

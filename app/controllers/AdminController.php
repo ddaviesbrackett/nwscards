@@ -3,10 +3,8 @@
 class AdminController extends BaseController {
 	public function getCaft($cutoffId)
 	{
-		$users = User::where('payment', '=', 0)->whereHas('orders', function($q) use ($cutoffId) {
-			$q->whereHas('cutoffdate', function($q) use ($cutoffId){
-				$q->where('id', '=', $cutoffId); //yay join chains
-			});
+		$users = User::where('payment', '=', 0)->whereHas('cutoffdates', function($q) use ($cutoffId) {
+			$q->where('cutoffdates.id', '=', $cutoffId);
 		})->orderby('activated_at', 'desc')->get();
 		$viewmodel = [];
 		$total = 0;
@@ -21,6 +19,7 @@ class AdminController extends BaseController {
 				'institution' =>$stripeCustomer->metadata['debit-institution'],
 			];
 		});
+		$this->dumpLastQuery();
 		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total]); 
 	}
 

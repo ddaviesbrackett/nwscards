@@ -12,4 +12,8 @@ class CutoffDate extends Eloquent {
 	public function orders() {
 		return $this->hasMany('Order');
 	}
+
+	public function users() {
+		return $this->belongsToMany('User', 'orders');
+	}
 }
