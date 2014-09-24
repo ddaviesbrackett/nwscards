@@ -18,7 +18,7 @@
 	<tr>
 		<th style="width:25%;">Name <br/>(Alternate)</th>
 		<th style="width:12%;">Save-On</th>
-		<th style="width:12%;">Coop</th>
+		<th style="width:12%;">Co-op</th>
 		<th style="width:51%;">Signature</th>
 	</tr>
 	@foreach($pickup as $order)
@@ -47,7 +47,7 @@
 	</tr>
 	@foreach($mail as $order)
 		<tr>
-			<td>{{{$order->user->name}}} ({{{$order->user->phone}}})</td>
+			<td>{{{$order->user->name}}} ({{{$order->user->getPhone()}}})</td>
 			<td>{{{$order->user->address()}}}</td>
 			<td>{{{$order->saveon}}}</td>
 			<td>{{{$order->coop}}}</td>

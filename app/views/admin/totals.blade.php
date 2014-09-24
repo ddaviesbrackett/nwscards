@@ -17,24 +17,19 @@
 <p>Note: Monthly totals include bi-weekly totals.</p>
 <table class='table text-left'>
 	<tr>
-		<th>frequency</th>
+		<th></th>
 		<th>Save-On</th>
-		<th>Kootenay Co-op</th>
+		<th>Co-op</th>
 	</tr>
 	<tr>
-		<td>Monthly</td>
+		<td>First Order</td>
 		<td>{{{$monthly['saveon'] + $biweekly['saveon']}}}</td>
 		<td>{{{$monthly['coop'] + $biweekly['coop']}}}</td>
 	</tr>
 	<tr>
-		<td>Monthly (second) </td>
+		<td>Second Order </td>
 		<td>{{{$monthlySecond['saveon'] + $biweekly['saveon']}}}</td>
 		<td>{{{$monthlySecond['coop'] + $biweekly['coop']}}}</td>
-	</tr>
-	<tr>
-		<td>Bi-weekly</td>
-		<td>{{{$biweekly['saveon']}}}</td>
-		<td>{{{$biweekly['coop']}}}</td>
 	</tr>
 </table>
 
