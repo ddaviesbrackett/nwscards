@@ -12,7 +12,7 @@
 	@if($message == 'order created')
 		<h1>Your order succeeded</h1>
 	@else
-		<h1>Thanks for your support</h1>
+		<h1>{{{money_format('%n', $user->orders->sum('profit'))}}} raised so far</h1>
 	@endif
 	<h3>Here's what's happening</h3>
 </div>
@@ -77,12 +77,40 @@
 			@else
 				You have no recurring order. You'll make more money for the school if you order more cards!
 			@endif
+			<h2>Your order history</h2>
+			<table class="table text-left">
+				<tr>
+					<th>Date</th>
+					<th>Cards</th>
+					<th>Class(es)</th>
+					<th>Other</th>
+				</tr>
+				@foreach($user->orders as $order)
+					<tr>
+						<td>
+							{{{$order->cutoffdate->deliverydate()->format('F jS Y')}}}
+						</td>
+						<td>
+							@if($order->saveon > 0)
+								{{{$order->saveon}}} Save-On
+							@endif
+							@if($order->coop > 0)
+								{{{$order->coop}}} Co-Op
+							@endif
+						</td>
+						<td>
+							@foreach($order->classesSupported() as $class)
+								{{{User::className($class)}}}: ${{{$order[$class]}}}<br/>
+							@endforeach
+						</td>
+						<td>
+							Tuition Reduction: ${{{$order->tuitionreduction}}}<br/>
+							PAC: ${{{$order->pac}}}
+						</td>
+					</tr>
+				@endforeach
+			</table>
 		</div>
-	</div>
-	<hr>
-	<div class="row text-center">
-		<h2>Your order history</h2>
-		(coming soon)
 	</div>
 </div>
 @stop

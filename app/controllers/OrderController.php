@@ -5,6 +5,7 @@ class OrderController extends BaseController {
 	public function getAccount()
 	{
 		$user = Sentry::getUser();
+		$user->load('orders');
 		return View::make('account', [
 			'user' => $user,
 			'message' => Session::get('ordermessage'),
