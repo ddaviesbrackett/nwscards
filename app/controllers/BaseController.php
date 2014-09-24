@@ -15,6 +15,12 @@ class BaseController extends Controller {
 		}
 	}
 
+	protected function dumpLastQuery() {
+		$queries = DB::getQueryLog();
+		$last_query = end($queries);
+		var_dump($last_query);
+	}
+
 	public static function getFormattedDates() {
 		return array_map(function(array $dts){
 			return array_map(function($d){
