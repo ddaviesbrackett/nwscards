@@ -1,7 +1,8 @@
 <?php
 
 class BaseController extends Controller {
-
+	
+	protected $classIds = ['marigold', 'daisy', 'sunflower', 'bluebell', 'class_1', 'class_2', 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8'];
 	/**
 	 * Setup the layout used by the controller.
 	 *
@@ -30,7 +31,7 @@ class BaseController extends Controller {
 	}
 
 	/*
-	* cutoff dates are the last day on which we can accept an order; orders are charged 6 days later, and delivered 8 days later (so, 2 days after charge).
+	* cutoff dates are the last day on which we can accept an order; orders are charged 5 days later, and delivered 7 days later (so, 2 days after charge).
 	*/
 	private static function getCutoffs( $target = NULL ) {;
 		if(is_null($target)){

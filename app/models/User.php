@@ -108,6 +108,8 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 			case 'class_6': return 'Class 6';
 			case 'class_7': return 'Class 7';
 			case 'class_8': return 'Class 8';
+			case 'pac': return 'PAC';
+			case 'tuitionreduction': return 'Tuition Reduction Fund';
 		}
 	}
 

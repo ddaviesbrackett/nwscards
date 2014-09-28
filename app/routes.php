@@ -22,6 +22,9 @@ Route::controller('password', 'RemindersController');
 //stripe webhooks
 Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
+//profit tracking
+Route::get('/tracking/leaderboard', 'TrackingController@getLeaderboard', ['as' => 'leaderboard']);
+
 //Administrator treehouse
 Route::get('/admin/caft/{id}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft', 'as' => 'admin-caft']);
 Route::get('/admin/totals', ['before'=>['auth','admin'], 'uses' => 'AdminController@getTotals']);

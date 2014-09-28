@@ -35,7 +35,7 @@
 					          <ul class="dropdown-menu" role="menu">
 								<li><a href="/admin/totals">Totals</a></li>
 					            <li><a href="/admin/orders">Orders</a></li>
-					            <li><a href="#">Tracking</a></li>
+					            <li><a href="/tracking/leaderboard">Tracking</a></li>
 					          </ul>
 					        </li>
 							@endif

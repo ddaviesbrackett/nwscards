@@ -31,7 +31,7 @@ class AdminController extends BaseController {
 		$classtotals = [];
 		array_map(function($classid) use (&$classtotals, $userQuery) {
 			$classtotals[User::className($classid)] = $userQuery->sum($classid);
-		}, ['marigold', 'daisy', 'sunflower', 'bluebell', 'class_1', 'class_2', 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8']);
+		}, $this->classIds);
 		return View::make('admin.totals', [
 			'totalUsers'=>$userQuery->count(), 
 			'monthly'=>['saveon'=>$userMonthlyQuery->sum('saveon'), 'coop'=>$userMonthlyQuery->sum('coop')], 
