@@ -6,6 +6,7 @@
 @section('head-extra')
 <style>
 	h1 {margin-top:0;}
+	table {font-size:smaller;}
 </style>
 @stop
 
@@ -16,15 +17,15 @@
 <div class="container-fluid">
 <table class='table'>
 	<tr>
-		<th style="width:25%;">Name <br/>(Alternate)</th>
+		<th style="width:45%;">Name <br/>(Alternate)</th>
 		<th style="width:12%;">Save-On</th>
 		<th style="width:12%;">Co-op</th>
-		<th style="width:51%;">Signature</th>
+		<th style="width:31%;">Signature</th>
 	</tr>
 	@foreach($pickup as $order)
 		<tr>
 			<td>
-				{{{$order->user->name}}}<br/>
+				{{{$order->user->name}}} - {{{$order->user->getPhone()}}}<br/>
 				({{{$order->user->pickupalt or 'none'}}})<br/>
 			</td>
 			<td>{{{$order->saveon}}}</td>
