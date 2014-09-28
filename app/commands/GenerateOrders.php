@@ -65,15 +65,7 @@ class GenerateOrders extends Command {
 					'deliverymethod' => $user->deliverymethod,
 					]);
 
-				//calculate order profits - maybe this goes in a separate command?  might not have the profit per store at order generation time
-				$profit = ($user->coop * 9) + ($user->saveon * 7.8); //TODO profit per store should be pulled from the cutoff
-				if($user->payment)
-				{
-					$profit -= (($user->saveon + $user->coop) / 2.9);
-					$profit -= 0.30;
-				}
-				$order->profit = $profit;
-
+				/*
 				$supp = $user->classesSupported();
 				$buckets = count($supp);
 				if($buckets > 0)
@@ -92,6 +84,7 @@ class GenerateOrders extends Command {
 					$order->pac = $profit * 0.25;
 					$order->tuitionreduction = $profit * 0.75;
 				}
+				*/
 				$order->cutoffdate()->associate($cutoff);
 				$user->orders()->save($order);
 			}
