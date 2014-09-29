@@ -135,13 +135,12 @@ class AdminController extends BaseController {
 				$order->tuitionreduction = $profit * 0.75;
 			}
 			$order->save();
-			$this->dumpLastQuery();
 		});
 
 		$cutoff->save();
 
 		//back to the main order page
-		//return Redirect::to('/admin/orders');
+		return Redirect::to('/admin/orders');
 	}
 
 	public static function splits()
