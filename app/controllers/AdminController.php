@@ -93,6 +93,7 @@ class AdminController extends BaseController {
 
 	public function postProfitSettingForm($cutoff) {
 		
+		//update the cutoff with profits
 		$in = Input::only(
 			'saveon_cheque_value',
 			'saveon_card_value',
@@ -103,9 +104,61 @@ class AdminController extends BaseController {
 		{
 			$cutoff[$k] = $v;
 		}
+
+		//update order profits for all the orders in the cutoff
+		$profits = $this->generateProfits($cutoff);
+		$cutoff->orders->load('user')->each(function($order) use ($profits) {
+			$profit = ($order->saveon * $profits['saveon']) + ($order->coop * $profits['coop']);
+			
+			//stripe takes its cut
+			if($order->paymentmethod) {
+				$profit -= ($order->saveon + $order->coop) * 2.9;
+				$profit -= 0.30;
+			}
+			$order->profit = $profit;
+
+			$supp = $order->user->classesSupported();
+			$buckets = count($supp);
+			if($buckets > 0) {
+				$perBucket = $profit / $buckets;
+				$splits = AdminController::splits();
+				foreach($supp as $class)
+				{
+					$order->{$class} = $perBucket * $splits[$class]['class'];
+					$order->pac += $perBucket * $splits[$class]['pac'];
+					$order->tuitionreduction += $perBucket * $splits[$class]['tuitionreduction'];
+				}
+			}
+			else
+			{
+				$order->pac = $profit * 0.25;
+				$order->tuitionreduction = $profit * 0.75;
+			}
+			$order->save();
+			$this->dumpLastQuery();
+		});
+
 		$cutoff->save();
 
 		//back to the main order page
-		return Redirect::to('/admin/orders');
+		//return Redirect::to('/admin/orders');
+	}
+
+	public static function splits()
+	{
+		return [
+			'marigold' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'daisy' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'sunflower' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'bluebell' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_1' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_2' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_3' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_4' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_5' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
+			'class_6' => ['class' => 0.6, 'pac' => 0.05, 'tuitionreduction' => 0.35],
+			'class_7' => ['class' => 0.7, 'pac' => 0.05, 'tuitionreduction' => 0.25],
+			'class_8' => ['class' => 0.8, 'pac' => 0.05, 'tuitionreduction' => 0.15],
+		];
 	}
 }
