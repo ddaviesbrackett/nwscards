@@ -9,6 +9,26 @@ class CutoffDate extends Eloquent {
 	 */
 	protected $table = 'cutoffdates';
 
+	protected $fillable = [
+		'saveon_cheque_value',
+		'saveon_card_value',
+		'coop_cheque_value',
+		'coop_card_value',
+	];
+
+	public function getSaveonChequeValueAttribute($val) {
+		return floatval($val);
+	}
+	public function getSaveonCardValueAttribute($val) {
+		return floatval($val);
+	}
+	public function getCoopChequeValueAttribute($val) {
+		return floatval($val);
+	}
+	public function getCoopCardValueAttribute($val) {
+		return floatval($val);
+	}
+
 	public function orders() {
 		return $this->hasMany('Order');
 	}

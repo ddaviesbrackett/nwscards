@@ -41,18 +41,38 @@ class AdminController extends BaseController {
 			]);
 	}
 
+	private function generateProfits($date) {
+		$saveon = 0.0;
+		$coop = 0.0;
+
+		if( ! empty($date->saveon_cheque_value) && ! empty($date->saveon_card_value))
+		{
+			$saveon = ($date->saveon_card_value - $date->saveon_cheque_value) / $date->saveon_card_value;
+		}
+
+		if( ! empty($date->coop_cheque_value) && ! empty($date->coop_card_value))
+		{
+			$coop = ($date->coop_card_value - $date->coop_cheque_value) / $date->coop_card_value;
+		}
+
+		return ['saveon'=>$saveon * 100, 'coop' => $coop * 100];
+	}
+
 	public function getOrders()
 	{
 		$viewmodel = [];
 		$dates = CutoffDate::has('orders')->orderby('cutoff', 'desc')->get();
 		$dates->each(function($date) use (&$viewmodel) {
+			$profits = $this->generateProfits($date);
 			$dt = new \Carbon\Carbon($date->cutoff);
 			$viewmodel[] = [
 				'id' => $date->id,
-				'delivery' => $dt->addDays(8)->format('l, F jS'),
+				'delivery' => $dt->addDays(7)->format('F jS'),
 				'orders' => $date->orders->count(),
 				'saveon' => $date->orders->sum('saveon'),
 				'coop' => $date->orders->sum('coop'),
+				'saveon_profit' => $profits['saveon'],
+				'coop_profit' => $profits['coop'],
 			];
 		});
 
@@ -65,5 +85,27 @@ class AdminController extends BaseController {
 		$pickup = $orders->filter(function($order){ return ! $order->deliverymethod;});
 		$mail = $orders->filter(function($order){ return $order->deliverymethod;	});
 		return View::make('admin.order', ['pickup'=>$pickup, 'mail'=>$mail]);
+	}
+
+	public function getProfitSettingForm($cutoff) {
+		return View::make('admin.profitform', ['cutoff'=>$cutoff]);
+	}
+
+	public function postProfitSettingForm($cutoff) {
+		
+		$in = Input::only(
+			'saveon_cheque_value',
+			'saveon_card_value',
+			'coop_cheque_value',
+			'coop_card_value');
+
+		foreach ($in as $k => $v)
+		{
+			$cutoff[$k] = $v;
+		}
+		$cutoff->save();
+
+		//back to the main order page
+		return Redirect::to('/admin/orders');
 	}
 }
