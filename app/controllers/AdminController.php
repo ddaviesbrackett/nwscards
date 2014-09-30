@@ -111,7 +111,7 @@ class AdminController extends BaseController {
 			$profit = ($order->saveon * $profits['saveon']) + ($order->coop * $profits['coop']);
 			
 			//stripe takes its cut
-			if($order->paymentmethod) {
+			if($order->payment) {
 				$profit -= ($order->saveon + $order->coop) * 2.9;
 				$profit -= 0.30;
 			}
