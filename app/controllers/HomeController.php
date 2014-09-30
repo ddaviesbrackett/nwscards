@@ -3,7 +3,7 @@
 class HomeController extends BaseController {
 	public function getHome()
 	{
-		return View::make('home', array('total'=>'$3332.30')); //TODO pull the total from the DB order aggregates
+		return View::make('home', array('total'=>Order::all()->sum('profit')));
 	}
 
 
