@@ -122,6 +122,8 @@ class AdminController extends BaseController {
 			if($buckets > 0) {
 				$perBucket = $profit / $buckets;
 				$splits = AdminController::splits();
+				$order->pac = 0;
+				$order->tuitionreduction = 0;
 				foreach($supp as $class)
 				{
 					$order->{$class} = $perBucket * $splits[$class]['class'];
