@@ -19,7 +19,7 @@
 @section('content')
 <div class="masthead">
 	<h1>Buy Grocery Cards<br/>Raise Money</h1>
-	<h3>We've raised {{{$total}}} so far<br/>Help us raise more &mdash; <em>without spending any extra!</em></h3>
+	<h3>We've raised ${{{$total}}} so far<br/>Help us raise more &mdash; <em>without spending any extra!</em></h3>
 	<a class="btn btn-outline-inverse btn-lg" href="/new">Order Now</a>
 	<a class="link order" href="/account">Checking on an existing order? Click here</a>
 </div>
