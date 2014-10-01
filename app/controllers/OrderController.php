@@ -109,7 +109,7 @@ class OrderController extends BaseController {
 				}
 				$gateway = null;
 				if(isset($cardToken)) {
-						$chargedate = BaseController::getDates()['charge'][$in['schedule']];
+						$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
 						$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
 				}
 				else {
