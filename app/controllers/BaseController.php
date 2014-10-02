@@ -35,7 +35,7 @@ class BaseController extends Controller {
 	*/
 	public static function getCutoffs( $target = NULL ) {;
 		if(is_null($target)){
-			$target = date('Y-m-d');
+			$target = (new \Carbon\Carbon('America/Los_Angeles'))->format('Y-m-d');
 		}
 		$ret = array();
 		$cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
