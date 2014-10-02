@@ -14,7 +14,8 @@ class TrackingController extends BaseController {
 		if(! empty($name) ) {
 			$orders = Order::with('cutoffdate')->where($bucketname, '>', 0)
 				->groupBy('cutoff_date_id')
-				->orderBy('cutoff_date_id','desc')
+				->join('cutoffdates', 'cutoffdates.id', '=', 'orders.cutoff_date_id')
+				->orderBy('cutoffdates.cutoff','desc')
 				->get([DB::raw('SUM('.$bucketname.') as profit'), DB::raw('count('.$bucketname.') as supporters'), 'cutoff_date_id']);
 			$totalprofit = Order::sum($bucketname);
 			if(count($orders) > 1)
