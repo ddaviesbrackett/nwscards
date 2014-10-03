@@ -49,6 +49,13 @@ Log::useFiles(storage_path().'/logs/laravel.log');
 App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
+	if (! empty($_ENV['error_to_address'])) {
+		Mail::send('emails.error', ['error' => $exception], function($message) use ($exception){
+			$message->subject('Grocery card website error:'.$exception->getMessage());
+			$message->to($_ENV['error_to_address'], 'Error Person');
+			$message->from('noreply@grocerycards.nelsonwaldorf.org', $_ENV['error_from_name']);
+		});
+	}
 });
 
 /*

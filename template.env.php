@@ -9,5 +9,6 @@ return array(
     'db_username' => 'INVALID',
     'db_password' => 'INVALID',
     'mandrill_key' => 'INVALID',
-
+    'error_to_address' => 'INVALID',
+    'error_from_name' => 'INVALID',
 );
