@@ -16,6 +16,9 @@ class BaseController extends Controller {
 		}
 	}
 
+	protected function dumpQueries() {
+		var_dump(DB::getQueryLog());
+	}
 	protected function dumpLastQuery() {
 		$queries = DB::getQueryLog();
 		$last_query = end($queries);

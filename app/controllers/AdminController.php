@@ -81,9 +81,10 @@ class AdminController extends BaseController {
 
 	public function getOrder($id)	
 	{
-		$orders = Order::where('cutoff_date_id', '=', $id)->with('user')->get();
+		$orders = Order::where('cutoff_date_id', '=', $id)->join('users', 'users.id', '=', 'orders.user_id')
+			->orderBy('users.name', 'asc')->with('user')->get();
 		$pickup = $orders->filter(function($order){ return ! $order->deliverymethod;});
-		$mail = $orders->filter(function($order){ return $order->deliverymethod;	});
+		$mail = $orders->filter(function($order){ return $order->deliverymethod;});
 		return View::make('admin.order', ['pickup'=>$pickup, 'mail'=>$mail]);
 	}
 
