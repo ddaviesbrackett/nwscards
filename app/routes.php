@@ -13,6 +13,10 @@ Route::post('/account', array('before' => 'csrf'/*auth too*/, 'uses' =>'OrderCon
 Route::get('/new', 'OrderController@getNew');
 Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'));
 
+Route::get('/edit', array('before' => 'auth', 'uses' => 'OrderController@getEdit'));
+Route::patch('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
+
+
 //contact form
 Route::post('/contact', array('before' => 'csrf', 'uses' =>'HomeController@postContact'));
 

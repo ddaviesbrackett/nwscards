@@ -23,41 +23,153 @@ class OrderController extends BaseController {
 		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']]);
 	}
 
+	public function getEdit()
+	{
+		$user = Sentry::getUser();
+		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']] )->with('user', $user);
+	}
+
+	public function postEdit()
+	{
+		//TODO error handling on this whole function!
+
+		$user = Sentry::getUser();
+		
+		if (Input::has('password'))
+		{
+			$in = Input::all();
+		}
+		else
+		{
+			$in = Input::except(array('password', 'password-repeat'));
+	  	}
+
+	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
+
+ 		$validator = Validator::make($in, OrderController::GetRules($user->id), OrderController::GetMessages());
+		
+		// process the login
+		if ($validator->fails()) {
+			return Redirect::to('/edit')
+				->withErrors($validator)
+				->withInput(Input::all());
+		} else {
+			$user->email = $in['email'];
+			$user->name = $in['name'];
+			$user->phone = $in['phone'];
+			$user->address1 = $in['address1'];
+			$user->address2 = $in['address2'];
+			$user->city = $in['city'];
+			$user->postal_code = $in['postal_code'];
+			$user->marigold = array_key_exists('marigold', $in);
+			$user->daisy = array_key_exists('daisy', $in);
+			$user->sunflower = array_key_exists('sunflower', $in);
+			$user->bluebell = array_key_exists('bluebell', $in);
+			$user->class_1 = array_key_exists('class_1', $in);
+			$user->class_2 = array_key_exists('class_2', $in);
+			$user->class_3 = array_key_exists('class_3', $in);
+			$user->class_4 = array_key_exists('class_4', $in);
+			$user->class_5 = array_key_exists('class_5', $in);
+			$user->class_6 = array_key_exists('class_6', $in);
+			$user->class_7 = array_key_exists('class_7', $in);
+			$user->class_8 = array_key_exists('class_8', $in);
+			$user->deliverymethod = $in['deliverymethod'] == 'mail';
+			$user->referrer = $in['referrer'];
+			$user->pickupalt = $in['pickupalt'];
+
+			if (Input::has('password'))
+			{
+				$user->password = $in['password'];
+			}
+
+			$user->saveon = $in['saveon'];
+			$user->coop = $in['coop'];
+			$user->schedule = $in['schedule'];
+			
+			$plan = null;
+			if($in['schedule'] == 'biweekly')
+			{
+				$plan = '14days';
+			}
+			else 
+			{
+				$plan = '28days';
+			}
+
+			if( $in['payment'] == 'cancel')
+			{
+				// if they cancel, remove their plan (if they have one)
+				if ($user->onPlan('14days') || $user->onPlan('28days'))
+				{
+					$user->subscription()->cancel();
+				}
+				// if they cancel then set cards to 0
+				$user->saveon = 0;
+				$user->coop = 0;
+			}
+			else if ( $in['payment'] != 'keep' )
+			{
+				// payment info changed so we can just cancel and create again. I think? 
+				//TODO check this actually works!
+
+				if ($user->onPlan('14days') || $user->onPlan('28days'))
+				{
+					$user->subscription()->cancel();
+				}
+
+				$cardToken = null;
+				if(isset($in['stripeToken'])){
+					$cardToken = $in['stripeToken'];
+				}
+
+				$gateway = null;
+				if(isset($cardToken)) {
+					$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
+					$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
+				}
+				else {
+					$gateway = $user->subscription(null); //just create them with no subs if they don't have a card
+				}
+				$extras = [
+					'email' => $user->email, 
+					'description' => $user->name,
+				];
+
+				if(!isset($cardToken))
+				{
+					$extras['metadata'] = [
+						'debit-transit'=>$in['debit-transit'],
+						'debit-institution'=>$in['debit-institution'],
+						'debit-account'=>$in['debit-account'],
+					];
+				}
+			
+				$gateway->create($cardToken, $extras);
+			}
+			else if ( $user->onTrial() )
+			{
+				// if they are on a trial need to update stripe with plan info
+				$user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop'])->swap();
+			}
+
+			if ($user->save())
+			{
+				return Redirect::to('/account');	
+			}
+			else
+			{
+				//what went wrong??
+			}
+		}
+	}
+
 	public function postNew()
 	{
-	 	$rules = [
-				'name'		=> 'required',
-				'email'		=> 'required|email|unique:users',
-				'phone'		=> 'digits:10',
-				'password'	=> 'required',
-				'password-repeat'	=> 'required|same:password',
-				'address1'	=> 'required_if:deliveyrmethod,mail',
-				'city'		=> 'required_if:deliverymethod,mail',
-				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
-				'schedule'	=> 'required|in:biweekly,monthly,monthly-second',
-				'saveon'	=> 'digits_between:1,2|required_without:coop',
-				'coop'		=> 'digits_between:1,2|required_without:saveon',
-				'payment'	=> 'required|in:debit,credit',
-				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
-				'debit-institution'	=> 'required_if:payment,debit|digits:3',
-				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
-				'debitterms' 	=> 'required_if:payment,debit',
-				'mailwaiver'	=>'required_if:deliverymethod,mail',
-				'deliverymethod' => 'required',
-			];
-
-	 	$messages = [
-	 			'debit-transit.required_if' => 'branch number is required.',
-	 			'debit-institution.required_if' => 'institution is required.',
-	 			'debit-account.required_if' => 'account number is required.',
-	 			'debitterms.required_if' => 'You must agree to the terms to pay by pre-authorized debit.',
-	 		];
-	  	//store phone as a number, but allow people to type ( and ) and - and space in it
 
 	  	$in = Input::all();
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
-		$validator = Validator::make($in, $rules, $messages);
+ 		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
 
 		// process the login
 		if ($validator->fails()) {
@@ -101,7 +213,7 @@ class OrderController extends BaseController {
 					$plan = '14days';
 				}
 				else {
-					$plan = '28days';
+ 					$plan = '28days';
 				}
 				$cardToken = null;
 				if(isset($in['stripeToken'])){
@@ -151,4 +263,39 @@ class OrderController extends BaseController {
 			return Redirect::to('/account');			
 		}
 	}
+
+	private static function GetRules($id=null)
+	{
+		return [
+				'name'		=> 'required',
+				'email'		=> 'required|email|unique:users,email' . ($id != null ? ",$id" : ""),
+				'phone'		=> 'digits:10',
+				'password'	=> 'sometimes:required',
+				'password-repeat'	=> 'sometimes:required|same:password',
+				'address1'	=> 'required_if:deliveyrmethod,mail',
+				'city'		=> 'required_if:deliverymethod,mail',
+				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
+				'schedule'	=> 'required|in:biweekly,monthly,monthly-second',
+				'saveon'	=> 'digits_between:1,2|required_without:coop',
+				'coop'		=> 'digits_between:1,2|required_without:saveon',
+				'payment'	=> 'required|in:debit,credit,keep,cancel',
+				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
+				'debit-institution'	=> 'required_if:payment,debit|digits:3',
+				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
+				'debitterms' 	=> 'required_if:payment,debit',
+				'mailwaiver'	=>'required_if:deliverymethod,mail',
+				'deliverymethod' => 'required',
+			];
+	}
+
+	private static function GetMessages()
+	{
+	 	return [
+	 			'debit-transit.required_if' => 'branch number is required.',
+	 			'debit-institution.required_if' => 'institution is required.',
+	 			'debit-account.required_if' => 'account number is required.',
+	 			'debitterms.required_if' => 'You must agree to the terms to pay by pre-authorized debit.',
+	 		];
+	}
+
 }

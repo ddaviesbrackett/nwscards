@@ -11,6 +11,16 @@ $(function(){
 			}
 		}
 	}
+
+	if ($('.individual-classes').find('input[type="checkbox"]:checked').length > 0)
+	{
+		$('#indiv-class-classes').attr('checked', true);
+	}
+	else
+	{
+		$('#indiv-class-school').attr('checked', true);
+	}
+
 	$('input:radio[name="indiv-class"]').on('click', fadeClassCheck ).each(fadeClassCheck);
 	
 	function radioSection(radioname){
