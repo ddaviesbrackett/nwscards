@@ -111,6 +111,7 @@ class OrderController extends BaseController {
 			{
 				// payment info changed so we can just cancel and create again. I think? 
 				//TODO check this actually works!
+				$user->payment = $in['payment'] == 'credit';
 
 				if ($user->onPlan('14days') || $user->onPlan('28days'))
 				{
@@ -146,9 +147,11 @@ class OrderController extends BaseController {
 			
 				$gateway->create($cardToken, $extras);
 			}
-			else if ( $user->onTrial() )
+			else if ( ($user->payment == 1)
+				&& (!$user->onPlan($plan) || ( ($in['saveon']+$in['coop']) != ($user->saveon + $user->coop) )))
 			{
-				// if they are on a trial need to update stripe with plan info
+				// if they are on a plan need to update stripe with plan info
+				$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
 				$user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop'])->swap();
 			}
 
