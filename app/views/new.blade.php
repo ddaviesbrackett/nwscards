@@ -76,7 +76,6 @@
 					<div class="radio"><label>
 						{{ Form::radio('schedule', 'biweekly') }}
 						Every 2 weeks, starting <b>{{{$dates['biweekly']['delivery']}}}</b>
-						Test = {{{$dates['biweekly']['cutoff']}}}
 					</label></div>
 					<div class="radio" style="margin-top:1em;"><label>
 						{{ Form::radio('schedule', 'monthly') }}
