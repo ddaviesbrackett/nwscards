@@ -24,7 +24,7 @@
 </div>
 <div class="container-fluid">
 	@if(isset($user))
-	{{Form::model($user, ['url' => ['edit'], 'method'=>'PATCH', 'class'=>'form-horizontal new-order'])}}
+	{{Form::model($user, ['url' => ['edit'], 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@else
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@endif
@@ -261,7 +261,7 @@
 			(2 business days before delivery).</span>
 			<div class="form-group">
 				<div class="col-sm-12">
-					@if(isset($user) && ($user->coop > 0 || $user->saveon > 0))
+					@if( isset($user) && $user->payment >= 0)
 						<div class="radio"><label><input type="radio" name="payment" id="payment_keep" value="keep" checked/>Keep the same payment settings</label></div>			
 						<div class="radio"><label><input type="radio" name="payment" id="payment_cancel" value="cancel" />Cancel Cards Plan!</label></div>			
 					@endif

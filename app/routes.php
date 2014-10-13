@@ -14,7 +14,7 @@ Route::get('/new', 'OrderController@getNew');
 Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'));
 
 Route::get('/edit', array('before' => 'auth', 'uses' => 'OrderController@getEdit'));
-Route::patch('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
+Route::post('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
 
 
 //contact form
