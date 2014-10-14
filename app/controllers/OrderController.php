@@ -26,9 +26,6 @@ class OrderController extends BaseController {
 	public function getEdit()
 	{
 		$user = Sentry::getUser();
-		VAR_DUMP($user->subscribed());
-		var_dump($user->onPlan('14days'));
-		var_dump($user->onPlan('28days'));
 		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']] )->with('user', $user);
 	}
 
@@ -85,6 +82,9 @@ class OrderController extends BaseController {
 				$user->password = $in['password'];
 			}
 
+			$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
+			$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
+
 			$user->saveon = $in['saveon'];
 			$user->coop = $in['coop'];
 			$user->schedule = $in['schedule'];
@@ -103,6 +103,7 @@ class OrderController extends BaseController {
 			$stripeUser->email = $user->email;
 			$stripeUser->description = $user->name;
 			
+
 			if( $in['payment'] == 'debit' )
 			{
 				//TODO donna will need to know about this?
@@ -113,13 +114,17 @@ class OrderController extends BaseController {
 					'debit-account'=>$in['debit-account'],
 				];
 				$stripeUser->metadata = $extras;
+				
+				if ($bIsSubscribed)
+				{
+					$user->subscription()->cancelNow();
+					$bIsSubscribed = false;
+				}
+
 			}
 		
 			$stripeUser->save();
 		
-			$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
-			$bIsSubscribed = $user->onPlan('28days') ||$user->onPlan('14days');
-
 			if( $in['payment'] == 'cancel')
 			{
 				// if they cancel, remove their plan in stripe (if they have one)
@@ -127,13 +132,13 @@ class OrderController extends BaseController {
 				if ( $bIsSubscribed )
 				{
 					// cancel immediately.
-					$user->subscription()->cancel(false);
+					$user->subscription()->cancelNow();
 				}
 
 				// if they cancel then set payment to -1? maybe not the best if we do resume
 				$user->payment = -1;
 			}
-			else if (( $in['payment'] == 'credit' ) || $bIsSubscribed )
+			else if (( $in['payment'] == 'credit' ) || ($bIsSubscribed && $bStripePlanChanged))
 			{
 				// IF they are subscribed OR are subscribing, update stripe plan
 				$cardToken = null;
@@ -144,33 +149,17 @@ class OrderController extends BaseController {
 				}
 
 				$gateway = null;
-				if ( $bIsSubscribed )
+
+				// to avoid prorating, just cancel and recreate plan.
+				if ($bIsSubscribed)
 				{
-					if ($user->payment == 0)
-					{
-						// they are going from subscribed to debit, already updated debit info above
-						$user->subscription()->cancel(false);
-					}
-					else
-					{
-						//changing their plan and possibly credit card.
-						$user->subscription($plan)->trialFor($chargedate)->swap($in['saveon']+$in['coop']);
-						if (isset($cardToken))
-						{
-							$user->updateCard($cardToken);
-						}
-					}
+					$user->subscription()->cancelNow();
 				}
-				else if (isset($cardToken) )
-				{
-					//subscribing to a new plan.
-					$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
-					$gateway->create($cardToken, array(), $gateway->getStripeCustomer());
-				}
-				else
-				{
-					// they updated their debit info with no plan to cancel. nothing to do here.
-				}
+
+				//subscribing to a new plan.
+				$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
+				$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
+				$gateway->create($cardToken, array(), $gateway->getStripeCustomer());
 			}
 		
 			
