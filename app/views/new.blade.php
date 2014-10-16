@@ -39,7 +39,7 @@
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@endif
 		<h4 class="callout-title">Make a Recurring Order</h4>
-		<div class="callout order <?php echo OrderController::IsBlackoutPeriod() ? 'blackoutPeriod' : '' ?>">
+		<div class="callout order {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
 			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 				<div class='col-sm-3'>
@@ -272,10 +272,10 @@
 				<div class="col-sm-12">
 					@if( isset($user) && $user->payment >= 0)
 						<div class="radio"><label><input type="radio" name="payment" id="payment_keep" value="keep" checked/>Keep the same payment settings</label></div>			
-						<div class="radio <?php echo OrderController::IsBlackoutPeriod() ? 'blackoutPeriod' : '' ?>"><label><input type="radio" name="payment" id="payment_cancel" value="cancel" />Cancel Cards Plan!</label></div>			
+						<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_cancel" value="cancel" />Cancel Cards Plan!</label></div>			
 					@endif
-					<div class="radio <?php echo OrderController::IsBlackoutPeriod() ? 'blackoutPeriod' : '' ?>"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
-					<div class="payment debit <?php echo OrderController::IsBlackoutPeriod() ? 'blackoutPeriod' : '' ?>">
+					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+					<div class="payment debit {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}">
 						<div class="form-group">
 							<div class="col-sm-offset-2">
 								<img src="images/void_cheque.gif" alt="Void Cheque showing location of branch, institution, and account numbers" class="img-thumbnail img-responsive"/>
@@ -320,7 +320,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="radio <?php echo (OrderController::IsBlackoutPeriod() && $user->payment != 1) ? 'blackoutPeriod' : '' ?>"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
+					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && $user->payment != 1) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
 					<div class="payment credit row">
 						<div class="col-sm-6 col-sm-offset-3">
 							<div class="form-group has-error payment-errors-group">
@@ -354,7 +354,7 @@
 			</div>
 		</div>
 		<h4 class="callout-title">Choose Delivery</h4>
-		<div class="callout <?php echo OrderController::IsBlackoutPeriod() ? 'blackoutPeriod' : '' ?>">
+		<div class="callout {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}">
 			<div class='form-group{{$errors->has("deliverymethod")?" has-error":"";}}'>
 				<div class="col-sm-12">
 					<div class="radio"><label>

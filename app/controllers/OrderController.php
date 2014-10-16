@@ -20,7 +20,7 @@ class OrderController extends BaseController {
 
 	public function getNew()
 	{
-		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']]);
+		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null]);
 	}
 
 	public function getEdit()
