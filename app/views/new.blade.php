@@ -22,7 +22,17 @@
 		Raise money for students and teachers at Nelson Waldorf without spending any extra money
 	</p>
 </div>
+@if (isset($user) && OrderController::IsBlackoutPeriod())
 <div class="container-fluid">
+	<!-- TODO better message here and styling -->
+	<h4 class="callout-title">Order being processed!</h4>
+		<span>
+			Orders are currently being processed and will be available for edit on: {{{@OrderController::GetBlackoutEndDate()->format('l, F jS')}}}
+		</span>
+</div>
+@endif
+<div class="container-fluid">
+
 	@if(isset($user))
 	{{Form::model($user, ['url' => ['edit'], 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@else

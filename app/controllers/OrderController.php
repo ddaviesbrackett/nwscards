@@ -283,10 +283,15 @@ class OrderController extends BaseController {
 		}
 	}
 
+	public static function GetBlackoutEndDate()
+	{
+		return BaseController::getCutoffs()['biweekly']['cutoff']->addDays(-7);
+	}
+
 	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
 	{	
-		return ((new \Carbon\Carbon('America/Los_Angeles'))->addDays(7) < (BaseController::getCutoffs()['biweekly']['cutoff']));
+		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
 	private static function GetRules($id=null)
