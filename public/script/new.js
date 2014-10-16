@@ -12,15 +12,6 @@ $(function(){
 		}
 	}
 
-	if ($('.individual-classes').find('input[type="checkbox"]:checked').length > 0)
-	{
-		$('#indiv-class-classes').attr('checked', true);
-	}
-	else
-	{
-		$('#indiv-class-school').attr('checked', true);
-	}
-
 	$('input:radio[name="indiv-class"]').on('click', fadeClassCheck ).each(fadeClassCheck);
 	
 	function radioSection(radioname){
@@ -36,6 +27,20 @@ $(function(){
 	radioSection('payment');
 	radioSection('deliverymethod');
 	radioSection('schedule');
+
+	if ($('.individual-classes').find('input[type="checkbox"]:checked').length > 0)
+	{
+		$('#indiv-class-classes').attr('checked', true);
+	}
+	else
+	{
+		$('#indiv-class-school').attr('checked', true);
+	}
+
+	$(".blackoutPeriod").addClass("disabled").on('click', function()
+	{
+		alert("You cannot edit this during blackout period.");
+	}).find(':input').attr("disabled", true).addClass('disabled');
 
 	$('.order input[type="number"]').on('blur', function(ev){
 		var $this = $(this);
@@ -82,6 +87,10 @@ $(function(){
 	$form.submit(function(ev) {
 		// Disable the submit button to prevent repeated clicks
 		$form.find('button').prop('disabled', true);
+
+		// re-enable form elements so validation doesn't fail.
+		$form.find('.blackoutPeriod :input').attr('disabled', false);
+
 		if($('#payment_credit').is(':checked')) {
 
 			Stripe.card.createToken($form, stripeResponseHandler);

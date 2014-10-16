@@ -73,96 +73,104 @@ class OrderController extends BaseController {
 			$user->class_6 = array_key_exists('class_6', $in);
 			$user->class_7 = array_key_exists('class_7', $in);
 			$user->class_8 = array_key_exists('class_8', $in);
-			$user->deliverymethod = $in['deliverymethod'] == 'mail';
-			$user->referrer = $in['referrer'];
-			$user->pickupalt = $in['pickupalt'];
 
 			if (Input::has('password'))
 			{
 				$user->password = $in['password'];
 			}
 
-			$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
-			$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
+			$cardToken = ( ($in['payment'] == 'credit') && isset($in['stripeToken']) ) ? $in['stripeToken'] : null;
 
-			$user->saveon = $in['saveon'];
-			$user->coop = $in['coop'];
-			$user->schedule = $in['schedule'];
-			
-			$plan = null;
-			if($in['schedule'] == 'biweekly')
+			// if they are paying with credit already, let them change the card.
+			if ( OrderController::IsBlackoutPeriod() && ( $cardToken != null ) && ( $user->payment == 1 ) && ( $user->subscribed() ) )
 			{
-				$plan = '14days';
+				$user->subscription()->updateCard($cardToken);
 			}
-			else 
+			else
 			{
-				$plan = '28days';
-			}
-		
-			$stripeUser = $user->subscription()->getStripeCustomer();
-			$stripeUser->email = $user->email;
-			$stripeUser->description = $user->name;
-			
+				$user->deliverymethod = $in['deliverymethod'] == 'mail';
+				$user->referrer = $in['referrer'];
+				$user->pickupalt = $in['pickupalt'];							
 
-			if( $in['payment'] == 'debit' )
-			{
-				//TODO donna will need to know about this?
-				$user->payment = 0;
-				$extras = [
-					'debit-transit'=>$in['debit-transit'],
-					'debit-institution'=>$in['debit-institution'],
-					'debit-account'=>$in['debit-account'],
-				];
-				$stripeUser->metadata = $extras;
+				$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
+				$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
+
+				$user->saveon = $in['saveon'];
+				$user->coop = $in['coop'];
+				$user->schedule = $in['schedule'];
 				
-				if ($bIsSubscribed)
+				$plan = null;
+				if($in['schedule'] == 'biweekly')
 				{
-					$user->subscription()->cancelNow();
-					$bIsSubscribed = false;
+					$plan = '14days';
 				}
-
-			}
-		
-			$stripeUser->save();
-		
-			if( $in['payment'] == 'cancel')
-			{
-				// if they cancel, remove their plan in stripe (if they have one)
-				// TODO: fix this so we can cancel/resume 
-				if ( $bIsSubscribed )
+				else 
 				{
-					// cancel immediately.
-					$user->subscription()->cancelNow();
+					$plan = '28days';
 				}
-
-				// if they cancel then set payment to -1? maybe not the best if we do resume
-				$user->payment = -1;
-			}
-			else if (( $in['payment'] == 'credit' ) || ($bIsSubscribed && $bStripePlanChanged))
-			{
-				// IF they are subscribed OR are subscribing, update stripe plan
-				$cardToken = null;
-				if(isset($in['stripeToken']) && $in['payment'] == 'credit') 
-				{
-					$user->payment = 1;
-					$cardToken = $in['stripeToken'];
-				}
-
-				$gateway = null;
-
-				// to avoid prorating, just cancel and recreate plan.
-				if ($bIsSubscribed)
-				{
-					$user->subscription()->cancelNow();
-				}
-
-				//subscribing to a new plan.
-				$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
-				$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
-				$gateway->create($cardToken, array(), $gateway->getStripeCustomer());
-			}
-		
 			
+				$stripeUser = $user->subscription()->getStripeCustomer();
+				$stripeUser->email = $user->email;
+				$stripeUser->description = $user->name;
+				
+				if( $in['payment'] == 'debit' )
+				{
+					//TODO donna will need to know about this?
+					$user->payment = 0;
+					$extras = [
+						'debit-transit'=>$in['debit-transit'],
+						'debit-institution'=>$in['debit-institution'],
+						'debit-account'=>$in['debit-account'],
+					];
+					$stripeUser->metadata = $extras;
+					
+					if ($bIsSubscribed)
+					{
+						$user->subscription()->cancelNow();
+						$bIsSubscribed = false;
+					}
+
+				}
+			
+				$stripeUser->save();
+			
+				if( $in['payment'] == 'cancel')
+				{
+					// if they cancel, remove their plan in stripe (if they have one)
+					// TODO: fix this so we can cancel/resume 
+					if ( $bIsSubscribed )
+					{
+						// cancel immediately.
+						$user->subscription()->cancelNow();
+					}
+
+					// if they cancel then set payment to -1? maybe not the best if we do resume
+					$user->payment = -1;
+				}
+				else if ( ( $cardToken != null ) && !( $bStripePlanChanged ) && ( $bIsSubscribed ) && $user->payment == 1 )
+				{ // they are subscribed and changed only their credit card
+					$user->subscription()->updateCard($cardToken);
+				}
+				else if ( (( $cardToken != null ) && !( $bIsSubscribed ))  || ($bIsSubscribed && $bStripePlanChanged))
+				{ // they are either subscribed and changing plan, or subscribing for first time.
+
+					$user->payment = 1;
+					
+					$gateway = null;
+
+					// to avoid prorating, just cancel and recreate plan.
+					if ($bIsSubscribed)
+					{
+						$user->subscription()->cancelNow();
+					}
+
+					//subscribing to a new plan.
+					$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
+					$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
+					$gateway->create($cardToken, array(), $gateway->getStripeCustomer());
+				}
+			}
+				
 			if ($user->save())
 			{
 				return Redirect::to('/account');	
@@ -273,6 +281,12 @@ class OrderController extends BaseController {
 			Sentry::login($user, false);
 			return Redirect::to('/account');			
 		}
+	}
+
+	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
+	public static function IsBlackoutPeriod()
+	{	
+		return ((new \Carbon\Carbon('America/Los_Angeles'))->addDays(7) < (BaseController::getCutoffs()['biweekly']['cutoff']));
 	}
 
 	private static function GetRules($id=null)
