@@ -51,9 +51,8 @@ class TrackingController extends BaseController {
 		}, $bucketnames);
 
 		array_map(function($classId) use (&$buckets, $bucketnames){
-				$order = Order::where($classId, '>', 0)->get([DB::raw('SUM('.$classId.') as sum'), DB::raw('count(*) as cnt')]);
-				$buckets[$classId]['count'] = $order[0]->cnt;
-				$buckets[$classId]['amount'] = $order[0]->sum;
+				$buckets[$classId]['count'] = $classId == 'pac' || $classId == 'tuitionreduction'?User::count():User::where($classId, '=', 1)->count();
+				$buckets[$classId]['amount'] = Order::where($classId, '>', 0)->sum($classId);
 			}, $bucketnames);
 
 		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);
