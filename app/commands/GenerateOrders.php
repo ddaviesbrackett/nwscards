@@ -64,29 +64,13 @@ class GenerateOrders extends Command {
 					'coop' => $user->coop,
 					'deliverymethod' => $user->deliverymethod,
 					]);
-
-				/*
-				$supp = $user->classesSupported();
-				$buckets = count($supp);
-				if($buckets > 0)
-				{
-					$perBucket = $profit / $buckets;
-					$splits = GenerateOrders::splits();
-					foreach($supp as $class)
-					{
-						$order->{$class} = $perBucket * $splits[$class]['class'];
-						$order->pac += $perBucket * $splits[$class]['pac'];
-						$order->tuitionreduction += $perBucket * $splits[$class]['tuitionreduction'];
-					}
-				}
-				else
-				{
-					$order->pac = $profit * 0.25;
-					$order->tuitionreduction = $profit * 0.75;
-				}
-				*/
 				$order->cutoffdate()->associate($cutoff);
 				$user->orders()->save($order);
+
+				Mail::send('emails.chargereminder', ['user' => $user, 'order' => $order], function($message) use ($user, $order){
+					$message->subject('Grocery cards next week - you\'ll be charged Monday');
+					$message->to($user->email, $user->name);
+				});
 			}
 		}
 	}
