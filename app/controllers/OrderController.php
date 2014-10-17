@@ -82,11 +82,12 @@ class OrderController extends BaseController {
 			$cardToken = ( ($in['payment'] == 'credit') && isset($in['stripeToken']) ) ? $in['stripeToken'] : null;
 
 			// if they are paying with credit already, let them change the card.
-			if ( OrderController::IsBlackoutPeriod() && ( $cardToken != null ) && ( $user->payment == 1 ) && ( $user->subscribed() ) )
+			if ( ( $cardToken != null ) && ( $user->payment == 1 ) && ( $user->subscribed() ) )
 			{
 				$user->subscription()->updateCard($cardToken);
 			}
-			else
+
+			if ( !(OrderController::IsBlackoutPeriod()) )
 			{
 				$user->deliverymethod = $in['deliverymethod'] == 'mail';
 				$user->referrer = $in['referrer'];
@@ -117,6 +118,7 @@ class OrderController extends BaseController {
 				{
 					//TODO donna will need to know about this?
 					$user->payment = 0;
+					$user->stripe_active = 1;
 					$extras = [
 						'debit-transit'=>$in['debit-transit'],
 						'debit-institution'=>$in['debit-institution'],
@@ -143,19 +145,19 @@ class OrderController extends BaseController {
 						// cancel immediately.
 						$user->subscription()->cancelNow();
 					}
-
-					// if they cancel then set payment to -1? maybe not the best if we do resume
-					$user->payment = -1;
+					$user->stripe_active = 0;
 				}
-				else if ( ( $cardToken != null ) && !( $bStripePlanChanged ) && ( $bIsSubscribed ) && $user->payment == 1 )
-				{ // they are subscribed and changed only their credit card
-					$user->subscription()->updateCard($cardToken);
+				else if ( ($in['payment'] == 'resume') && ($user->payment == 0) )
+				{ // resume a debit plan
+					$user->stripe_active = 1;
 				}
-				else if ( (( $cardToken != null ) && !( $bIsSubscribed ))  || ($bIsSubscribed && $bStripePlanChanged))
-				{ // they are either subscribed and changing plan, or subscribing for first time.
-
+				else if ( (( $cardToken != null ) && !( $bIsSubscribed )) // credit card selected -> new stripe subscription
+				  || ( $bIsSubscribed && $bStripePlanChanged ) // changing stripe subscription
+				  || ($user->stripe_active == 0 && $user->payment == 1 && $in['payment'] == 'resume') ) // resume stripe subscription
+				{
+					$user->stripe_active = 1;
 					$user->payment = 1;
-					
+
 					$gateway = null;
 
 					// to avoid prorating, just cancel and recreate plan.
@@ -308,7 +310,7 @@ class OrderController extends BaseController {
 				'schedule'	=> 'required|in:biweekly,monthly,monthly-second',
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
-				'payment'	=> 'required|in:debit,credit,keep,cancel',
+				'payment'	=> 'required|in:debit,credit,keep,cancel,resume',
 				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
