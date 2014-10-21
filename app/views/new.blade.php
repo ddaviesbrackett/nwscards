@@ -17,7 +17,13 @@
 
 @section('content')
 <div class="masthead">
-	<h1>Your support means a lot</h1>
+	<h1>
+			@if(isset($user))
+				Thank you for your continued support
+			@else
+				Your support means a lot
+			@endif
+	</h1>
 	<p>
 		Raise money for students and teachers at Nelson Waldorf without spending any extra money
 	</p>
@@ -38,7 +44,13 @@
 	@else
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@endif
-		<h4 class="callout-title">Make a Recurring Order</h4>
+		<h4 class="callout-title">
+			@if(isset($user))
+				Change Your Recurring Order
+			@else
+				Make a Recurring Order
+			@endif
+		</h4>
 		<div class="callout order {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
 			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
@@ -101,7 +113,13 @@
 				</div>
 			</div>
 		</div>
-		<h4 class="callout-title">Enter Your Information</h4>
+		<h4 class="callout-title">
+			@if(isset($user))
+				Change Your Information
+			@else
+				Enter Your Information
+			@endif
+		</h4>
 		<div class="callout">
 			<div class='form-group{{$errors->has("name")?" has-error":"";}}'>
 				<label for='name' class='col-sm-3 text-right'>Name:</label>
@@ -184,7 +202,14 @@
 					</div>
 				</div>
 		</div>
-		<h4 class="callout-title">Decide who to Support</h4>
+		<h4 class="callout-title">
+			@if(isset($user))
+				Change who you Support
+			@else
+				Decide who to Support
+			@endif
+		
+		</h4>
 		<div class="callout">
 			<div class="form-group">
 				<div class="col-sm-12">
@@ -244,7 +269,13 @@
 					{{ Form::checkbox('class_6') }}
 					Class 6 (Mr. Goncalves)
 				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
+					@if(isset($user))
+				Edit your order
+			@else
+				New Order
+			@endif
+<div class="c
+				ol-sm-offset-2 col-sm-4"><div class="checkbox"><label>
 					{{ Form::checkbox('class_7') }}
 					Class 7 (Ms. Thayer)
 				</label></div></div>
@@ -260,7 +291,14 @@
 				</div>
 			</div>
 		</div>
- 		<h4 class="callout-title">Choose Payment</h4>
+ 		<h4 class="callout-title">
+ 			@if(isset($user))
+				Change Your Payment Method
+			@else
+ 				Choose Payment
+			@endif
+
+ 		</h4>
 		<div class="callout">
 			<span class="help-block info">You will be charged for your delivery on 
 				<b>
@@ -363,7 +401,13 @@
 				</div>
 			</div>
 		</div>
-		<h4 class="callout-title">Choose Delivery</h4>
+		<h4 class="callout-title">
+			@if(isset($user))
+				Change Delivery Method
+			@else
+				Choose Delivery
+			@endif
+		</h4>
 		<div class="callout {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}">
 			<div class='form-group{{$errors->has("deliverymethod")?" has-error":"";}}'>
 				<div class="col-sm-12">
