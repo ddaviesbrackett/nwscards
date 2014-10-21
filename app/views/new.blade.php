@@ -313,7 +313,7 @@
 					@if( isset($user) )
 						<div class="radio"><label><input type="radio" name="payment" id="payment_keep" value="keep" checked/>
 							@if ($user->stripe_active == 1)
-								Continue paying by {{{$user->payment?'credit card':'direct debit'}}}
+								Keep existing payment information.
 							@else
 								I do not want any cards right now.
 							@endif
@@ -324,7 +324,15 @@
 					@elseif ( isset($user) && ($user->stripe_active == 0) )
 						<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_keep" value="resume" />Resume cards plan. You will be charged by {{{$user->payment?'credit card':'direct debit'}}} on {{{$dates[$user->schedule]['charge']}}}.</label></div>			
 					@endif
-					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>Direct Debit (we make more money with debit)</label></div>
+					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>
+						@if (isset($user) && $user->payment == 1)
+							Switch to direct debit (and raise more money)
+						@elseif (isset($user) && $user->payment == 0)
+							Update debit information
+						@else
+							Direct Debit (we make more money with debit)
+						@endif
+					</label></div>
 					<div class="payment debit {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}">
 						<div class="form-group">
 							<div class="col-sm-offset-2">
@@ -370,7 +378,15 @@
 							</div>
 						</div>
 					</div>
-					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && $user->payment != 1) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>Credit Card</label></div>
+					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && $user->payment != 1) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>
+						@if (isset($user) && $user->payment == 1)
+							Update Credit Card
+						@elseif (isset($user) && $user->payment == 0)
+							Switch to Credit Card
+						@else
+							Credit Card
+						@endif
+					</label></div>
 					<div class="payment credit row">
 						<div class="col-sm-6 col-sm-offset-3">
 							<div class="form-group has-error payment-errors-group">
