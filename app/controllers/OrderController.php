@@ -81,10 +81,13 @@ class OrderController extends BaseController {
 
 			$cardToken = ( ($in['payment'] == 'credit') && isset($in['stripeToken']) ) ? $in['stripeToken'] : null;
 
+			$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
+			
 			// if they are paying with credit already, let them change the card.
-			if ( ( $cardToken != null ) && ( $user->payment == 1 ) && ( $user->subscribed() ) )
+			if ( ( $cardToken != null ) && ( $user->payment == 1 ) && ( $bIsSubscribed ) )
 			{
 				$user->subscription()->updateCard($cardToken);
+				$cardToken = null;
 			}
 
 			if ( !(OrderController::IsBlackoutPeriod()) )
@@ -94,8 +97,7 @@ class OrderController extends BaseController {
 				$user->pickupalt = $in['pickupalt'];							
 
 				$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
-				$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
-
+		
 				$user->saveon = $in['saveon'];
 				$user->coop = $in['coop'];
 				$user->schedule = $in['schedule'];
