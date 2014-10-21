@@ -182,6 +182,7 @@
 					@endif
 				</div>
 			</div>
+			@if (!isset($user))
 				<div class='form-group{{$errors->has("password")?" has-error":"";}}'>
 					<label for='password' class='col-sm-3 text-right'>Password:</label>
 					<div class='col-sm-8'>
@@ -201,6 +202,7 @@
 						@endif
 					</div>
 				</div>
+			@endif
 		</div>
 		<h4 class="callout-title">
 			@if(isset($user))
