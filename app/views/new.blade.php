@@ -52,6 +52,7 @@
 			@endif
 		</h4>
 		<div class="callout order {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
+			
 			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 				<div class='col-sm-3'>
@@ -113,6 +114,7 @@
 				</div>
 			</div>
 		</div>
+
 		<h4 class="callout-title">
 			@if(isset($user))
 				Change Your Information
@@ -276,8 +278,7 @@
 			@else
 				New Order
 			@endif
-<div class="c
-				ol-sm-offset-2 col-sm-4"><div class="checkbox"><label>
+			<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
 					{{ Form::checkbox('class_7') }}
 					Class 7 (Ms. Thayer)
 				</label></div></div>
@@ -301,7 +302,7 @@
 			@endif
 
  		</h4>
-		<div class="callout">
+		<div class="callout {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
 			<span class="help-block info">You will be charged for your delivery on 
 				<b>
 					<span class="schedule monthly">{{{$dates['monthly']['charge']}}}</span>
@@ -475,6 +476,12 @@
 			</div>
 		</div>
 	{{Form::close()}}
+
+	<div class='blackoutPeriodError'>
+		<p class="messageBox">
+			Sorry, you can't change your order right now. Orders are currently being processed.
+		</p>
+	</div>
 </div>
 <script>
 	Stripe.setPublishableKey('{{{$stripeKey}}}');

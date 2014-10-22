@@ -36,11 +36,31 @@ $(function(){
 	{
 		$('#indiv-class-school').attr('checked', true);
 	}
-
-	$(".blackoutPeriod").addClass("disabled").on('click', function()
+	
+	$errorBox = $('.blackoutPeriodError');
+	$(".blackoutPeriod.callout").addClass("disabled").prepend($errorBox)
+	.on('click', function()
 	{
 		alert("You cannot edit this during blackout period.");
 	}).find(':input').attr("disabled", true).addClass('disabled');
+
+	function positionBlackoutErrorBox()
+	{
+		$(".blackoutPeriod.callout").each(function()
+		{
+			$varParent = $(this);
+			$varParent.find('.blackoutPeriodError')
+				.width($varParent.outerWidth())
+				.height($varParent.outerHeight())
+				.show()
+				.css({
+					left: $varParent.position().left + "px",
+					top: $varParent.position().top + "px",
+				});
+		});
+	}
+
+	$(window).load(positionBlackoutErrorBox).on('resize', positionBlackoutErrorBox);
 
 	$('.order input[type="number"]').on('blur', function(ev){
 		var $this = $(this);
