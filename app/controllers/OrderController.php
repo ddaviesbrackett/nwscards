@@ -25,13 +25,22 @@ class OrderController extends BaseController {
 
 	public function getEdit()
 	{
-		$user = Sentry::getUser();
-		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key']] )->with('user', $user);
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+		else
+		{
+			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser()]);
+		}
 	}
 
 	public function postEdit()
 	{
-		//TODO error handling on this whole function!
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
 
 		$user = Sentry::getUser();
 		
