@@ -304,7 +304,7 @@ class OrderController extends BaseController {
 	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
 	{	
-		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
+		return false && ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
 	private static function GetRules($id=null)

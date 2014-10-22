@@ -30,7 +30,7 @@
 						@yield('nav-extra')
 						@if(Sentry::check())
 							@if(Sentry::getUser()->isAdmin())
-							<li class="dropdown">
+							<li class="admin-dropdown">
 					          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <span class="caret"></span></a>
 					          <ul class="dropdown-menu" role="menu">
 								<li><a href="/admin/totals">Totals</a></li>
@@ -39,8 +39,13 @@
 					          </ul>
 					        </li>
 							@endif
-							<li><a href="/account">My Account</a></li>
-							<li><a href="/edit">Edit Order</a></li>
+							<li class="user-dropdown">
+					          <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <span class="caret"></span></a>
+					          <ul class="dropdown-menu" role="menu">
+								<li><a href="/account">View</a></li>
+								<li><a href="/edit">Change</a></li>
+					          </ul>
+					        </li>
 							<li><a href="/logout">Log Out</a></li>
 						@else
 							<li><a href="/new">Order Cards</a></li>
