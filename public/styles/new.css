@@ -33,7 +33,7 @@ label {
 	position: absolute;
 	z-index: 10;
 	background: rgba(0, 0, 0, 0.5);
-	display;none;
+	display: none;
 }
 
 .blackoutPeriodError p
