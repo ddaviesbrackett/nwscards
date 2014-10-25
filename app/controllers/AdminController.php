@@ -3,7 +3,7 @@
 class AdminController extends BaseController {
 	public function getImpersonate()
 	{
-		$users = Sentry::findAllUsers();
+		$users = User::orderBy('name')->get();
 		return View::make('admin.impersonation', ['users' => $users]);
 	}
 
