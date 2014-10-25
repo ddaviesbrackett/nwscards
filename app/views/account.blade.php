@@ -74,10 +74,10 @@
 						@endif
 					@endif
 				</p>
-				<p><a class="btn btn-primary" href="/edit">Change your order</a>
 			@else
 				You have no recurring order. You'll make more money for the school if you order more cards!
 			@endif
+			<p><a class="btn btn-primary" href="/edit">Change your order</a></p>
 			<h2>Your order history</h2>
 			<table class="table text-left">
 				<tr>
