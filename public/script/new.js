@@ -1,4 +1,14 @@
 $(function(){
+
+	if ($('.individual-classes').find('input[type="checkbox"]:checked').length > 0)
+	{
+		$('#indiv-class-classes').attr('checked', true);
+	}
+	else
+	{
+		$('#indiv-class-school').attr('checked', true);
+	}
+
 	function fadeClassCheck(ev){
 		if(this.checked) {
 			var $classes = $('.individual-classes');
@@ -27,15 +37,6 @@ $(function(){
 	radioSection('payment');
 	radioSection('deliverymethod');
 	radioSection('schedule');
-
-	if ($('.individual-classes').find('input[type="checkbox"]:checked').length > 0)
-	{
-		$('#indiv-class-classes').attr('checked', true);
-	}
-	else
-	{
-		$('#indiv-class-school').attr('checked', true);
-	}
 	
 	$errorBox = $('.blackoutPeriodError');
 	$(".blackoutPeriod.callout").addClass("disabled").prepend($errorBox)
