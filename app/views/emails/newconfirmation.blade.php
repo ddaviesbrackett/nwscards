@@ -1,7 +1,8 @@
 <html>
 <body>
 <h2>Hi {{{$user->name}}},</h2>
-<p> Thank you very much for your grocery card order.  This email is to confirm your order.  Please reply to this email if anything here doesn't look right.</p>
+<p> Thank you very much for your grocery card order.  This email is to confirm {{{$isChange?"the changes you just made to ":""}}}your order.  
+Please reply to this email if anything here doesn't look right.</p>
 <h2>Your recurring order</h2>
 	<p>
 		You have ordered<br/>

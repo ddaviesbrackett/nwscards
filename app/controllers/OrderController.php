@@ -186,6 +186,16 @@ class OrderController extends BaseController {
 				
 			if ($user->save())
 			{
+				Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){
+				$message->subject('Grocery card order confirmation');
+				$message->to($user->email, $user->name);
+				if(! $user->payment)
+				{
+					$agreementView = View::make('partial.debitterms');
+					$agreement = '<html><body>'.$agreementView->render().'</body></html>';
+					$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
+				}
+			});
 				return Redirect::to('/account');	
 			}
 			else
@@ -279,7 +289,7 @@ class OrderController extends BaseController {
 				throw $e;
 			}
 
-			Mail::send('emails.newconfirmation', ['user' => $user], function($message) use ($user){
+			Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => false], function($message) use ($user){
 				$message->subject('Grocery card order confirmation');
 				$message->to($user->email, $user->name);
 				if(! $user->payment)
