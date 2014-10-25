@@ -39,6 +39,7 @@
 								<li><a href="/admin/totals">Totals</a></li>
 					            <li><a href="/admin/orders">Orders</a></li>
 					            <li><a href="/tracking/leaderboard">Tracking</a></li>
+					            <li><a href="/admin/impersonate">Change Another User</a></li>
 					          </ul>
 					        </li>
 							@endif
@@ -49,7 +50,11 @@
 								<li><a href="/edit">Change</a></li>
 					          </ul>
 					        </li>
-							<li><a href="/logout">Log Out</a></li>
+					        @if(Session::has('adminUser'))
+								<li><a href="/admin/unimpersonate"><span class="glyphicon glyphicon-log-out"></span> Stop Impersonating</a></li>
+							@else
+								<li><a href="/logout">Log Out</a></li>
+							@endif
 						@else
 							<li><a href="/login"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
 						@endif

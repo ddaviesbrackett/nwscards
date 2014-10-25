@@ -50,7 +50,7 @@
 				</p>
 				Supporting:
 				<ul style='list-style-type:none;padding-left:0;'>
-					<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a></b></li>
+					<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a><b></li>
 					@foreach ($user->classesSupported() as $class)
 						<li><b><a href="/tracking/{{{$class}}}">{{{User::className($class)}}}</a></b></li>
 					@endforeach

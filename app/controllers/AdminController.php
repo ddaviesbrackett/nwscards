@@ -1,6 +1,32 @@
 <?php
 
 class AdminController extends BaseController {
+	public function getImpersonate()
+	{
+		$users = Sentry::findAllUsers();
+		return View::make('admin.impersonation', ['users' => $users]);
+	}
+
+	public function doImpersonate($id)
+	{
+		$user = Sentry::findUserById($id);
+		if( is_null($user) ) {
+			return $this->getImpersonate();
+		}
+		Session::put('adminUser', Sentry::getUser());
+		Sentry::login($user);
+		return Redirect::to('/account');
+	}
+
+	public function unImpersonate()
+	{
+		if(Session::has('adminUser'))
+		{
+			Sentry::login(Session::pull('adminUser'));
+		}
+		return Redirect::to('/account');
+	}
+
 	public function getCaft($cutoffId)
 	{
 		$users = User::where('payment', '=', 0)->whereHas('cutoffdates', function($q) use ($cutoffId) {

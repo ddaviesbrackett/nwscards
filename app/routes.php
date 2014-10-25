@@ -42,6 +42,24 @@ Route::get('/admin/order/{id}',
 		'uses' => 'AdminController@getOrder', 
 		'as' =>'admin-order',
 	]);
+Route::get('/admin/impersonate', 
+	[
+		'before'=>['auth','admin'], 
+		'uses' => 'AdminController@getImpersonate', 
+		'as' =>'admin-impersonate',
+	]);
+Route::get('/admin/impersonate/{id}', 
+	[
+		'before'=>['auth','admin'], 
+		'uses' => 'AdminController@doImpersonate', 
+		'as' =>'admin-doimpersonate',
+	]);
+Route::get('/admin/unimpersonate/', 
+	[
+		'before'=>['auth'], 
+		'uses' => 'AdminController@unImpersonate', 
+		'as' =>'admin-unimpersonate',
+	]);
 
 Route::get('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getProfitSettingForm', 'as' => 'admin-getprofit']);
 Route::post('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin', 'csrf'], 'uses' => 'AdminController@postProfitSettingForm', 'as' => 'admin-postprofit']);
