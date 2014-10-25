@@ -438,6 +438,10 @@
 							{{ Form::text('pickupalt', null, array('class' => 'form-control', 'placeholder' => 'Is someone else picking up your order?') ) }}
 							<span class="help-block">You'll have to sign for your cards.  If someone else can sign for them, enter their name here.</span>
 						</div>
+						<div class="col-sm-12"><div class="checkbox"><label>
+							{{ Form::checkbox('employee') }}
+							I or my alternate am employed by the school
+						</label></div></div>
 					</div>
 					<div class="radio"><label>
 						<input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" {{ (Input::old('deliverymethod') == 'mail' || (isset($user) && $user->deliverymethod == 1)) ? 'checked':''}} />

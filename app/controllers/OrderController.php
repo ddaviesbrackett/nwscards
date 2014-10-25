@@ -103,7 +103,8 @@ class OrderController extends BaseController {
 			{
 				$user->deliverymethod = $in['deliverymethod'] == 'mail';
 				$user->referrer = $in['referrer'];
-				$user->pickupalt = $in['pickupalt'];							
+				$user->pickupalt = $in['pickupalt'];
+				$user->employee = array_key_exists('employee', $in);
 
 				$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
 		
@@ -332,7 +333,7 @@ class OrderController extends BaseController {
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
 				'payment'	=> 'required|in:debit,credit,keep,cancel,resume',
-				'debit-transit'		=> 'required_if:payment,debit|digits_between:5,7',
+				'debit-transit'		=> 'required_if:payment,debit|digits:5',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
 				'debitterms' 	=> 'required_if:payment,debit',
