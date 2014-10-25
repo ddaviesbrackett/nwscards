@@ -26,8 +26,11 @@
 				  <a class="navbar-brand" href="/">Grocery Cards</a>
 				</div>
 				<div class="collapse navbar-collapse" id="mainnav-collapse">
-					<ul class="nav navbar-nav navbar-right">
+					<ul class="nav navbar-nav navbar-left">
+						<li><a href="/new">Order</a></li>
 						@yield('nav-extra')
+					</ul>
+					<ul class="nav navbar-nav navbar-right">
 						@if(Sentry::check())
 							@if(Sentry::getUser()->isAdmin())
 							<li class="admin-dropdown">
@@ -48,8 +51,7 @@
 					        </li>
 							<li><a href="/logout">Log Out</a></li>
 						@else
-							<li><a href="/new">Order Cards</a></li>
-							<li><a href="/login">Log In</a></li>
+							<li><a href="/login"><span class="glyphicon glyphicon-user"></span> Log In</a></li>
 						@endif
 					</ul>
 				</div>
@@ -57,7 +59,6 @@
 		</header>
 		@yield('content')
 		<div class='text-center footer'>
-			<hr/>
 			We appreciate your support<br> This fundraiser is presented and adminstered by the <a href="mailto:grocerycards@nelsonwaldorf.org">Nelson Waldorf School Parent Association</a>
 		</div>
 	</body>

@@ -11,7 +11,6 @@
 
 @section('nav-extra')
 	<li><a href="#about">About</a></li>
-	<li><a href="#method">How it Works</a></li>
 	<li><a href="#faq">FAQ</a></li>
 	<li><a href="#contact">Contact</a></li>
 @stop
