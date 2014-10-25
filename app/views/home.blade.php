@@ -173,8 +173,7 @@
 	    </div>
 	    <div id="faq7" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Contact us using <a href="#contact">the form below</a> – and we’ll help you out.</p>
-			<p>Please note we require 10 days’ notice to change an order.</p>
+	        <p>You can change an existing order with <a href="/edit">this form</a>. Please note that you can't change your order while orders are being processed.</p>
 	      </div>
 	    </div>
 	  </div>
@@ -333,7 +332,13 @@
 	    </div>
 	  </div>
 	</div>
-
+	<p style="margin-top:3em;">
+		@if (Sentry::check())
+			<a class="btn btn-danger btn-lg" href="/edit">Change Order</a>
+		@else
+			<a class="btn btn-danger btn-lg" href="/new">Order Now</a>
+		@endif
+	</p>
 	<a name="contact"></a>
 	<h2>Got another question? We've got answers</h2>
 	<p>
