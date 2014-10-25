@@ -74,7 +74,7 @@
 						@endif
 					@endif
 				</p>
-				<p><a class="btn btn-danger" href="/edit">Change your order</a>
+				<p><a class="btn btn-primary" href="/edit">Change your order</a>
 			@else
 				You have no recurring order. You'll make more money for the school if you order more cards!
 			@endif
