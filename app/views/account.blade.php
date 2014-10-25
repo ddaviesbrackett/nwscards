@@ -50,9 +50,9 @@
 				</p>
 				Supporting:
 				<ul style='list-style-type:none;padding-left:0;'>
-					<li><b>the Tuition Reduction Fund</b></li>
+					<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a></b></li>
 					@foreach ($user->classesSupported() as $class)
-						<li><b>{{{User::className($class)}}}</b></li>
+						<li><b><a href="/tracking/{{{$class}}}">{{{User::className($class)}}}</a></b></li>
 					@endforeach
 				</ul>
 				<p>
@@ -74,6 +74,7 @@
 						@endif
 					@endif
 				</p>
+				<p><a class="btn btn-danger" href="/edit">Change your order</a>
 			@else
 				You have no recurring order. You'll make more money for the school if you order more cards!
 			@endif
