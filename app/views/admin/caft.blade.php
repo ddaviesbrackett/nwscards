@@ -12,8 +12,9 @@
 	<h1>CAFT entry form</h1>
 </div>
 <div class="container-fluid">
-
+<?php $total = 0;?>
 @foreach($model as $name => $bucket)
+<?php $total += count($bucket);?>
 	<h2>{{{$name}}}</h2>
 	<table class='table'>
 		<tr>
@@ -37,7 +38,7 @@
 	</table>
 @endforeach
 <p>
-	Total rows: {{{count($model)}}}
+	Total rows: {{{$total}}}
 </p>
 <p>
 	Total amount: {{{$total}}}00

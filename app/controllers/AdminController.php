@@ -38,12 +38,24 @@ class AdminController extends BaseController {
 			'Unchanged' => [],
 		];
 		$total = 0;
-		$cutoff = CutoffDate::find($cutoffId)->cutoffdate()->tz('UTC');
-		$users->each(function($user) use (&$viewmodel, &$total, $cutoff) {
+		$bicutoff = null;
+		$mcutoff = null;
+		if($cutoffId < 2) {
+			$bicutoff = CutoffDate::find($cutoffId - 1)->cutoffdate()->tz('UTC');
+			$mcutoff = CutoffDate::find($cutoffId - 2)->cutoffdate()->tz('UTC');
+		}
+		$users->each(function($user) use (&$viewmodel, &$total, $bicutoff, $mcutoff, $cutoffId) {
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
 			$total += $user->saveon + $user->coop;
-			$bucket = $user->created_at < $cutoff ? 'New' : $user->updated_at < $cutoff ? 'Updated' : 'Unchanged';
+			if($cutoffId > 2) {
+				$cutoff = $user->schedule == 'biweekly' ? $bicutoff : $mcutoff;
+				$bucket = ($cutoff->lt($user->created_at) ? 'New' : ($cutoff->lt($user->updated_at) ? 'Updated' : 'Unchanged'));
+			}
+			else {
+				$bucket = 'New';
+			}
+
 			$viewmodel[$bucket][] = [
 				'user' => $user,
 				'acct' =>$stripeCustomer->metadata['debit-account'],
