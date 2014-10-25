@@ -31,14 +31,20 @@ class AdminController extends BaseController {
 	{
 		$users = User::where('payment', '=', 0)->whereHas('cutoffdates', function($q) use ($cutoffId) {
 			$q->where('cutoffdates.id', '=', $cutoffId);
-		})->orderby('activated_at', 'desc')->get();
-		$viewmodel = [];
+		})->orderby('updated_at', 'desc')->get();
+		$viewmodel = [
+			'New' => [],
+			'Updated' => [],
+			'Unchanged' => [],
+		];
 		$total = 0;
-		$users->each(function($user) use (&$viewmodel, &$total) {
+		$cutoff = CutoffDate::find($cutoffId)->cutoffdate()->tz('UTC');
+		$users->each(function($user) use (&$viewmodel, &$total, $cutoff) {
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
 			$total += $user->saveon + $user->coop;
-			$viewmodel[] = [
+			$bucket = $user->created_at < $cutoff ? 'New' : $user->updated_at < $cutoff ? 'Updated' : 'Unchanged';
+			$viewmodel[$bucket][] = [
 				'user' => $user,
 				'acct' =>$stripeCustomer->metadata['debit-account'],
 				'transit' =>$stripeCustomer->metadata['debit-transit'],

@@ -12,26 +12,30 @@
 	<h1>CAFT entry form</h1>
 </div>
 <div class="container-fluid">
-<table class='table'>
-	<tr>
-		<th>Account</th>
-		<th>Transit</th>
-		<th>Institution</th>
-		<th>Name</th>
-		<th>Amount</th>
-		<th>Frequency</th>
-	</tr>
-	@foreach($model as $info)
+
+@foreach($model as $name => $bucket)
+	<h2>{{{$name}}}</h2>
+	<table class='table'>
 		<tr>
-			<td>{{{$info['acct']}}}</td>
-			<td>{{{$info['transit']}}}</td>
-			<td>{{{$info['institution']}}}</td>
-			<td>{{{$info['user']->name}}}</td>
-			<td>{{{$info['user']->coop + $info['user']->saveon}}}00</td>
-			<td>{{{$info['user']->schedule}}}</td>
+			<th>Account</th>
+			<th>Institution</th>
+			<th>Transit</th>
+			<th>Name</th>
+			<th>Amount</th>
+			<th>Frequency</th>
 		</tr>
-	@endforeach
-</table>
+		@foreach($bucket as $info)
+			<tr>
+				<td>{{{$info['acct']}}}</td>
+				<td>{{{$info['institution']}}}</td>
+				<td>{{{$info['transit']}}}</td>
+				<td>{{{$info['user']->name}}}</td>
+				<td>{{{$info['user']->coop + $info['user']->saveon}}}00</td>
+				<td>{{{$info['user']->schedule}}}</td>
+			</tr>
+		@endforeach
+	</table>
+@endforeach
 <p>
 	Total rows: {{{count($model)}}}
 </p>
