@@ -148,7 +148,7 @@ class OrderController extends BaseController {
 			
 				$stripeUser->save();
 			
-				if( $in['payment'] == 'cancel')
+				if( $in['payment'] == 'cancel' || $in['saveon']+$in['coop'] == 0) //setting your amounts to 0 cancels you
 				{
 					// if they cancel, remove their plan in stripe (if they have one)
 					// TODO: fix this so we can cancel/resume 
