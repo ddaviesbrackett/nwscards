@@ -273,11 +273,6 @@
 					{{ Form::checkbox('class_6') }}
 					Class 6 (Mr. Goncalves)
 				</label></div></div>
-					@if(isset($user))
-				Edit your order
-			@else
-				New Order
-			@endif
 			<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
 					{{ Form::checkbox('class_7') }}
 					Class 7 (Ms. Thayer)
