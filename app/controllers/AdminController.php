@@ -40,7 +40,7 @@ class AdminController extends BaseController {
 		$total = 0;
 		$bicutoff = null;
 		$mcutoff = null;
-		if($cutoffId < 2) {
+		if($cutoffId > 2) {
 			$bicutoff = CutoffDate::find($cutoffId - 1)->cutoffdate()->tz('UTC');
 			$mcutoff = CutoffDate::find($cutoffId - 2)->cutoffdate()->tz('UTC');
 		}
