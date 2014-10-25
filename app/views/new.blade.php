@@ -315,11 +315,6 @@
 							@endif
 						</label></div>			
 					@endif
-					@if ( isset($user) && ($user->stripe_active == 1) )	
-						<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_cancel" value="cancel" />Cancel Cards Plan!</label></div>			
-					@elseif ( isset($user) && ($user->stripe_active == 0) )
-						<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_keep" value="resume" />Resume cards plan. You will be charged by {{{$user->payment?'credit card':'direct debit'}}} on {{{$dates[$user->schedule]['charge']}}}.</label></div>			
-					@endif
 					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>
 						@if (isset($user) && $user->payment == 1)
 							Switch to direct debit (and raise more money)
