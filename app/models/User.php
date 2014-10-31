@@ -43,6 +43,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return new NWSCardsStripeGateWay($this, $plan);
 	}
 
+	public function hasStripePlan()
+	{
+		return $this->onPlan('28days') || $this->onPlan('14days');
+	}
 
 	public function classesSupported() {
 		$ret = [];

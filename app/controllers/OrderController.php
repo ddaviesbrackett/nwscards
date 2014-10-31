@@ -18,6 +18,57 @@ class OrderController extends BaseController {
 		return View::make('account');
 	}
 
+	public function Suspend()
+	{
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+
+		$user = Sentry::getUser();
+
+		if ($user->hasStripePlan())
+		{
+			$user->subscription()->cancelNow();
+		}
+		
+		$user->stripe_active = 0;
+		$user->save();
+
+		Session::flash('ordermessage', 'Suspending Order');
+		return Redirect::to('/account');	
+	}
+
+	public function Resume()
+	{
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+
+		$user = Sentry::getUser();
+
+		if ( $user->payment == 1 )
+		{
+			$plan = null;
+			if($user->schedule == 'biweekly'){
+				$plan = '14days';
+			}
+			else {
+				$plan = '28days';
+			}
+			$chargedate = BaseController::getCutoffs()[$user->schedule]['charge'];
+			$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->payment + $user->coop);
+			$gateway->create(null, array(), $gateway->getStripeCustomer());
+		}
+
+		$user->stripe_active = 1;
+		$user->save();
+
+		Session::flash('ordermessage', 'Resuming Order');
+		return Redirect::to('/account');	
+	}
+
 	public function getNew()
 	{
 		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null]);
@@ -25,6 +76,7 @@ class OrderController extends BaseController {
 
 	public function getEdit()
 	{
+		var_dump(Sentry::getUser());
 		if(OrderController::IsBlackoutPeriod())
 		{
 			return View::make('edit-blackout');
@@ -90,7 +142,7 @@ class OrderController extends BaseController {
 
 			$cardToken = ( ($in['payment'] == 'credit') && isset($in['stripeToken']) ) ? $in['stripeToken'] : null;
 
-			$bIsSubscribed = $user->onPlan('28days') || $user->onPlan('14days');
+			$bIsSubscribed = $user->hasStripePlan();
 			
 			// if they are paying with credit already, let them change the card.
 			if ( ( $cardToken != null ) && ( $user->payment == 1 ) && ( $bIsSubscribed ) )
@@ -129,8 +181,6 @@ class OrderController extends BaseController {
 				if( $in['payment'] == 'debit' )
 				{
 					//TODO donna will need to know about this?
-					$user->payment = 0;
-					$user->stripe_active = 1;
 					$extras = [
 						'debit-transit'=>$in['debit-transit'],
 						'debit-institution'=>$in['debit-institution'],
@@ -144,6 +194,10 @@ class OrderController extends BaseController {
 						$bIsSubscribed = false;
 					}
 
+					$user->payment = 0;
+
+					// cancelling plan sets stripe-active to 0. need to reset it here.
+					$user->stripe_active = 1;
 				}
 			
 				$stripeUser->save();
@@ -314,8 +368,8 @@ class OrderController extends BaseController {
 
 	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
-	{
-		return (new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
+	{	
+		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
 	private static function GetRules($id=null)
