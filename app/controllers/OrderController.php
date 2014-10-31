@@ -25,6 +25,7 @@ class OrderController extends BaseController {
 
 	public function getEdit()
 	{
+		var_dump(OrderController::IsBlackoutPeriod());
 		if(OrderController::IsBlackoutPeriod())
 		{
 			return View::make('edit-blackout');
@@ -315,7 +316,7 @@ class OrderController extends BaseController {
 	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
 	{	
-		return false && ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
+		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
 	private static function GetRules($id=null)
