@@ -76,7 +76,6 @@ class OrderController extends BaseController {
 
 	public function getEdit()
 	{
-		var_dump(Sentry::getUser());
 		if(OrderController::IsBlackoutPeriod())
 		{
 			return View::make('edit-blackout');
