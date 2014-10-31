@@ -25,7 +25,6 @@ class OrderController extends BaseController {
 
 	public function getEdit()
 	{
-		var_dump(OrderController::IsBlackoutPeriod());
 		if(OrderController::IsBlackoutPeriod())
 		{
 			return View::make('edit-blackout');
