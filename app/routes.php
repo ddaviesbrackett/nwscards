@@ -15,7 +15,8 @@ Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'
 
 Route::get('/edit', array('before' => 'auth', 'uses' => 'OrderController@getEdit'));
 Route::post('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
-
+Route::get('/Suspend', array('before' => 'auth', 'uses' =>'OrderController@Suspend'));
+Route::get('/Resume', array('before' => 'auth', 'uses' =>'OrderController@Resume'));
 
 //contact form
 Route::post('/contact', array('before' => 'csrf', 'uses' =>'HomeController@postContact'));

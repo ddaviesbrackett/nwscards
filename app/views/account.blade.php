@@ -33,12 +33,12 @@
 			@endif
 		<hr/>
 		@endif
-			<h2>Your next order</h2>
-			<p>You will be charged on <b>{{{$dates[$user->schedule]['charge']}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
-			<p>Your cards will be available on <b>{{{$dates[$user->schedule]['delivery']}}}</b>.</p>
-		<hr/>
-			<h2>Your recurring order</h2>
-			@if($user->coop > 0 || $user->saveon > 0)
+			@if( ($user->coop > 0 || $user->saveon > 0) && ( $user->stripe_active == 1 ))
+				<h2>Your next order</h2>
+				<p>You will be charged on <b>{{{$dates[$user->schedule]['charge']}}}</b>, by <b>{{{$user->payment?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
+				<p>Your cards will be available on <b>{{{$dates[$user->schedule]['delivery']}}}</b>.</p>
+				<hr/>
+				<h2>Your recurring order</h2>
 				<p>
 					You have a <b style="text-transform:capitalize;">{{{$user->schedule}}}</b> order of<br/>
 					@if($user->coop > 0)
@@ -75,9 +75,14 @@
 					@endif
 				</p>
 			@else
-				You have no recurring order. You'll make more money for the school if you order more cards!
+				<p>You have no recurring order. You'll make more money for the school if you order more cards!</p>
 			@endif
 			<p><a class="btn btn-primary" href="/edit">Change your order</a></p>
+			@if ($user->stripe_active == 1)
+				<p><a class="btn btn-primary" href="{{action('OrderController@Suspend')}}">Suspend your order</a></p>
+			@elseif( $user->stripe_active == 0 && ($user->saveon+$user->coop> 0))
+				<p><a class="btn btn-primary" href="{{action('OrderController@Resume')}}">Resume your order</a></p>
+			@endif
 			<h2>Your order history</h2>
 			<table class="table text-left">
 				<tr>
