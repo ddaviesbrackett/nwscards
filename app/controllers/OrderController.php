@@ -266,7 +266,7 @@ class OrderController extends BaseController {
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
  		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
-
+ 		$validator->mergeRules('password', 'required');
 		// process the login
 		if ($validator->fails()) {
 			return Redirect::to('/new')
