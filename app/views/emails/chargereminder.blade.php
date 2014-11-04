@@ -1,7 +1,7 @@
 <html>
 <body>
 	<h2>Hi {{{$user->name}}},</h2>
-	<p> This  is a reminder that you'll be charged for your grocery card order {{{$order->cutoffdate->chargedate()->format('l, F jS')}}}.</p>
+	<p> This is a reminder that you'll be charged for your grocery card order {{{$order->cutoffdate->chargedate()->format('l, F jS')}}}.</p>
 	<p>
 		You have ordered<br/>
 		<b>${{{$order->coop}}}00 from Kootenay Co-op</b><br/>
@@ -28,7 +28,8 @@
 	<p>
 		Thank you for your support,<br/>
 		Donna Davies Brackett<br/>
-		The Nelson Waldorf School Grocery Card Fundraiser Staff
+		
+	<p>NWS Grocery Cards Committee</p>
 	</p>
 </body>
 </html>

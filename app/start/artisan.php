@@ -11,6 +11,5 @@
 |
 */
 
-Artisan::add(new GenerateOrders);
 Artisan::add(new AssignAdminRights);
-Artisan::add(new EmailReminder);
+Artisan::add(new NightlyProcessing);
