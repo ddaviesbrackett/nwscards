@@ -34,6 +34,14 @@ p {
 	margin-bottom:20px;
 }
 
+a {
+	color:#D74615;
+}
+
+a:hover, a:focus {
+	color:#BD3E13;
+}
+
 .mainnav {
 	margin-bottom:0;
 }
@@ -68,6 +76,23 @@ p {
 
 .masthead a {
 	color:#fff;
+}
+
+.subnav {
+	background-color:#D74615;
+	border-radius:0;
+}
+.subnav .icon-bar
+{
+	background-color:#fff;
+}
+
+.subnav a {
+	color:#fff;
+}
+
+.subnav .nav>li>a:hover, .subnav .nav>li>a:focus {
+	background-color:#BD3E13;
 }
 
 .callout

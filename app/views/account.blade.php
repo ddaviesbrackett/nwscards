@@ -8,13 +8,36 @@
 @stop
 
 @section('content')
-<div class="masthead">
+<div class="masthead" style="padding-bottom:40px;">
 	@if($message == 'order created')
 		<h1>Your order succeeded</h1>
 	@else
 		<h1>{{{money_format('%n', $user->orders->sum('profit'))}}} raised so far</h1>
 	@endif
-	<h3>Here's what's happening</h3>
+</div>
+<div>
+	<header class="navbar subnav" role="navigation">
+		<div class="container-fluid">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#subnav-collapse">
+		    <span class="sr-only">Toggle sub-navigation</span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		  </button>
+		</div>
+		<div class="collapse navbar-collapse" id="subnav-collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="/edit">Change Your Order</a></li>
+				@if ($user->stripe_active == 1)
+					<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Order</a></li>
+				@elseif( $user->stripe_active == 0 && ($user->saveon+$user->coop> 0))
+					<li><a href="{{action('OrderController@Resume')}}">Resume Your Order</a></li>
+				@endif
+			</ul>
+		</div>
+	</div>
+</header>
 </div>
 <div class="container-fluid text-center">
 	@if($message == 'order created')
@@ -76,12 +99,6 @@
 				</p>
 			@else
 				<p>You have no recurring order. You'll make more money for the school if you order more cards!</p>
-			@endif
-			<p><a class="btn btn-primary" href="/edit">Change your order</a></p>
-			@if ($user->stripe_active == 1)
-				<p><a class="btn btn-primary" href="{{action('OrderController@Suspend')}}">Suspend your order</a></p>
-			@elseif( $user->stripe_active == 0 && ($user->saveon+$user->coop> 0))
-				<p><a class="btn btn-primary" href="{{action('OrderController@Resume')}}">Resume your order</a></p>
 			@endif
 			<h2>Your order history</h2>
 			<table class="table text-left">

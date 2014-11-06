@@ -43,12 +43,8 @@
 					          </ul>
 					        </li>
 							@endif
-							<li class="user-dropdown">
-					          <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account <span class="caret"></span></a>
-					          <ul class="dropdown-menu" role="menu">
-								<li><a href="/account">View</a></li>
-								<li><a href="/edit">Change</a></li>
-					          </ul>
+							<li>
+					          <a href="/account">My Account</a>
 					        </li>
 					        @if(Session::has('adminUser'))
 								<li><a href="/admin/unimpersonate"><span class="glyphicon glyphicon-log-out"></span> Stop Impersonating</a></li>
