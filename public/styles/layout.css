@@ -108,10 +108,15 @@ a:hover, a:focus {
 	margin-bottom:0;
 }
 
-.callout-title
+.callout-title, .nav-tabs
 {
+	font-family:'Oswald', Verdana, sans-serif;
 	margin:1.5em 0 0.5em 0;
 	font-size:18pt;
+}
+
+.nav-tabs {
+	margin:0;
 }
 
 html {

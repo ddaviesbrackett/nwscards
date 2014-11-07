@@ -30,7 +30,6 @@
 </div>
 @if (isset($user) && OrderController::IsBlackoutPeriod())
 <div class="container-fluid">
-	<!-- TODO better message here and styling -->
 	<h4 class="callout-title">Order being processed!</h4>
 		<span>
 			Orders are currently being processed and will be available for edit on: {{{@OrderController::GetBlackoutEndDate()->format('l, F jS')}}}
@@ -44,75 +43,137 @@
 	@else
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@endif
-		<h4 class="callout-title">
-			@if(isset($user))
-				Change Your Recurring Order
-			@else
-				Make a Recurring Order
+		@if(isset($user))
+		<h4 class="callout-title">Change Your Recurring Order</h4>
+		@else
+		<ul class="nav nav-tabs" role="tablist" style="margin-top:2em;">
+  			<li role="presentation" class="active"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
+  			<li role="presentation"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
+		</ul>
+		@endif
+		<div class="tab-content {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
+			<div role="tabpanel" id="recurring" class="callout order tab-pane active">
+				<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
+					<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							{{ Form::input('number', 'coop', isset($user) ? null : 0, array('class' => 'form-control')) }}
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12 text-warning'>
+						@if($errors->has('coop'))
+							<span class='help-block'>{{{$errors->first('coop')}}}</span>
+						@endif
+					</div>
+				</div>
+				<div class='form-group{{$errors->has("saveon")?" has-error":"";}}'>
+					<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							{{ Form::input('number', 'saveon',  isset($user) ? null : 0, array('class' => 'form-control')) }}
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12'>
+						@if($errors->has('saveon'))
+							<span class='help-block'>{{{$errors->first('saveon')}}}</span>
+						@endif
+					</div>
+				</div>
+				<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
+					<label class="col-sm-3 text-right">Schedule:</label>
+					<div class="col-sm-8">
+						<div class="radio"><label>
+							{{ Form::radio('schedule', 'biweekly') }}
+							Every 2 weeks, starting <b>{{{$dates['biweekly']['delivery']}}}</b>
+						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							{{ Form::radio('schedule', 'monthly') }}
+							Once a month, starting <b>{{{$dates['monthly']['delivery']}}}</b>
+						</label></div>
+						<div class="radio"><label>
+							{{ Form::radio('schedule', 'monthly-second') }}
+							Once a month, starting <b>{{{$dates['monthly-second']['delivery']}}}</b>
+						</label></div>
+						@if($errors->has('schedule'))
+							<span class='help-block'>{{{$errors->first('schedule')}}}</span>
+						@endif
+					</div>
+				</div>
+			</div>
+			@if( !isset($user) )
+				<div role="tabpanel" id="onetime" class="callout order tab-pane">
+					<div class='form-group{{$errors->has("coop_onetime")?" has-error":"";}}'>
+						<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+						<div class='col-sm-3'>
+							<div class="input-group">
+								{{ Form::input('number', 'coop_onetime', isset($user) ? null : 0, array('class' => 'form-control')) }}
+								<span class="input-group-addon">x $100</span>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class="alert alert-warning alert-dismissible hidden" role="alert">
+							  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							  That's $<span class="amt"></span>00 in cards!
+							</div>
+						</div>
+						<div class='col-sm-12 text-warning'>
+							@if($errors->has('coop_onetime'))
+								<span class='help-block'>{{{$errors->first('coop_onetime')}}}</span>
+							@endif
+						</div>
+					</div>
+					<div class='form-group{{$errors->has("saveon_onetime")?" has-error":"";}}'>
+						<label for='saveon_onetime' class='col-sm-3 text-right'>Save-On:</label>
+						<div class='col-sm-3'>
+							<div class="input-group">
+								{{ Form::input('number', 'saveon_onetime',  isset($user) ? null : 0, array('class' => 'form-control')) }}
+								<span class="input-group-addon">x $100</span>
+							</div>
+						</div>
+						<div class='col-sm-6'>
+							<div class="alert alert-warning alert-dismissible hidden" role="alert">
+							  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+							  That's $<span class="amt"></span>00 in cards!
+							</div>
+						</div>
+						<div class='col-sm-12'>
+							@if($errors->has('saveon_onetime'))
+								<span class='help-block'>{{{$errors->first('saveon_onetime')}}}</span>
+							@endif
+						</div>
+					</div>
+					<div class='form-group{{$errors->has("schedule_onetime")?" has-error":"";}}'>
+						<label class="col-sm-3 text-right">Date:</label>
+						<div class="col-sm-8">
+							<div class="radio"><label>
+								{{ Form::radio('schedule_onetime', 'monthly') }}
+								On <b>{{{$dates['monthly']['delivery']}}}</b>
+							</label></div>
+							<div class="radio"><label>
+								{{ Form::radio('schedule_onetime', 'monthly-second') }}
+								On <b>{{{$dates['monthly-second']['delivery']}}}</b>
+							</label></div>
+							@if($errors->has('schedule_onetime'))
+								<span class='help-block'>{{{$errors->first('schedule_onetime')}}}</span>
+							@endif
+						</div>
+					</div>
+				</div>
 			@endif
-		</h4>
-		<div class="callout order {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
-			
-			<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
-				<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
-				<div class='col-sm-3'>
-					<div class="input-group">
-						{{ Form::input('number', 'coop', isset($user) ? null : 0, array('class' => 'form-control')) }}
-						<span class="input-group-addon">x $100</span>
-					</div>
-				</div>
-				<div class='col-sm-6'>
-					<div class="alert alert-warning alert-dismissible hidden" role="alert">
-					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					  That's $<span class="amt"></span>00 in cards!
-					</div>
-				</div>
-				<div class='col-sm-12 text-warning'>
-					@if($errors->has('coop'))
-						<span class='help-block'>{{{$errors->first('coop')}}}</span>
-					@endif
-				</div>
-			</div>
-			<div class='form-group{{$errors->has("saveon")?" has-error":"";}}'>
-				<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
-				<div class='col-sm-3'>
-					<div class="input-group">
-						{{ Form::input('number', 'saveon',  isset($user) ? null : 0, array('class' => 'form-control')) }}
-						<span class="input-group-addon">x $100</span>
-					</div>
-				</div>
-				<div class='col-sm-6'>
-					<div class="alert alert-warning alert-dismissible hidden" role="alert">
-					  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-					  That's $<span class="amt"></span>00 in cards!
-					</div>
-				</div>
-				<div class='col-sm-12'>
-					@if($errors->has('saveon'))
-						<span class='help-block'>{{{$errors->first('saveon')}}}</span>
-					@endif
-				</div>
-			</div>
-			<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
-				<label class="col-sm-3 text-right">Schedule:</label>
-				<div class="col-sm-8">
-					<div class="radio"><label>
-						{{ Form::radio('schedule', 'biweekly') }}
-						Every 2 weeks, starting <b>{{{$dates['biweekly']['delivery']}}}</b>
-					</label></div>
-					<div class="radio" style="margin-top:1em;"><label>
-						{{ Form::radio('schedule', 'monthly') }}
-						Once a month, starting <b>{{{$dates['monthly']['delivery']}}}</b>
-					</label></div>
-					<div class="radio"><label>
-						{{ Form::radio('schedule', 'monthly-second') }}
-						Once a month, starting <b>{{{$dates['monthly-second']['delivery']}}}</b>
-					</label></div>
-					@if($errors->has('schedule'))
-						<span class='help-block'>{{{$errors->first('schedule')}}}</span>
-					@endif
-				</div>
-			</div>
 		</div>
 
 		<h4 class="callout-title">
