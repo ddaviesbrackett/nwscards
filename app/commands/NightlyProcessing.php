@@ -38,7 +38,7 @@ class NightlyProcessing extends Command {
 	 */
 	public function fire()
 	{
-		$date = Carbon::parse($this->argument('date'));
+		$date = Carbon::parse($this->argument('date'), 'America/Los_Angeles');
 		
 		$eventResults = array_where(Event::fire('timed.nightly', [$date]), function($k, $v) {
 			return !is_null($v);
