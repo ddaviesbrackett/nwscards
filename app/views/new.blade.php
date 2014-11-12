@@ -316,9 +316,9 @@
 						</label></div>			
 					@endif
 					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>
-						@if (isset($user) && $user->payment == 1)
+						@if (isset($user) && $user->isCreditCard())
 							Switch to direct debit (and raise more money)
-						@elseif (isset($user) && $user->payment == 0)
+						@elseif (isset($user) && ! $user->isCreditCard())
 							Update debit information
 						@else
 							Direct Debit (we make more money with debit)
@@ -369,10 +369,10 @@
 							</div>
 						</div>
 					</div>
-					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && $user->payment != 1) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>
-						@if (isset($user) && $user->payment == 1)
+					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && !$user->isCreditCard()) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>
+						@if (isset($user) && $user->isCreditCard())
 							Update Credit Card
-						@elseif (isset($user) && $user->payment == 0)
+						@elseif (isset($user) && ! $user->isCreditCard())
 							Switch to Credit Card
 						@else
 							Credit Card

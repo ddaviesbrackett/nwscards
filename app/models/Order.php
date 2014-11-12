@@ -37,6 +37,10 @@ class Order extends Eloquent {
 		return $this->belongsTo('CutoffDate', 'cutoff_date_id');
 	}
 
+	public function isCreditcard() {
+		return $this->payment;
+	}
+
 	public function classesSupported() {
 		$ret = [];
 		if($this->marigold > 0) $ret[] = 'marigold';

@@ -98,6 +98,27 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return $this->deliverymethod;
 	}
 
+	public function isCreditcard() {
+		return $this->payment;
+	}
+
+	public function getFriendlySchedule() {
+		switch ($this->schedule) {
+			case 'biweekly':
+				return 'Bi-weekly'
+				break;
+			case 'monthly':
+				return 'Monthly'
+				break;
+			case 'monthly-second':
+				return 'Monthly'
+				break;
+			default:
+				throw new Exception("Invalid schedule");
+				break;
+		}
+	}
+
 	public static function className($class) {
 		switch ($class) {
 			case 'marigold': return 'Marigolds';

@@ -10,7 +10,7 @@ Please reply to this email if anything here doesn't look right.</p>
 		<b>${{{$user->saveon}}}00 from Save-On</b><br/>
 	</p>
 	<p>
-		<b style="text-transform:capitalize;">{{{$user->schedule}}}</b><br/>
+		<b style="text-transform:capitalize;">{{{$user->getFriendlySchedule()}}}</b><br/>
 	</p>
 
 	<p>

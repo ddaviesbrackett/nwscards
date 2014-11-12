@@ -48,7 +48,7 @@ class OrderController extends BaseController {
 
 		$user = Sentry::getUser();
 
-		if ( $user->payment == 1 )
+		if ( $user->isCreditCard() )
 		{
 			$plan = null;
 			if($user->schedule == 'biweekly'){
@@ -58,7 +58,7 @@ class OrderController extends BaseController {
 				$plan = '28days';
 			}
 			$chargedate = BaseController::getCutoffs()[$user->schedule]['charge'];
-			$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->payment + $user->coop);
+			$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->saveon + $user->coop);
 			$gateway->create(null, array(), $gateway->getStripeCustomer());
 		}
 
@@ -212,13 +212,13 @@ class OrderController extends BaseController {
 					}
 					$user->stripe_active = 0;
 				}
-				else if ( ($in['payment'] == 'resume') && ($user->payment == 0) )
+				else if ( ($in['payment'] == 'resume') && ( ! $user->isCreditCard()) )
 				{ // resume a debit plan
 					$user->stripe_active = 1;
 				}
 				else if ( (( $cardToken != null ) && !( $bIsSubscribed )) // credit card selected -> new stripe subscription
 				  || ( $bIsSubscribed && $bStripePlanChanged ) // changing stripe subscription
-				  || ($user->stripe_active == 0 && $user->payment == 1 && $in['payment'] == 'resume') ) // resume stripe subscription
+				  || ($user->stripe_active == 0 && $user->isCreditCard() && $in['payment'] == 'resume') ) // resume stripe subscription
 				{
 					$user->stripe_active = 1;
 					$user->payment = 1;
@@ -243,7 +243,7 @@ class OrderController extends BaseController {
 				Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){
 					$message->subject('Grocery card order change confirmation');
 					$message->to($user->email, $user->name);
-					if(! $user->payment)
+					if(! $user->isCreditCard())
 					{
 						$agreementView = View::make('partial.debitterms');
 						$agreement = '<html><body>'.$agreementView->render().'</body></html>';
