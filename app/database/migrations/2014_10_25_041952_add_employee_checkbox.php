@@ -25,7 +25,7 @@ class AddEmployeeCheckbox extends Migration {
 	 */
 	public function down()
 	{
-		Schema::table('cutoffdates', function($table)
+		Schema::table('users', function($table)
 		{
 		    $table->dropColumn('employee');
 		});
