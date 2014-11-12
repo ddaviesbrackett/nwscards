@@ -12,10 +12,15 @@ class OrderGenerationHandler {
 		if($cutoff->orders->isEmpty()){ //don't regenerate orders that have been generated already
 			$users = User::where('stripe_active', '=', 1)
 			->where(function($q){
-				$q->where('saveon', '>', '0')->orWhere('coop','>','0');
+				$q->where('saveon', '>', '0')
+				  ->orWhere('coop','>','0')
+				  ->orWhere('saveon_onetime', '>', '0')
+				  ->orWhere('coop_onetime','>','0');
 			})
 			->where(function($q) use ($currentMonthly){
-				$q->where('schedule', '=', 'biweekly')->orWhere('schedule', '=', $currentMonthly);
+				$q->where('schedule', '=', 'biweekly')
+				  ->orWhere('schedule', '=', $currentMonthly),
+				  ->orWhere('schedule_onetime', '=', $currentMonthly);
 			})
 			->get();
 

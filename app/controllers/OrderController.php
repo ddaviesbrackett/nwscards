@@ -316,7 +316,7 @@ class OrderController extends BaseController {
 					$cardToken = $in['stripeToken'];
 				}
 				$gateway = null;
-				if(isset($cardToken)) {
+				if(isset($cardToken) && $in['saveon']+$in['coop'] > 0) {
 						$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
 						$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
 				}
