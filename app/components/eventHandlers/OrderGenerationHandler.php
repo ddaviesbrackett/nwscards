@@ -1,16 +1,15 @@
 <?php namespace NWSCards\eventHandlers;
-use \CutoffDate;
 class OrderGenerationHandler {
 	public function handle($date) {
 		$target = $date->copy();
-		$cutoff = CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();
+		$cutoff = \CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();
 		if(! isset($cutoff)) {
 			return;
 		}
 		$currentMonthly = $cutoff->first?'monthly':'monthly-second';
 
 		if($cutoff->orders->isEmpty()){ //don't regenerate orders that have been generated already
-			$users = User::where('stripe_active', '=', 1)
+			$users = \User::where('stripe_active', '=', 1)
 			->where(function($q){
 				$q->where('saveon', '>', '0')->orWhere('coop','>','0');
 			})
@@ -21,7 +20,7 @@ class OrderGenerationHandler {
 
 			foreach($users as $user)
 			{
-				$order = new Order([
+				$order = new \Order([
 					'paid' => 0,
 					'payment' => $user->payment,
 					'saveon' => $user->saveon,
@@ -31,7 +30,7 @@ class OrderGenerationHandler {
 				$order->cutoffdate()->associate($cutoff);
 				$user->orders()->save($order);
 
-				Mail::send('emails.chargereminder', ['user' => $user, 'order' => $order], function($message) use ($user, $order){
+				\Mail::send('emails.chargereminder', ['user' => $user, 'order' => $order], function($message) use ($user, $order){
 					$message->subject('Grocery cards next week - you\'ll be charged Monday');
 					$message->to($user->email, $user->name);
 				});
