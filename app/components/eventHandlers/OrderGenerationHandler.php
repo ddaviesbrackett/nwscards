@@ -24,17 +24,37 @@ class OrderGenerationHandler {
 			})
 			->get();
 
-			foreach($users as $user)
-			{
+			foreach($users as $user) {
 				$order = new Order([
 					'paid' => 0,
 					'payment' => $user->payment,
-					'saveon' => $user->saveon,
-					'coop' => $user->coop,
 					'deliverymethod' => $user->deliverymethod,
 					]);
+				if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{
+					$order->coop = $user->coop;
+					$order->saveon = $user->saveon;
+				}
+				if($user->schedule_onetime == $currentMonthly) {
+					$order->coop_onetime = $user->coop_onetime;
+					$order->saveon_onetime = $user->saveon_onetime;
+					$user->coop_onetime = 0;
+					$user->saveon_onetime = 0;
+					$user->schedule_onetime = '';
+					$user->save();
+				}
 				$order->cutoffdate()->associate($cutoff);
 				$user->orders()->save($order);
+
+				//since we're now entering the blackout period, we can add one-time orders to credit card invoices
+				//orders that are onetime-ONLY get dealt with separately on charge day, because this is easier than sorting through Stripe's API docs
+				if($order->isCreditcard() && ($order->saveon + $order->coop > 0) && ($order->saveon_onetime + $order->coop_onetime > 0) {
+					Stripe_InvoiceItem::create([
+						'customer' => $user->stripe_id, 
+						'currency' => 'cad', 
+						'description' => 'one-time order',
+						'amount' => ($order->saveon_onetime + $order->coop_onetime) * 100 * 100,
+					]);
+				}
 
 				Mail::send('emails.chargereminder', ['user' => $user, 'order' => $order], function($message) use ($user, $order){
 					$message->subject('Grocery cards next week - you\'ll be charged Monday');

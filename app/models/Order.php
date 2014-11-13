@@ -14,6 +14,8 @@ class Order extends Eloquent {
 		'payment',
 		'saveon',
 		'coop',
+		'saveon_onetime',
+		'coop_onetime',
 		'deliverymethod',
 		'marigold',
 		'daisy',

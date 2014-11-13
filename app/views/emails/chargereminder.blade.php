@@ -4,8 +4,8 @@
 	<p> This is a reminder that you'll be charged for your grocery card order {{{$order->cutoffdate->chargedate()->format('l, F jS')}}}.</p>
 	<p>
 		You have ordered<br/>
-		<b>${{{$order->coop}}}00 from Kootenay Co-op</b><br/>
-		<b>${{{$order->saveon}}}00 from Save-On</b><br/>
+		<b>${{{$order->coop + $order->coop_onetime}}}00 from Kootenay Co-op</b><br/>
+		<b>${{{$order->saveon + $order->saveon_onetime}}}00 from Save-On</b><br/>
 	</p>
 
 	<p>

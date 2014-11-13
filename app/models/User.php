@@ -105,14 +105,11 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	public function getFriendlySchedule() {
 		switch ($this->schedule) {
 			case 'biweekly':
-				return 'Bi-weekly'
-				break;
+				return 'Bi-weekly';
 			case 'monthly':
-				return 'Monthly'
-				break;
+				return 'Monthly';
 			case 'monthly-second':
-				return 'Monthly'
-				break;
+				return 'Monthly';
 			default:
 				throw new Exception("Invalid schedule");
 				break;

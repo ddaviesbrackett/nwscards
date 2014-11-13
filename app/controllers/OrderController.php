@@ -297,8 +297,11 @@ class OrderController extends BaseController {
 				'class_8' => array_key_exists('class_8', $in),
 				'saveon' => $in['saveon'],
 				'coop' => $in['coop'],
-				'payment' => $in['payment'] == 'credit',
 				'schedule' => $in['schedule'],
+				'saveon_onetime' => $in['saveon_onetime'],
+				'coop_onetime' => $in['coop_onetime'],
+				'schedule_onetime' => $in['schedule_onetime'],
+				'payment' => $in['payment'] == 'credit',
 				'deliverymethod' => $in['deliverymethod'] == 'mail',
 				'referrer' => $in['referrer'],
 				'pickupalt' => $in['pickupalt'],
@@ -365,7 +368,7 @@ class OrderController extends BaseController {
 		return BaseController::getCutoffs()['biweekly']['cutoff']->addDays(-7);
 	}
 
-	// Blackout period is from cutoff wednesday at midnight until card pickup wednesday morning.
+	// Blackout period is from cutoff wednesday just before midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
 	{
 		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
@@ -385,6 +388,8 @@ class OrderController extends BaseController {
 				'schedule'	=> 'required|in:biweekly,monthly,monthly-second',
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
+				'saveon_onetime'	=> 'digits_between:1,2',
+				'coop_onetime'		=> 'digits_between:1,2',
 				'payment'	=> 'required|in:debit,credit,keep,cancel,resume',
 				'debit-transit'		=> 'required_if:payment,debit|digits:5',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
