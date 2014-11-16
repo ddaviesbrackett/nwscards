@@ -71,7 +71,8 @@ class OrderController extends BaseController {
 
 	public function getNew()
 	{
-		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null]);
+		$visibleorder = Session::getOldInput('visibleorder', 'recurring');
+		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null, 'visibleorder'=> $visibleorder]);
 	}
 
 	public function getEdit()
@@ -82,7 +83,8 @@ class OrderController extends BaseController {
 		}
 		else
 		{
-			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser()]);
+			$visibleorder = Session::getOldInput('visibleorder', 'recurring');
+			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> $visibleorder]);
 		}
 	}
 
@@ -387,7 +389,7 @@ class OrderController extends BaseController {
 				'address1'	=> 'required_if:deliveyrmethod,mail',
 				'city'		=> 'required_if:deliverymethod,mail',
 				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
-				'schedule'	=> 'required|in:biweekly,monthly,monthly-second',
+				'schedule'	=> 'in:biweekly,monthly,monthly-second',
 				'saveon'	=> 'digits_between:1,2|required_without:coop',
 				'coop'		=> 'digits_between:1,2|required_without:saveon',
 				'saveon_onetime'	=> 'digits_between:1,2',

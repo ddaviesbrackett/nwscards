@@ -43,17 +43,19 @@
 	@else
 	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 	@endif
+		<div class="j-orderpanel">
+		<input type="hidden" id="visibleorder" name="visibleorder" value="{{{$visibleorder}}}" />
 		@if(isset($user))
 		<h4 class="callout-title">Change Your Recurring Order</h4>
 		@else
 		<div style="height:2em;"></div>
 		<ul class="nav nav-tabs nav-justified responsive" role="tablist" id="ordertabs">
-  			<li role="presentation" class="active"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
-  			<li role="presentation"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
+  			<li role="presentation" class="{{{$visibleorder == 'recurring'? 'active':''}}}"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
+  			<li role="presentation" class="{{{$visibleorder == 'onetime'? 'active':''}}}"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
 		</ul>
 		@endif
 		<div class="tab-content responsive {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
-			<div role="tabpanel" id="recurring" class="callout order tab-pane active">
+			<div role="tabpanel" id="recurring" class="callout order tab-pane {{{$visibleorder == 'recurring'? 'active':''}}}">
 				<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 					<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 					<div class='col-sm-3'>
@@ -116,7 +118,7 @@
 				</div>
 			</div>
 			@if( !isset($user) )
-				<div role="tabpanel" id="onetime" class="callout order tab-pane">
+				<div role="tabpanel" id="onetime" class="callout order tab-pane {{{$visibleorder == 'onetime'? 'active':''}}}">
 					<div class='form-group{{$errors->has("coop_onetime")?" has-error":"";}}'>
 						<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 						<div class='col-sm-3'>
@@ -176,7 +178,7 @@
 				</div>
 			@endif
 		</div>
-
+		</div>
 		<h4 class="callout-title">
 			@if(isset($user))
 				Change Your Information

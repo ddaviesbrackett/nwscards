@@ -8,7 +8,6 @@ $(function(){
 	{
 		$('#indiv-class-school').attr('checked', true);
 	}
-
 	function fadeClassCheck(ev){
 		if(this.checked) {
 			var $classes = $('.individual-classes');
@@ -21,9 +20,12 @@ $(function(){
 			}
 		}
 	}
-
 	$('input:radio[name="indiv-class"]').on('click', fadeClassCheck ).each(fadeClassCheck);
 	
+	$('.j-orderpanel').on('shown.bs.collapse, shown.bs.tab', function(ev) {
+		$('#visibleorder').val(ev.target.attributes['href'].value.substr(1));
+	});
+
 	function radioSection(radioname){
 		$('input:radio[name="'+radioname+'"]').on('click', function(ev){
 			var val = this.value;
