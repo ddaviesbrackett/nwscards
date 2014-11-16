@@ -46,7 +46,8 @@
 		@if(isset($user))
 		<h4 class="callout-title">Change Your Recurring Order</h4>
 		@else
-		<ul class="nav nav-tabs nav-justified responsive" role="tablist" style="margin-top:2em;">
+		<div style="height:2em;"></div>
+		<ul class="nav nav-tabs nav-justified responsive" role="tablist" id="ordertabs">
   			<li role="presentation" class="active"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
   			<li role="presentation"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
 		</ul>

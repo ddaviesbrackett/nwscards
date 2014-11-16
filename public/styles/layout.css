@@ -124,6 +124,10 @@ a:hover, a:focus {
 	border-top-left-radius: 0;
 }
 
+.callout.panel-body {
+	margin-bottom:0;
+}
+
 .nav.nav-tabs>li:first-child>a,
 .nav.nav-tabs>li:first-child>a:hover {
 	border-left-width:5px;
