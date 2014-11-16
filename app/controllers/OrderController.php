@@ -83,8 +83,7 @@ class OrderController extends BaseController {
 		}
 		else
 		{
-			$visibleorder = Session::getOldInput('visibleorder', 'recurring');
-			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> $visibleorder]);
+			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> 'recurring']);
 		}
 	}
 
