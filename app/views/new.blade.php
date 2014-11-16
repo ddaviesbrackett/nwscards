@@ -46,18 +46,18 @@
 		@if(isset($user))
 		<h4 class="callout-title">Change Your Recurring Order</h4>
 		@else
-		<ul class="nav nav-tabs" role="tablist" style="margin-top:2em;">
+		<ul class="nav nav-tabs nav-justified responsive" role="tablist" style="margin-top:2em;">
   			<li role="presentation" class="active"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
   			<li role="presentation"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
 		</ul>
 		@endif
-		<div class="tab-content {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
+		<div class="tab-content responsive {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
 			<div role="tabpanel" id="recurring" class="callout order tab-pane active">
 				<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
 					<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 					<div class='col-sm-3'>
 						<div class="input-group">
-							{{ Form::input('number', 'coop', isset($user) ? null : 0, array('class' => 'form-control')) }}
+							{{ Form::input('number', 'coop', null, array('class' => 'form-control')) }}
 							<span class="input-group-addon">x $100</span>
 						</div>
 					</div>
@@ -77,7 +77,7 @@
 					<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
 					<div class='col-sm-3'>
 						<div class="input-group">
-							{{ Form::input('number', 'saveon',  isset($user) ? null : 0, array('class' => 'form-control')) }}
+							{{ Form::input('number', 'saveon', null, array('class' => 'form-control')) }}
 							<span class="input-group-addon">x $100</span>
 						</div>
 					</div>
@@ -120,7 +120,7 @@
 						<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
 						<div class='col-sm-3'>
 							<div class="input-group">
-								{{ Form::input('number', 'coop_onetime', isset($user) ? null : 0, array('class' => 'form-control')) }}
+								{{ Form::input('number', 'coop_onetime', null, array('class' => 'form-control')) }}
 								<span class="input-group-addon">x $100</span>
 							</div>
 						</div>
@@ -140,7 +140,7 @@
 						<label for='saveon_onetime' class='col-sm-3 text-right'>Save-On:</label>
 						<div class='col-sm-3'>
 							<div class="input-group">
-								{{ Form::input('number', 'saveon_onetime',  isset($user) ? null : 0, array('class' => 'form-control')) }}
+								{{ Form::input('number', 'saveon_onetime', null, array('class' => 'form-control')) }}
 								<span class="input-group-addon">x $100</span>
 							</div>
 						</div>

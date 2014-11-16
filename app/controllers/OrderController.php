@@ -106,8 +106,8 @@ class OrderController extends BaseController {
 
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
- 		$validator = Validator::make($in, OrderController::GetRules($user->id), OrderController::GetMessages());
-		
+ 		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
+		$validator->mergeRules('id', $user->id);
 		// process the login
 		if ($validator->fails()) {
 			return Redirect::to('/edit')
@@ -267,6 +267,8 @@ class OrderController extends BaseController {
 
  		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
  		$validator->mergeRules('password', 'required');
+ 		$validator->mergeRules('schedule', 'required_with:saveon,coop');
+ 		$validator->mergeRules('schedule_onetime', 'required_with:saveon_onetime,coop_onetime');
 		// process the login
 		if ($validator->fails()) {
 			return Redirect::to('/new')
@@ -374,14 +376,14 @@ class OrderController extends BaseController {
 		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
-	private static function GetRules($id=null)
+	private static function GetRules()
 	{
+		//TODO: need to code in that schedule and saveon/coop are co-required, schedule_onetime and saveon_onetime/coop_onetime are co-required
 		return [
 				'name'		=> 'required',
-				'email'		=> 'required|email|unique:users,email' . ($id != null ? ",$id" : ""),
+				'email'		=> 'required|email|unique:users,email',
 				'phone'		=> 'digits:10',
-				'password'	=> 'sometimes:required',
-				'password-repeat'	=> 'sometimes:required|same:password',
+				'password-repeat'	=> 'same:password',
 				'address1'	=> 'required_if:deliveyrmethod,mail',
 				'city'		=> 'required_if:deliverymethod,mail',
 				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',

@@ -22,6 +22,6 @@ class OnetimeCreditOrderHandler {
 					]);
 			}
 		}
-		return "one-time CC orders generated for " . $date;
+		return "one-time CC orders charged for " . $date;
 	}
 }

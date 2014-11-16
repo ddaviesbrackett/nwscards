@@ -66,7 +66,7 @@ $(function(){
 	$('.order input[type="number"]').on('blur', function(ev){
 		var $this = $(this);
 		var val = parseInt($this.val(), 10);
-		$this.closest('.form-group').find('.alert').toggleClass('hidden', val < 10).find('.amt').text(val);
+		$this.closest('.form-group').find('.alert').toggleClass('hidden', !val || val < 10).find('.amt').text(val);
 	});
 
 	var $form = $('form.new-order');
