@@ -14,15 +14,15 @@ class AddOnetimeOrderColumns extends Migration {
 	{
 		Schema::table('users', function($table)
 		{
-		    $table->int('coop_onetime');
-		    $table->int('saveon_onetime');
-		    $table->int('schedule_onetime');
+		    $table->integer('coop_onetime')->nullable();
+		    $table->integer('saveon_onetime')->nullable();
+		    $table->string('schedule_onetime')->nullable();
 		});
 
 		Schema::table('orders', function($table)
 		{
-		    $table->int('coop_onetime');
-		    $table->int('saveon_onetime');
+		    $table->integer('coop_onetime')->nullable();
+		    $table->string('saveon_onetime')->nullable();
 		});
 	}
 
