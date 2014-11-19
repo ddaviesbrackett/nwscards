@@ -4,34 +4,38 @@
 <p> Thank you very much for your grocery card order.  This email is to confirm {{{$isChange?"the changes you just made to ":""}}}your order.  
 Please reply to this email if anything here doesn't look right.</p>
 <h2>Your recurring order</h2>
-	<p>
-		You have ordered<br/>
-		<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
-		<b>${{{$user->saveon}}}00 from Save-On</b><br/>
-	</p>
-	<p>
-		<b style="text-transform:capitalize;">{{{$user->getFriendlySchedule()}}}</b><br/>
-	</p>
+	@if( ($user->coop > 0 || $user->saveon > 0) && ( $user->stripe_active == 1 ) && $user->schedule != 'none')
+		<p>
+			You have ordered<br/>
+			<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
+			<b>${{{$user->saveon}}}00 from Save-On</b><br/>
+		</p>
+		<p>
+			<b style="text-transform:capitalize;">{{{$user->getFriendlySchedule()}}}</b><br/>
+		</p>
 
-	<p>
-		Your cards will be
-		@if($user->deliverymethod)
-			<b>mailed to you</b> at<br/>
-			{{{$user->name}}}<br/>
-				{{{$user->address1}}}<br/>
-				{{{$user->address2?$user->address2 + '<br/>':''}}}
-				{{{$user->city}}},
-				{{{$user->province}}}<br/>
-				{{{$user->postal_code}}}
-		@else
-			<b>picked up at the school</b> by you
-			@if(($user->pickupalt))
-					or by <b>{{{$user->pickupalt}}}</b>
+		<p>
+			Your cards will be
+			@if($user->deliverymethod)
+				<b>mailed to you</b> at<br/>
+				{{{$user->name}}}<br/>
+					{{{$user->address1}}}<br/>
+					{{{$user->address2?$user->address2 + '<br/>':''}}}
+					{{{$user->city}}},
+					{{{$user->province}}}<br/>
+					{{{$user->postal_code}}}
+			@else
+				<b>picked up at the school</b> by you
+				@if(($user->pickupalt))
+						or by <b>{{{$user->pickupalt}}}</b>
+				@endif
 			@endif
+		</p>
+		@if(!$user->payment)
+			<p>A copy of the Pre-Authorized Debit Agreement is attached to this email.</p>
 		@endif
-	</p>
-	@if(!$user->payment)
-		<p>A copy of the Pre-Authorized Debit Agreement is attached to this email.</p>
+	@else
+		<p>You have no recurring order.  You'll make more money for the school if you order more cards!</p>
 	@endif
 	<p>
 		Thank you ever so much,<br/>

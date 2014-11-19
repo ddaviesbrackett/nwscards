@@ -1,0 +1,13 @@
+TODO
+
+1. when all quantities are 0, hide orange bar and have 2 buttons:  (1) make a recurring order (2) make a one-time order
+2. OTHERWISE show orange bar, with link to edit form - Change Your Order.  (change page must do onetime as well as recurring; sigh.)
+3. if you have a recurring order, edit opens to recurring.  Otherwise, edit opens to one-time.
+4. Suspend/Resume only shows if you have a recurring quantity.
+
+
+6. CAFT repair: switch to by ORDER not by USER so it stops lying to Donna  (still need to join in user for change dates)
+
+
+5. expense page:  -date -amount -description -accountdropdown
+

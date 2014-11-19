@@ -110,6 +110,8 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 				return 'Monthly';
 			case 'monthly-second':
 				return 'Monthly';
+			case 'none':
+				return 'Never';
 			default:
 				throw new Exception("Invalid schedule");
 				break;

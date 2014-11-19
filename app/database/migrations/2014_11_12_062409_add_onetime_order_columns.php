@@ -35,12 +35,12 @@ class AddOnetimeOrderColumns extends Migration {
 	{
 		Schema::table('users', function($table)
 		{
-		    $table->dropColumn('coop_onetime, saveon_onetime, schedule_onetime');
+		    $table->dropColumn('coop_onetime', 'saveon_onetime', 'schedule_onetime');
 		});
 
 		Schema::table('orders', function($table)
 		{
-		    $table->dropColumn('coop_onetime, saveon_onetime');
+		    $table->dropColumn('coop_onetime', 'saveon_onetime');
 		});
 	}
 }
