@@ -38,7 +38,6 @@ $(function(){
 	}
 	radioSection('payment');
 	radioSection('deliverymethod');
-	radioSection('schedule');
 	
 	$errorBox = $('.blackoutPeriodError');
 	$(".blackoutPeriod.callout").addClass("disabled").prepend($errorBox)

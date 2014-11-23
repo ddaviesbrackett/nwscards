@@ -29,11 +29,16 @@
 		<div class="collapse navbar-collapse" id="subnav-collapse">
 			<ul class="nav navbar-nav navbar-left">
 				<li><a href="/edit">Change Your Order</a></li>
-				@if ($user->stripe_active == 1)
-					<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Order</a></li>
-				@elseif( $user->stripe_active == 0 && ($user->saveon+$user->coop> 0))
-					<li><a href="{{action('OrderController@Resume')}}">Resume Your Order</a></li>
+				@if ($user->schedule != 'none')
+					<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Recurring Order</a></li>
+				@elseif($user->saveon+$user->coop> 0)
+					<li><a href="{{action('OrderController@Resume')}}">Resume Your Recurring Order</a></li>
 				@endif
+				<li><a href="URL::route('account-onetime')">
+					@if($user->saveon + $user->coop > 0)
+						{{{$user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'}}}
+					@endif
+				</a></li>
 			</ul>
 		</div>
 	</div>
@@ -56,14 +61,14 @@
 			@endif
 		<hr/>
 		@endif
-			@if( ($user->coop > 0 || $user->saveon > 0) && ( $user->stripe_active == 1 ))
+			@if( $user->saveon + $user->coop > 0 && $user->schedule != 'none')
 				<h2>Your next order</h2>
 				<p>You will be charged on <b>{{{$dates[$user->schedule]['charge']}}}</b>, by <b>{{{$user->isCreditCard()?'credit card':'direct debit'}}}</b> (last 4 digits {{{$user->last_four}}}).</p>
 				<p>Your cards will be available on <b>{{{$dates[$user->schedule]['delivery']}}}</b>.</p>
 				<hr/>
 				<h2>Your recurring order</h2>
 				<p>
-					You have a <b style="text-transform:capitalize;">{{{$user->getFriendlySchedule}}}</b> order of<br/>
+					You have a <b style="text-transform:capitalize;">{{{$user->getFriendlySchedule()}}}</b> order of<br/>
 					@if($user->coop > 0)
 						<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
 					@endif

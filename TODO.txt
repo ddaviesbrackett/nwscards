@@ -11,3 +11,4 @@ TODO
 
 5. expense page:  -date -amount -description -accountdropdown
 
+30. CAFT automation

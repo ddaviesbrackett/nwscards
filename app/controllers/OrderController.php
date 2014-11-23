@@ -13,11 +13,6 @@ class OrderController extends BaseController {
 			]);
 	}
 
-	public function postAccount()
-	{
-		return View::make('account');
-	}
-
 	public function Suspend()
 	{
 		if(OrderController::IsBlackoutPeriod())
@@ -31,11 +26,12 @@ class OrderController extends BaseController {
 		{
 			$user->subscription()->cancelNow();
 		}
-		
-		$user->stripe_active = 0;
+		//suspending while you're already suspended shouldn't clobber your saved schedule
+		$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
+		$user->schedule = 'none';
 		$user->save();
 
-		Session::flash('ordermessage', 'Suspending Order');
+		Session::flash('ordermessage', 'order suspended');
 		return Redirect::to('/account');	
 	}
 
@@ -47,26 +43,31 @@ class OrderController extends BaseController {
 		}
 
 		$user = Sentry::getUser();
+		if($user->schedule_suspended != 'none') {
+			$user->schedule = $user->schedule_suspended;
+			
+			if ( $user->isCreditCard() )
+			{
+				$plan = null;
+				if($user->schedule == 'biweekly'){
+					$plan = '14days';
+				}
+				else {
+					$plan = '28days';
+				}
+				$chargedate = BaseController::getCutoffs()[$user->schedule]['charge'];
+				$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->saveon + $user->coop);
+				$gateway->create(null, array(), $gateway->getStripeCustomer());
+			}
+			$user->save();
 
-		if ( $user->isCreditCard() )
-		{
-			$plan = null;
-			if($user->schedule == 'biweekly'){
-				$plan = '14days';
-			}
-			else {
-				$plan = '28days';
-			}
-			$chargedate = BaseController::getCutoffs()[$user->schedule]['charge'];
-			$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->saveon + $user->coop);
-			$gateway->create(null, array(), $gateway->getStripeCustomer());
+			Session::flash('ordermessage', 'order resumed');
+			return Redirect::to('/account');
 		}
-
-		$user->stripe_active = 1;
-		$user->save();
-
-		Session::flash('ordermessage', 'Resuming Order');
-		return Redirect::to('/account');	
+		else {
+			throw new Exception("Error Processing Request: no schedule to resume", 500);
+			
+		}
 	}
 
 	public function getNew()
@@ -107,8 +108,9 @@ class OrderController extends BaseController {
 
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
- 		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
-		$validator->mergeRules('id', $user->id);
+ 		$validator = OrderController::GetValidator($in);
+		$validator->mergeRules('email', 'unique:users,email,' . $user->id);
+
 		// process the login
 		if ($validator->fails()) {
 			return Redirect::to('/edit')
@@ -158,21 +160,31 @@ class OrderController extends BaseController {
 				$user->pickupalt = $in['pickupalt'];
 				$user->employee = array_key_exists('employee', $in);
 
+				$user->saveon_onetime = $in['saveon_onetime'];
+				$user->coop_onetime = $in['coop_onetime'];
+				$user->schedule_onetime = $in['schedule_onetime'];
+
 				$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
 		
 				$user->saveon = $in['saveon'];
 				$user->coop = $in['coop'];
-				$user->schedule = $in['schedule'];
 				
 				$plan = null;
 				if($in['schedule'] == 'biweekly')
 				{
 					$plan = '14days';
 				}
-				else 
+				else if($in['schedule'] == 'monthly' || $in['schedule'] == 'monthly-second')
 				{
 					$plan = '28days';
 				}
+				else
+				{
+					//if new suspension, save schedule for resumption
+					$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
+				}
+
+				$user->schedule = $in['schedule'];
 			
 				$stripeUser = $user->subscription()->getStripeCustomer();
 				$stripeUser->email = $user->email;
@@ -180,7 +192,6 @@ class OrderController extends BaseController {
 				
 				if( $in['payment'] == 'debit' )
 				{
-					//TODO donna will need to know about this?
 					$extras = [
 						'debit-transit'=>$in['debit-transit'],
 						'debit-institution'=>$in['debit-institution'],
@@ -202,29 +213,12 @@ class OrderController extends BaseController {
 			
 				$stripeUser->save();
 			
-				if( $in['payment'] == 'cancel' || $in['saveon']+$in['coop'] == 0) //setting your amounts to 0 cancels you
+				 if ( $plan != null && 
+				 		( ( !$bIsSubscribed && $cardToken != null ) // credit card selected -> new stripe subscription
+					  	 || ( $bIsSubscribed && $bStripePlanChanged ) ) // changing stripe subscription
+					) 
 				{
-					// if they cancel, remove their plan in stripe (if they have one)
-					// TODO: fix this so we can cancel/resume 
-					if ( $bIsSubscribed )
-					{
-						// cancel immediately.
-						$user->subscription()->cancelNow();
-					}
-					$user->stripe_active = 0;
-				}
-				else if ( ($in['payment'] == 'resume') && ( ! $user->isCreditCard()) )
-				{ // resume a debit plan
-					$user->stripe_active = 1;
-				}
-				else if ( (( $cardToken != null ) && !( $bIsSubscribed )) // credit card selected -> new stripe subscription
-				  || ( $bIsSubscribed && $bStripePlanChanged ) // changing stripe subscription
-				  || ($user->stripe_active == 0 && $user->isCreditCard() && $in['payment'] == 'resume') ) // resume stripe subscription
-				{
-					$user->stripe_active = 1;
 					$user->payment = 1;
-
-					$gateway = null;
 
 					// to avoid prorating, just cancel and recreate plan.
 					if ($bIsSubscribed)
@@ -255,7 +249,8 @@ class OrderController extends BaseController {
 			}
 			else
 			{
-				//what went wrong??
+				throw new Exception("Error Processing Request: user save failed", 501);
+				
 			}
 		}
 	}
@@ -266,11 +261,23 @@ class OrderController extends BaseController {
 	  	$in = Input::all();
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
- 		$validator = Validator::make($in, OrderController::GetRules(), OrderController::GetMessages());
+ 		$validator = OrderController::GetValidator($in);
+ 		
  		$validator->mergeRules('password', 'required');
- 		$validator->mergeRules('schedule', 'required_with:saveon,coop');
- 		$validator->mergeRules('schedule_onetime', 'required_with:saveon_onetime,coop_onetime');
-		// process the login
+ 		$validator->mergeRules('email', 'unique:users,email');
+
+ 		$validator->sometimes('schedule', 'in:biweekly,monthly,monthly-second', function($input) {
+			return $input->schedule_onetime == 'none';
+		});
+		$validator->sometimes('schedule_onetime', 'in:monthly,monthly-second', function($input) {
+			return $input->schedule == 'none';
+		});
+		$validator->setCustomMessages([
+				'schedule.in'=> 'We need either a recurring order or a one-time order.',
+				'schedule_onetime.in'=> 'We need either a recurring order or a one-time order.',
+				]);
+
+		// process the new user
 		if ($validator->fails()) {
 			return Redirect::to('/new')
 				->withErrors($validator)
@@ -314,7 +321,7 @@ class OrderController extends BaseController {
 				if($in['schedule'] == 'biweekly'){
 					$plan = '14days';
 				}
-				else {
+				else if($in['schedule'] == 'monthly' || $in['schedule'] == 'monthly-second'){
  					$plan = '28days';
 				}
 				$cardToken = null;
@@ -374,43 +381,70 @@ class OrderController extends BaseController {
 	// Blackout period is from cutoff wednesday just before midnight until card pickup wednesday morning.
 	public static function IsBlackoutPeriod()
 	{
-		return ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
+		return false && ((new \Carbon\Carbon('America/Los_Angeles')) < OrderController::GetBlackoutEndDate());
 	}
 
-	private static function GetRules()
-	{
-		//TODO: need to code in that schedule and saveon/coop are co-required, schedule_onetime and saveon_onetime/coop_onetime are co-required
-		return [
+	private static function GetValidator( $in ) {
+		$v = Validator::make($in, [
 				'name'		=> 'required',
-				'email'		=> 'required|email|unique:users,email',
+				'email'		=> 'required|email',
 				'phone'		=> 'digits:10',
 				'password-repeat'	=> 'same:password',
 				'address1'	=> 'required_if:deliveyrmethod,mail',
 				'city'		=> 'required_if:deliverymethod,mail',
 				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
-				'schedule'	=> 'in:biweekly,monthly,monthly-second',
-				'saveon'	=> 'digits_between:1,2|required_without:coop',
-				'coop'		=> 'digits_between:1,2|required_without:saveon',
-				'saveon_onetime'	=> 'digits_between:1,2',
-				'coop_onetime'		=> 'digits_between:1,2',
-				'payment'	=> 'required|in:debit,credit,keep,cancel,resume',
+				'schedule'	=> 'in:none,biweekly,monthly,monthly-second',
+				'schedule_onetime'	=> 'in:none,monthly,monthly-second',
+				'saveon'	=> 'sometimes|digits_between:1,2|min:0',
+				'coop'		=> 'sometimes|digits_between:1,2|min:0',
+				'saveon_onetime'	=> 'sometimes|digits_between:1,2',
+				'coop_onetime'		=> 'sometimes|digits_between:1,2',
+				'payment'	=> 'required|in:debit,credit,keep',
 				'debit-transit'		=> 'required_if:payment,debit|digits:5',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
 				'debit-account' 	=> 'required_if:payment,debit|digits_between:5,15',
 				'debitterms' 	=> 'required_if:payment,debit',
 				'mailwaiver'	=>'required_if:deliverymethod,mail',
 				'deliverymethod' => 'required',
-			];
+			], [
+				'debit-transit.required_if' => 'branch number is required.',
+				'debit-institution.required_if' => 'institution is required.',
+				'debit-account.required_if' => 'account number is required.',
+				'debitterms.required_if' => 'You must agree to the terms to pay by pre-authorized debit.',
+				'saveon.required' => 'You need to order at least one card.',
+				'coop.required' => 'You need to order at least one card.',
+				'saveon_onetime.required' => 'You need to order at least one card.',
+				'coop_onetime.required' => 'You need to order at least one card.',
+				'schedule.not_in' => 'Choose a delivery date',
+				'schedule_onetime.not_in' => 'Choose a delivery date',
+			]);
+		$v->sometimes('schedule', 'not_in:none', function($input){
+			return $input['saveon'] > 0 ||
+				   $input['coop'] > 0;
+		});
+		$v->sometimes('schedule_onetime', 'not_in:none', function($input){
+			return $input['saveon_onetime'] > 0 ||
+				   $input['coop_onetime'] > 0;
+		});
+
+		//return a function that returns when an order amount field is required
+		$orderRequired = function($schedulefield, $other) {
+			return function($input) use ($schedulefield, $other) {
+				return ($input->{$schedulefield} == 'biweekly' ||
+					   $input->{$schedulefield} == 'monthly' ||
+					   $input->{$schedulefield} == 'monthly-second') 
+					&& 
+					   ($input->{$other} == '' || $input->{$other} == '0');
+			};
+		}
+
+		$v->sometimes('saveon', 'required', $orderRequired('schedule', 'coop'));
+		$v->sometimes('coop', 'required', $orderRequired('schedule', 'saveon'));
+		$v->sometimes('saveon_onetime', 'required', $orderRequired('schedule_onetime', 'coop_onetime'));
+		$v->sometimes('coop_onetime', 'required', $orderRequired('schedule_onetime', 'saveon_onetime'));
+		return $v;
 	}
 
-	private static function GetMessages()
-	{
-	 	return [
-	 			'debit-transit.required_if' => 'branch number is required.',
-	 			'debit-institution.required_if' => 'institution is required.',
-	 			'debit-account.required_if' => 'account number is required.',
-	 			'debitterms.required_if' => 'You must agree to the terms to pay by pre-authorized debit.',
-	 		];
-	}
+	
 
 }

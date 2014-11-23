@@ -65,6 +65,5 @@ Route::get('/admin/unimpersonate/',
 Route::get('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getProfitSettingForm', 'as' => 'admin-getprofit']);
 Route::post('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin', 'csrf'], 'uses' => 'AdminController@postProfitSettingForm', 'as' => 'admin-postprofit']);
 
-
 //stuff everything needs
 View::share('dates', BaseController::getFormattedDates());

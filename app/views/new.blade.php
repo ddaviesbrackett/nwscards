@@ -32,28 +32,37 @@
 <div class="container-fluid">
 	<h4 class="callout-title">Order being processed!</h4>
 		<span>
-			Orders are currently being processed and will be available for edit on: {{{@OrderController::GetBlackoutEndDate()->format('l, F jS')}}}
+			Orders are currently being processed and will be available for edit on <b>{{{@OrderController::GetBlackoutEndDate()->format('l, F jS')}}}</b>
 		</span>
 </div>
 @endif
 <div class="container-fluid">
-
-	@if(isset($user))
 	{{Form::model($user, ['url' => ['edit'], 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
-	@else
-	{{Form::open(['url'=>'/new', 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
-	@endif
 		<div class="j-orderpanel">
 		<input type="hidden" id="visibleorder" name="visibleorder" value="{{{$visibleorder}}}" />
-		@if(isset($user))
-		<h4 class="callout-title">Change Your Recurring Order</h4>
-		@else
 		<div style="height:2em;"></div>
-		<ul class="nav nav-tabs nav-justified responsive" role="tablist" id="ordertabs">
-  			<li role="presentation" class="{{{$visibleorder == 'recurring'? 'active':''}}}"><a href="#recurring" role="tab" data-toggle="tab">Make a Recurring Order</a></li>
-  			<li role="presentation" class="{{{$visibleorder == 'onetime'? 'active':''}}}"><a href="#onetime" role="tab" data-toggle="tab">Make a One-Time Order</a></li>
+		<ul class="nav nav-tabs responsive" role="tablist" id="ordertabs">
+  			<li role="presentation" class="{{{$visibleorder == 'recurring'? 'active':''}}}">
+  				<a href="#recurring" role="tab" data-toggle="tab">
+					{{$errors->has("saveon")||$errors->has("coop")||$errors->has("schedule")?'<span class="glyphicon glyphicon-exclamation-sign" style="color:red;"></span>':""}}
+  					@if(isset($user))
+						Change Your Recurring Order
+					@else
+						Make a Recurring Order
+					@endif
+  				</a>
+  			</li>
+  			<li role="presentation" class="{{{$visibleorder == 'onetime'? 'active':''}}}">
+  				<a href="#onetime" role="tab" data-toggle="tab">
+  					{{$errors->has("saveon_onetime")||$errors->has("coop_onetime")||$errors->has("schedule_onetime")?'<span class="glyphicon glyphicon-exclamation-sign" style="color:red;"></span>':""}}
+  					@if(isset($user))
+						Change Your One-Time Order
+					@else
+						Make a One-Time Order
+					@endif
+  				</a>
+  			</li>
 		</ul>
-		@endif
 		<div class="tab-content responsive {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
 			<div role="tabpanel" id="recurring" class="callout order tab-pane {{{$visibleorder == 'recurring'? 'active':''}}}">
 				<div class='form-group{{$errors->has("coop")?" has-error":"";}}'>
@@ -111,72 +120,78 @@
 							{{ Form::radio('schedule', 'monthly-second') }}
 							Once a month, starting <b>{{{$dates['monthly-second']['delivery']}}}</b>
 						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							{{ Form::radio('schedule', 'none', true, null) }}
+							I don't want a recurring order
+						</label></div>
 						@if($errors->has('schedule'))
 							<span class='help-block'>{{{$errors->first('schedule')}}}</span>
 						@endif
 					</div>
 				</div>
 			</div>
-			@if( !isset($user) )
-				<div role="tabpanel" id="onetime" class="callout order tab-pane {{{$visibleorder == 'onetime'? 'active':''}}}">
-					<div class='form-group{{$errors->has("coop_onetime")?" has-error":"";}}'>
-						<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
-						<div class='col-sm-3'>
-							<div class="input-group">
-								{{ Form::input('number', 'coop_onetime', null, array('class' => 'form-control')) }}
-								<span class="input-group-addon">x $100</span>
-							</div>
-						</div>
-						<div class='col-sm-6'>
-							<div class="alert alert-warning alert-dismissible hidden" role="alert">
-							  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							  That's $<span class="amt"></span>00 in cards!
-							</div>
-						</div>
-						<div class='col-sm-12 text-warning'>
-							@if($errors->has('coop_onetime'))
-								<span class='help-block'>{{{$errors->first('coop_onetime')}}}</span>
-							@endif
+			<div role="tabpanel" id="onetime" class="callout order tab-pane {{{$visibleorder == 'onetime'? 'active':''}}}">
+				<div class='form-group{{$errors->has("coop_onetime")?" has-error":"";}}'>
+					<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							{{ Form::input('number', 'coop_onetime', null, array('class' => 'form-control')) }}
+							<span class="input-group-addon">x $100</span>
 						</div>
 					</div>
-					<div class='form-group{{$errors->has("saveon_onetime")?" has-error":"";}}'>
-						<label for='saveon_onetime' class='col-sm-3 text-right'>Save-On:</label>
-						<div class='col-sm-3'>
-							<div class="input-group">
-								{{ Form::input('number', 'saveon_onetime', null, array('class' => 'form-control')) }}
-								<span class="input-group-addon">x $100</span>
-							</div>
-						</div>
-						<div class='col-sm-6'>
-							<div class="alert alert-warning alert-dismissible hidden" role="alert">
-							  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-							  That's $<span class="amt"></span>00 in cards!
-							</div>
-						</div>
-						<div class='col-sm-12'>
-							@if($errors->has('saveon_onetime'))
-								<span class='help-block'>{{{$errors->first('saveon_onetime')}}}</span>
-							@endif
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
 						</div>
 					</div>
-					<div class='form-group{{$errors->has("schedule_onetime")?" has-error":"";}}'>
-						<label class="col-sm-3 text-right">Date:</label>
-						<div class="col-sm-8">
-							<div class="radio"><label>
-								{{ Form::radio('schedule_onetime', 'monthly') }}
-								On <b>{{{$dates['monthly']['delivery']}}}</b>
-							</label></div>
-							<div class="radio"><label>
-								{{ Form::radio('schedule_onetime', 'monthly-second') }}
-								On <b>{{{$dates['monthly-second']['delivery']}}}</b>
-							</label></div>
-							@if($errors->has('schedule_onetime'))
-								<span class='help-block'>{{{$errors->first('schedule_onetime')}}}</span>
-							@endif
-						</div>
+					<div class='col-sm-12 text-warning'>
+						@if($errors->has('coop_onetime'))
+							<span class='help-block'>{{{$errors->first('coop_onetime')}}}</span>
+						@endif
 					</div>
 				</div>
-			@endif
+				<div class='form-group{{$errors->has("saveon_onetime")?" has-error":"";}}'>
+					<label for='saveon_onetime' class='col-sm-3 text-right'>Save-On:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							{{ Form::input('number', 'saveon_onetime', null, array('class' => 'form-control')) }}
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12'>
+						@if($errors->has('saveon_onetime'))
+							<span class='help-block'>{{{$errors->first('saveon_onetime')}}}</span>
+						@endif
+					</div>
+				</div>
+				<div class='form-group{{$errors->has("schedule_onetime")?" has-error":"";}}'>
+					<label class="col-sm-3 text-right">Date:</label>
+					<div class="col-sm-8">
+						<div class="radio"><label>
+							{{ Form::radio('schedule_onetime', 'monthly') }}
+							On <b>{{{$dates['monthly']['delivery']}}}</b>
+						</label></div>
+						<div class="radio"><label>
+							{{ Form::radio('schedule_onetime', 'monthly-second') }}
+							On <b>{{{$dates['monthly-second']['delivery']}}}</b>
+						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							{{ Form::radio('schedule_onetime', 'none', true) }}
+							I don't want a one-time order
+						</label></div>
+						@if($errors->has('schedule_onetime'))
+							<span class='help-block'>{{{$errors->first('schedule_onetime')}}}</span>
+						@endif
+					</div>
+				</div>
+			</div>
 		</div>
 		</div>
 		<h4 class="callout-title">
@@ -362,21 +377,12 @@
 
  		</h4>
 		<div class="callout {{OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : '' }}">
-			<span class="help-block info">You will be charged for your delivery on 
-				<b>
-					<span class="schedule monthly">{{{$dates['monthly']['charge']}}}</span>
-					<span class="schedule biweekly">{{{$dates['biweekly']['charge']}}}</span>
-				</b> 
-			(2 business days before delivery).</span>
+			<span class="help-block info">You will be charged 2 business days before delivery.</span>
 			<div class="form-group">
 				<div class="col-sm-12">
 					@if( isset($user) )
 						<div class="radio"><label><input type="radio" name="payment" id="payment_keep" value="keep" checked/>
-							@if ($user->stripe_active == 1)
-								Keep existing payment information.
-							@else
-								I do not want any cards right now.
-							@endif
+							Keep existing payment information
 						</label></div>			
 					@endif
 					<div class="radio {{OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''}}"><label><input type="radio" name="payment" id="payment_debit" value="debit" {{Form::getValueAttribute('payment', '') == 'debit'?'checked':''}}/>
@@ -435,9 +441,9 @@
 					</div>
 					<div class="radio {{(OrderController::IsBlackoutPeriod() && isset($user) && !$user->isCreditCard()) ? 'blackoutPeriod' : '' }}"><label><input type="radio" name="payment" id="payment_credit" value="credit" {{Form::getValueAttribute('payment', '') == 'credit'?'checked':''}}/>
 						@if (isset($user) && $user->isCreditCard())
-							Update Credit Card
+							Update credit card
 						@elseif (isset($user) && ! $user->isCreditCard())
-							Switch to Credit Card
+							Switch to credit card
 						@else
 							Credit Card
 						@endif
