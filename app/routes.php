@@ -17,6 +17,8 @@ Route::get('/edit', array('before' => 'auth', 'uses' => 'OrderController@getEdit
 Route::post('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
 Route::get('/Suspend', array('before' => 'auth', 'uses' =>'OrderController@Suspend'));
 Route::get('/Resume', array('before' => 'auth', 'uses' =>'OrderController@Resume'));
+Route::get('/account/onetime', ['before'=>'auth', 'uses' => 'OrderController@getOnetime', 'as' => 'account-getonetime']);
+Route::post('/account/onetime', ['before'=>['auth', 'csrf'], 'uses' => 'OrderController@postOneTime', 'as' => 'account-postonetime']);
 
 //contact form
 Route::post('/contact', array('before' => 'csrf', 'uses' =>'HomeController@postContact'));
@@ -64,7 +66,6 @@ Route::get('/admin/unimpersonate/',
 
 Route::get('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getProfitSettingForm', 'as' => 'admin-getprofit']);
 Route::post('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin', 'csrf'], 'uses' => 'AdminController@postProfitSettingForm', 'as' => 'admin-postprofit']);
-
 
 //stuff everything needs
 View::share('dates', BaseController::getFormattedDates());

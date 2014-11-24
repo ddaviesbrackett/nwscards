@@ -7,7 +7,7 @@
 <script>
 	//reload the popup every time, so it doesn't have stale data in it
 	$(document).on('hidden.bs.modal', function (e) {
-    	$(e.target).removeData('bs.modal').find('.modal-content').html('');
+		$(e.target).removeData('bs.modal').find('.modal-content').html('');
 	});
 </script>
 @stop

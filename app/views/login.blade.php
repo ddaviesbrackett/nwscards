@@ -28,7 +28,7 @@
 			    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
 			  </div>
 			  <span class="help-block"><a href="{{action('RemindersController@getRemind')}}">Forgot your password?</a></span>
-			  <button type="submit" class="btn btn-primary">Log in</button>
+			  <button type="submit" class="btn btn-danger">Log in</button>
 			</div>
 		</div>
 		</div>

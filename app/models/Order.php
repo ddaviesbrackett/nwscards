@@ -14,6 +14,8 @@ class Order extends Eloquent {
 		'payment',
 		'saveon',
 		'coop',
+		'saveon_onetime',
+		'coop_onetime',
 		'deliverymethod',
 		'marigold',
 		'daisy',
@@ -35,6 +37,10 @@ class Order extends Eloquent {
 
 	public function cutoffdate() {
 		return $this->belongsTo('CutoffDate', 'cutoff_date_id');
+	}
+
+	public function isCreditcard() {
+		return $this->payment;
 	}
 
 	public function classesSupported() {

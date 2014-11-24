@@ -8,7 +8,6 @@ $(function(){
 	{
 		$('#indiv-class-school').attr('checked', true);
 	}
-
 	function fadeClassCheck(ev){
 		if(this.checked) {
 			var $classes = $('.individual-classes');
@@ -21,9 +20,12 @@ $(function(){
 			}
 		}
 	}
-
 	$('input:radio[name="indiv-class"]').on('click', fadeClassCheck ).each(fadeClassCheck);
 	
+	$('.j-orderpanel').on('shown.bs.collapse, shown.bs.tab', function(ev) {
+		$('#visibleorder').val(ev.target.attributes['href'].value.substr(1));
+	});
+
 	function radioSection(radioname){
 		$('input:radio[name="'+radioname+'"]').on('click', function(ev){
 			var val = this.value;
@@ -36,7 +38,6 @@ $(function(){
 	}
 	radioSection('payment');
 	radioSection('deliverymethod');
-	radioSection('schedule');
 	
 	$errorBox = $('.blackoutPeriodError');
 	$(".blackoutPeriod.callout").addClass("disabled").prepend($errorBox)
@@ -66,7 +67,7 @@ $(function(){
 	$('.order input[type="number"]').on('blur', function(ev){
 		var $this = $(this);
 		var val = parseInt($this.val(), 10);
-		$this.closest('.form-group').find('.alert').toggleClass('hidden', val < 10).find('.amt').text(val);
+		$this.closest('.form-group').find('.alert').toggleClass('hidden', !val || val < 10).find('.amt').text(val);
 	});
 
 	var $form = $('form.new-order');

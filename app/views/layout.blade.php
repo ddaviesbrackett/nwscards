@@ -9,6 +9,7 @@
 		<link href='//fonts.googleapis.com/css?family=Oswald' rel='stylesheet' type='text/css'>
 		<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script src="//openam.github.io/bootstrap-responsive-tabs/js/responsive-tabs.js"></script>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		@yield('head-extra')
 	</head>
@@ -62,5 +63,8 @@
 		<div class='text-center footer'>
 			We appreciate your support<br> This fundraiser is presented and adminstered by the <a href="mailto:grocerycards@nelsonwaldorf.org">Nelson Waldorf School Parent Association</a>
 		</div>
+		<script>
+			fakewaffle.responsiveTabs(['xs', 'sm']);
+		</script>
 	</body>
 </html>

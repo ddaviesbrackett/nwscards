@@ -99,7 +99,7 @@ a:hover, a:focus {
 {
 	padding: 20px;
 	margin-bottom: 20px;
-	border: 1px solid #eee;
+	border: 1px solid #ddd;
 	border-left-width: 5px;
 	border-radius: 3px;
 }
@@ -108,10 +108,29 @@ a:hover, a:focus {
 	margin-bottom:0;
 }
 
-.callout-title
+.callout-title, .nav-tabs
 {
+	font-family:'Oswald', Verdana, sans-serif;
 	margin:1.5em 0 0.5em 0;
 	font-size:18pt;
+}
+
+.nav-tabs {
+	margin:0;
+}
+
+.callout.tab-pane {
+	border-top:0;
+	border-top-left-radius: 0;
+}
+
+.callout.panel-body {
+	margin-bottom:0;
+}
+
+.nav.nav-tabs>li:first-child>a,
+.nav.nav-tabs>li:first-child>a:hover {
+	border-left-width:5px;
 }
 
 html {
