@@ -81,6 +81,35 @@ class OrderController extends BaseController {
 			
 		}
 	}
+	public function getOnetime() {
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+		return View::make('account-onetimeform', ['user'=>Sentry::getUser()]);
+	}
+
+	public function postOnetime() {
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+
+		$user = Sentry::getUser();
+		$s_o = Input::get('saveon_onetime');
+		$c_o = Input::get('coop_onetime');
+		if(filter_var($s_o, FILTER_VALIDATE_INT) !== false && 
+			filter_var($c_o, FILTER_VALIDATE_INT) !== false	&& 
+			$s_o >= 0 && 
+			$c_o >= 0) {
+			$user->saveon_onetime = $s_o;
+			$user->coop_onetime = $c_o;
+			$user->schedule_onetime = $user->schedule;
+			$user->save();
+			Session::flash('ordermessage', 'order updated');
+		}
+		return Redirect::to('/account');
+	}
 
 	public function getNew()
 	{

@@ -5,6 +5,19 @@
 @stop
 
 @section('head-extra')
+<script>
+	//reload the popup every time, so it doesn't have stale data in it
+	$(document).on('hidden.bs.modal', function (e) {
+		$(e.target).removeData('bs.modal').find('.modal-content').html('');
+	});
+	$(function() {
+		$('#onetimeform').on('blur', 'input[type="number"]', function(ev){
+			var $this = $(this);
+			var val = parseInt($this.val(), 10);
+			$this.closest('.form-group').find('.alert').toggleClass('hidden', !val || val < 10).find('.amt').text(val);
+		});
+	});
+</script>
 @stop
 
 @section('content')
@@ -32,21 +45,23 @@
 		    <span class="icon-bar"></span>
 		  </button>
 		</div>
-		<div class="collapse navbar-collapse" id="subnav-collapse">
-			<ul class="nav navbar-nav navbar-left">
-				<li><a href="/edit">Change Your Order</a></li>
-				@if ($user->schedule != 'none')
-					<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Recurring Order</a></li>
-				@elseif($user->saveon+$user->coop> 0)
-					<li><a href="{{action('OrderController@Resume')}}">Resume Your Recurring Order</a></li>
-				@endif
-				<li><a href="URL::route('account-onetime')">
-					@if($user->saveon + $user->coop > 0)
-						{{{$user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'}}}
+		@if(! OrderController::IsBlackoutPeriod() )
+			<div class="collapse navbar-collapse" id="subnav-collapse">
+				<ul class="nav navbar-nav navbar-left">
+					<li><a href="/edit">Change Your Order</a></li>
+					@if ($user->schedule != 'none')
+						<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Recurring Order</a></li>
+					@elseif($user->saveon+$user->coop> 0)
+						<li><a href="{{action('OrderController@Resume')}}">Resume Your Recurring Order</a></li>
 					@endif
-				</a></li>
-			</ul>
-		</div>
+					@if($user->saveon + $user->coop > 0 && $user->schedule != 'none')
+						<li><a data-toggle="modal" data-target="#onetimeform" href="{{URL::route('account-getonetime')}}">
+							{{{$user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'}}}	
+						</a></li>
+					@endif
+				</ul>
+			</div>
+		@endif
 	</div>
 </header>
 </div>
@@ -102,7 +117,7 @@
 		@if($user->schedule != 'none' || $user->schedule_onetime != 'none')
 			Supporting:
 			<ul style='list-style-type:none;padding-left:0;'>
-				<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a><b></li>
+				<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a></b></li>
 				@foreach ($user->classesSupported() as $class)
 					<li><b><a href="/tracking/{{{$class}}}">{{{User::className($class)}}}</a></b></li>
 				@endforeach
@@ -162,5 +177,12 @@
 			</table>
 		</div>
 	</div>
+</div>
+
+<div class="modal fade" id="onetimeform" tabindex="-1" role="dialog" aria-labelledby="onetimeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
 </div>
 @stop
