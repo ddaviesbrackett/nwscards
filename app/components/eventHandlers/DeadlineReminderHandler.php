@@ -12,7 +12,9 @@ class DeadlineReminderHandler {
 
 		$users = \User::where('stripe_active', '=', 1)
 		->where(function($q) use ($currentMonthly){
-			$q->where('schedule', '=', 'biweekly')->orWhere('schedule', '=', $currentMonthly);
+			$q->where('schedule', '=', 'biweekly')
+			->orWhere('schedule', '=', $currentMonthly)
+			->orWhere('schedule_onetime', '=', $currentMonthly);
 		})
 		->get();
 
@@ -20,6 +22,19 @@ class DeadlineReminderHandler {
 		{
 			\Mail::send('emails.deadlinereminder', ['user' => $user, 'cutoff' => $cutoff], function($message) use ($user){
 				$message->subject('Need to change your grocery card order? Deadline is tomorrow at midnight');
+				$message->to($user->email, $user->name);
+			});
+		}
+
+		$usersToBeg = \User::where('stripe_active', '=', 1)
+			->where('schedule', '=', 'none')
+			->where('schedule_onetime', '=', 'none')
+			->get();
+
+		foreach($usersToBeg as $user)
+		{
+			\Mail::send('emails.orderbeg', ['user' => $user, 'cutoff' => $cutoff], function($message) use ($user){
+				$message->subject('Need more grocery cards? Deadline is tomorrow at midnight');
 				$message->to($user->email, $user->name);
 			});
 		}

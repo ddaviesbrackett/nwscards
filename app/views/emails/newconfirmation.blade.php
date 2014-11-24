@@ -2,7 +2,8 @@
 <body>
 <h2>Hi {{{$user->name}}},</h2>
 <p> Thank you very much for your grocery card order.  This email is to confirm {{{$isChange?"the changes you just made to ":""}}}your order.  
-Please reply to this email if anything here doesn't look right - or <a href="https://grocerycards.nelsonwaldorf.org/edit">change your order online</a>.</p>
+	You can change your order at <a href="https://grocerycards.nelsonwaldorf.org/edit">https://grocerycards.nelsonwaldorf.org/edit</a>.
+	Log in with this email address and the password you signed up with. (Forgot your password? You can reset it at the login screen.)</p>
 @if( $user->saveon + $user->coop > 0 && $user->schedule != 'none')
 	<h2>Your recurring order</h2>
 	<p>

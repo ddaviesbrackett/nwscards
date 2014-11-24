@@ -30,7 +30,10 @@ class OrderController extends BaseController {
 		$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
 		$user->schedule = 'none';
 		$user->save();
-
+		Mail::send('emails.suspend', ['user' => $user, 'isChange' => true], function($message) use ($user){
+			$message->subject('Grocery card order suspended');
+			$message->to($user->email, $user->name);
+		});
 		Session::flash('ordermessage', 'order suspended');
 		return Redirect::to('/account');	
 	}
@@ -60,7 +63,16 @@ class OrderController extends BaseController {
 				$gateway->create(null, array(), $gateway->getStripeCustomer());
 			}
 			$user->save();
-
+			Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){
+				$message->subject('Grocery card order resumed');
+				$message->to($user->email, $user->name);
+				if(! $user->isCreditCard())
+				{
+					$agreementView = View::make('partial.debitterms');
+					$agreement = '<html><body>'.$agreementView->render().'</body></html>';
+					$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
+				}
+			});
 			Session::flash('ordermessage', 'order resumed');
 			return Redirect::to('/account');
 		}
@@ -243,6 +255,7 @@ class OrderController extends BaseController {
 						$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
 					}
 				});
+				Session::flash('ordermessage', 'order updated');
 				return Redirect::to('/account');	
 			}
 			else

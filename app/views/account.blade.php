@@ -11,6 +11,12 @@
 <div class="masthead" style="padding-bottom:40px;">
 	@if($message == 'order created')
 		<h1>Your order succeeded</h1>
+	@elseif ($message == 'order updated')
+		<h1>Your order was updated</h1>
+	@elseif ($message == 'order suspended')
+		<h1>Your order was suspended</h1>
+	@elseif ($message == 'order resumed')
+		<h1>Your order was resumed</h1>
 	@else
 		<h1>{{{money_format('%n', $user->orders->sum('profit'))}}} raised so far</h1>
 	@endif
@@ -45,7 +51,7 @@
 </header>
 </div>
 <div class="container-fluid text-center">
-	@if($message == 'order created')
+	@if(isset($message))
 		<h2>Confirmation</h2>
 		<p>You'll receive an email shortly (to {{{$user->email}}}) with your order details.</p>
 	@endif

@@ -1,20 +1,30 @@
 <html>
 <body>
 	<h2>Hi {{{$user->name}}},</h2>
+	
 	<p>
-		Need to change your grocery card order? You have until tomorrow, {{{$cutoff->cutoffdate()->format('l, F jS')}}},  at midnight.
+		Need to change your grocery card order? You have until tomorrow, {{{$cutoff->cutoffdate()->format('l, F jS')}}}, at midnight. 
 	</p>
 	<p>
-		You can change your order at <a href="https://grocerycards.nelsonwaldorf.org/edit">https://grocerycards.nelsonwaldorf.org/edit</a>.
-		Log in with this email address and the password you signed up with. (Forgot your pasword? You can reset it at the login screen.) 
+		You can change your regular order OR order extra cards <b>just once</b> 
+		at <a href="https://grocerycards.nelsonwaldorf.org/edit">https://grocerycards.nelsonwaldorf.org/edit</a>. Heck, you could even do both!
+		Log in with this email address and the password you signed up with. (Forgot your password? You can reset it at the login screen.) 
 	</p>
 	@if($user->saveon > 0 || $user->coop > 0)
 		<p>
 			You are currently ordering<br/>
 			<b>${{{$user->coop}}}00 from Kootenay Co-op</b><br/>
 			<b>${{{$user->saveon}}}00 from Save-On</b><br/>
+		</p>	
+	@endif
+	@if($user->saveon_onetime > 0 || $user->coop_onetime > 0)
+		<p>
+			You have a <b>one-time</b> order for <br/>
+			<b>${{{$user->coop_onetime}}}00 from Kootenay Co-op</b><br/>
+			<b>${{{$user->saveon_onetime}}}00 from Save-On</b><br/>
 		</p>
-
+	@endif
+	@if($user->saveon > 0 || $user->coop > 0 || $user->saveon_onetime > 0 || $user->coop_onetime > 0)
 		<p>
 			On {{{$cutoff->deliverydate()->format('l, F jS')}}}, your cards will be
 			@if($user->deliverymethod)
@@ -32,8 +42,6 @@
 				@endif
 			@endif
 		</p>
-	@else
-		<p>You're not ordering any cards right now.</p>
 	@endif
 	<p>
 		Thank you for your support,<br/>
