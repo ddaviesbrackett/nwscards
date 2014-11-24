@@ -37,7 +37,7 @@
 </div>
 @endif
 <div class="container-fluid">
-	{{Form::model($user, ['url' => ['edit'], 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
+	{{Form::model($user, ['url' => [isset($user)?'edit':'new'], 'method'=>'POST', 'class'=>'form-horizontal new-order'])}}
 		<div class="j-orderpanel">
 		<input type="hidden" id="visibleorder" name="visibleorder" value="{{{$visibleorder}}}" />
 		<div style="height:2em;"></div>

@@ -84,7 +84,8 @@ class OrderController extends BaseController {
 		}
 		else
 		{
-			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> 'recurring']);
+			$visibleorder = Session::getOldInput('visibleorder', 'recurring');
+			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> $visibleorder]);
 		}
 	}
 
@@ -97,14 +98,7 @@ class OrderController extends BaseController {
 
 		$user = Sentry::getUser();
 		
-		if (Input::has('password'))
-		{
-			$in = Input::all();
-		}
-		else
-		{
-			$in = Input::except(array('password', 'password-repeat'));
-	  	}
+		$in = Input::all();
 
 	  	$in['phone'] = preg_replace('/[- \\(\\)]*/','',$in['phone']);
 
@@ -147,7 +141,7 @@ class OrderController extends BaseController {
 			$bIsSubscribed = $user->hasStripePlan();
 			
 			// if they are paying with credit already, let them change the card.
-			if ( ( $cardToken != null ) && ( $user->payment == 1 ) && ( $bIsSubscribed ) )
+			if ( ( $cardToken != null ) && ( $user->isCreditcard() ) && ( $bIsSubscribed ) )
 			{
 				$user->subscription()->updateCard($cardToken);
 				$cardToken = null;
@@ -178,10 +172,14 @@ class OrderController extends BaseController {
 				{
 					$plan = '28days';
 				}
-				else
+				else //schedule is none - save old schedule for resume, cancel credit card
 				{
-					//if new suspension, save schedule for resumption
 					$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
+					if ($bIsSubscribed)
+					{
+						$user->subscription()->cancelNow();
+						$bIsSubscribed = false;
+					}
 				}
 
 				$user->schedule = $in['schedule'];
@@ -395,10 +393,10 @@ class OrderController extends BaseController {
 				'postal_code'	=> 'required_if:deliverymethod,mail|regex:/^\w\d\w ?\d\w\d$/',
 				'schedule'	=> 'in:none,biweekly,monthly,monthly-second',
 				'schedule_onetime'	=> 'in:none,monthly,monthly-second',
-				'saveon'	=> 'sometimes|digits_between:1,2|min:0',
-				'coop'		=> 'sometimes|digits_between:1,2|min:0',
-				'saveon_onetime'	=> 'sometimes|digits_between:1,2',
-				'coop_onetime'		=> 'sometimes|digits_between:1,2',
+				'saveon'	=> 'integer|digits_between:1,2',
+				'coop'		=> 'integer|digits_between:1,2',
+				'saveon_onetime'	=> 'integer|digits_between:1,2',
+				'coop_onetime'		=> 'integer|digits_between:1,2',
 				'payment'	=> 'required|in:debit,credit,keep',
 				'debit-transit'		=> 'required_if:payment,debit|digits:5',
 				'debit-institution'	=> 'required_if:payment,debit|digits:3',
@@ -415,6 +413,10 @@ class OrderController extends BaseController {
 				'coop.required' => 'You need to order at least one card.',
 				'saveon_onetime.required' => 'You need to order at least one card.',
 				'coop_onetime.required' => 'You need to order at least one card.',
+				'saveon.min' => 'You need to order at least one card.',
+				'coop.min' => 'You need to order at least one card.',
+				'saveon_onetime.min' => 'You need to order at least one card.',
+				'coop_onetime.min' => 'You need to order at least one card.',
 				'schedule.not_in' => 'Choose a delivery date',
 				'schedule_onetime.not_in' => 'Choose a delivery date',
 			]);
@@ -427,21 +429,25 @@ class OrderController extends BaseController {
 				   $input['coop_onetime'] > 0;
 		});
 
-		//return a function that returns when an order amount field is required
-		$orderRequired = function($schedulefield, $other) {
-			return function($input) use ($schedulefield, $other) {
-				return ($input->{$schedulefield} == 'biweekly' ||
-					   $input->{$schedulefield} == 'monthly' ||
-					   $input->{$schedulefield} == 'monthly-second') 
+		//rules for order amounts are complicated.  They can't both be 0 if they have a schedule
+		$orderRequired = function($schedulefield, $field, $other) use ($v, $in) {
+			if (($in[$schedulefield] == 'biweekly' ||
+					   $in[$schedulefield] == 'monthly' ||
+					   $in[$schedulefield] == 'monthly-second') 
 					&& 
-					   ($input->{$other} == '' || $input->{$other} == '0');
-			};
-		}
+					   ($in[$other] == '' || $in[$other] == '0') ){
+					   		$v->mergeRules($field, 'required|min:1');
+					   }
+			else {
+				$v->mergeRules($field, 'min:0');
+			}
+		};
+		
+		$orderRequired('schedule', 'saveon', 'coop');
+		$orderRequired('schedule', 'coop', 'saveon');
+		$orderRequired('schedule_onetime', 'saveon_onetime', 'coop_onetime');
+		$orderRequired('schedule_onetime', 'coop_onetime', 'saveon_onetime');
 
-		$v->sometimes('saveon', 'required', $orderRequired('schedule', 'coop'));
-		$v->sometimes('coop', 'required', $orderRequired('schedule', 'saveon'));
-		$v->sometimes('saveon_onetime', 'required', $orderRequired('schedule_onetime', 'coop_onetime'));
-		$v->sometimes('coop_onetime', 'required', $orderRequired('schedule_onetime', 'saveon_onetime'));
 		return $v;
 	}
 

@@ -95,11 +95,11 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	}
 
 	public function isMail() {
-		return $this->deliverymethod;
+		return $this->deliverymethod == 1;
 	}
 
 	public function isCreditcard() {
-		return $this->payment;
+		return $this->payment == 1;
 	}
 
 	public function getFriendlySchedule() {

@@ -16,7 +16,7 @@ class AddOnetimeOrderColumns extends Migration {
 		{
 		    $table->integer('coop_onetime')->nullable();
 		    $table->integer('saveon_onetime')->nullable();
-		    $table->string('schedule_onetime')->nullable();
+		    $table->string('schedule_onetime')->default('none');
 		});
 
 		Schema::table('orders', function($table)

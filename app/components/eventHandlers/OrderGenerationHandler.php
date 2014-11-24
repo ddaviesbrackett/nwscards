@@ -1,7 +1,12 @@
 <?php namespace NWSCards\eventHandlers;
 use \CutoffDate;
+use User;
+use Order;
+use Mail;
+use Stripe_InvoiceItem;
 class OrderGenerationHandler {
 	public function handle($date) {
+		\Stripe::setApiKey($_ENV['stripe_secret_key']);
 		$target = $date->copy();
 		$cutoff = CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();
 		if(! isset($cutoff)) {
@@ -19,7 +24,7 @@ class OrderGenerationHandler {
 			})
 			->where(function($q) use ($currentMonthly){
 				$q->where('schedule', '=', 'biweekly')
-				  ->orWhere('schedule', '=', $currentMonthly),
+				  ->orWhere('schedule', '=', $currentMonthly)
 				  ->orWhere('schedule_onetime', '=', $currentMonthly);
 			})
 			->get();
@@ -39,7 +44,7 @@ class OrderGenerationHandler {
 					$order->saveon_onetime = $user->saveon_onetime;
 					$user->coop_onetime = 0;
 					$user->saveon_onetime = 0;
-					$user->schedule_onetime = '';
+					$user->schedule_onetime = 'none';
 					$user->save();
 				}
 				$order->cutoffdate()->associate($cutoff);
@@ -47,7 +52,7 @@ class OrderGenerationHandler {
 
 				//since we're now entering the blackout period, we can add one-time orders to credit card invoices
 				//orders that are onetime-ONLY get dealt with separately on charge day, because this is easier than sorting through Stripe's API docs
-				if($order->isCreditcard() && ($order->saveon + $order->coop > 0) && ($order->saveon_onetime + $order->coop_onetime > 0) {
+				if($order->isCreditcard() && ($order->saveon + $order->coop > 0) && ($order->saveon_onetime + $order->coop_onetime > 0) ) {
 					Stripe_InvoiceItem::create([
 						'customer' => $user->stripe_id, 
 						'currency' => 'cad', 

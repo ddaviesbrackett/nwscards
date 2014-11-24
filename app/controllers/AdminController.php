@@ -88,7 +88,6 @@ class AdminController extends BaseController {
 	private function generateProfits($date) {
 		$saveon = 0.0;
 		$coop = 0.0;
-
 		if( ! empty($date->saveon_cheque_value) && ! empty($date->saveon_card_value))
 		{
 			$saveon = ($date->saveon_card_value - $date->saveon_cheque_value) / $date->saveon_card_value;
