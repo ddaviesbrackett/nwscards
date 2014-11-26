@@ -8,7 +8,7 @@ class HomeController extends BaseController {
 
 
 	public function getLogin() {
-		return View::make('login');
+		return View::make('login')->with('error', '');
 	}
 
 	public function postLogin()
