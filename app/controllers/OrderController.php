@@ -104,7 +104,12 @@ class OrderController extends BaseController {
 			$c_o >= 0) {
 			$user->saveon_onetime = $s_o;
 			$user->coop_onetime = $c_o;
-			$user->schedule_onetime = $user->schedule;
+			$sched = $user->schedule;
+			if($sched = 'biweekly') {
+				$cutoffs = $this->getCutoffs();
+				$sched = $cutoffs['biweekly']['cutoff'] == $cutoffs['monthly']['cutoff'] ? 'monthly' : 'monthly-second';
+			}
+			$user->schedule_onetime = $sched;
 			$user->save();
 			Session::flash('ordermessage', 'order updated');
 		}
