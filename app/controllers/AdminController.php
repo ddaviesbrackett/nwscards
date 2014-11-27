@@ -29,9 +29,15 @@ class AdminController extends BaseController {
 
 	public function getCaft($cutoffId)
 	{
-		$users = User::where('payment', '=', 0)->whereHas('cutoffdates', function($q) use ($cutoffId) {
-			$q->where('cutoffdates.id', '=', $cutoffId);
-		})->orderby('updated_at', 'desc')->get();
+		$orders = Order::join('users as u', 'u.id', '=', 'orders.user_id')
+			->where('orders.cutoff_date_id','=',$cutoffId) //only this cutoff
+			->where('orders.payment', '=', 0) //only debit
+			->orderby('u.updated_at', 'desc') //sort by date
+			->select('orders.*') //only select orders, so that the users columns don't confuse eloquent (sigh)
+			->with('user') //eagerload user
+			->get();
+		
+
 		$viewmodel = [
 			'New' => [],
 			'Updated' => [],
@@ -44,10 +50,11 @@ class AdminController extends BaseController {
 			$bicutoff = CutoffDate::find($cutoffId - 1)->cutoffdate()->tz('UTC');
 			$mcutoff = CutoffDate::find($cutoffId - 2)->cutoffdate()->tz('UTC');
 		}
-		$users->each(function($user) use (&$viewmodel, &$total, $bicutoff, $mcutoff, $cutoffId) {
+		foreach($orders as $order) {
+			$user = $order->user;
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
-			$total += $user->saveon + $user->coop;
+			$total += $order->totalCards();
 			if($cutoffId > 2) {
 				$cutoff = $user->schedule == 'biweekly' ? $bicutoff : $mcutoff;
 				$bucket = ($cutoff->lt($user->created_at) ? 'New' : ($cutoff->lt($user->updated_at) ? 'Updated' : 'Unchanged'));
@@ -57,12 +64,13 @@ class AdminController extends BaseController {
 			}
 
 			$viewmodel[$bucket][] = [
-				'user' => $user,
+				'order' => $order,
 				'acct' =>$stripeCustomer->metadata['debit-account'],
 				'transit' =>$stripeCustomer->metadata['debit-transit'],
 				'institution' =>$stripeCustomer->metadata['debit-institution'],
 			];
-		});
+		}
+
 		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total]); 
 	}
 

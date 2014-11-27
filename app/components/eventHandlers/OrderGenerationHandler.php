@@ -39,7 +39,7 @@ class OrderGenerationHandler {
 					$order->coop = $user->coop;
 					$order->saveon = $user->saveon;
 				}
-				if($user->schedule_onetime == $currentMonthly) {
+				if($user->schedule_onetime == $currentMonthly ) {
 					$order->coop_onetime = $user->coop_onetime;
 					$order->saveon_onetime = $user->saveon_onetime;
 					$user->coop_onetime = 0;

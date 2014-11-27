@@ -60,4 +60,12 @@ class Order extends Eloquent {
 
 	 	return $ret;
 	}
+
+	public function totalCards() {
+		return $this->coop + $this->saveon + $this->coop_onetime + $this->saveon_onetime;
+	}
+
+	public function hasOnetime() {
+		return $this->coop_onetime + $this->saveon_onetime > 0;
+	}
 }
