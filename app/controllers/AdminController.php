@@ -112,7 +112,7 @@ class AdminController extends BaseController {
 	public function getOrders()
 	{
 		$viewmodel = [];
-		$dates = CutoffDate::has('orders')->orderby('cutoff', 'desc')->get();
+		$dates = CutoffDate::has('orders')->orderby('cutoff', 'desc')->with('orders')->get();
 		$dates->each(function($date) use (&$viewmodel) {
 			$profits = $this->generateProfits($date);
 			$dt = new \Carbon\Carbon($date->cutoff);
@@ -120,8 +120,8 @@ class AdminController extends BaseController {
 				'id' => $date->id,
 				'delivery' => $dt->addDays(7)->format('F jS'),
 				'orders' => $date->orders->count(),
-				'saveon' => $date->orders->sum('saveon'),
-				'coop' => $date->orders->sum('coop'),
+				'saveon' => $date->orders->sum('saveon') + $date->orders->sum('saveon_onetime'),
+				'coop' => $date->orders->sum('coop') + $date->orders->sum('coop_onetime'),
 				'saveon_profit' => $profits['saveon'],
 				'coop_profit' => $profits['coop'],
 			];
@@ -132,7 +132,7 @@ class AdminController extends BaseController {
 
 	public function getOrder($id)	
 	{
-		$orders = Order::where('cutoff_date_id', '=', $id)->join('users', 'users.id', '=', 'orders.user_id')
+		$orders = Order::where('cutoff_date_id', '=', $id)->select('orders.*')->join('users', 'users.id', '=', 'orders.user_id')
 			->orderBy('users.name', 'asc')->with('user')->get();
 		$pickup = $orders->filter(function($order){ return ! $order->deliverymethod;});
 		$mail = $orders->filter(function($order){ return $order->deliverymethod;});

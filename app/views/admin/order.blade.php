@@ -28,8 +28,8 @@
 				{{{$order->user->name}}} - {{{$order->user->getPhone()}}}<br/>
 				({{{$order->user->pickupalt or 'none'}}})<br/>
 			</td>
-			<td>{{{$order->saveon}}}</td>
-			<td>{{{$order->coop}}}</td>
+			<td>{{{$order->saveon +$order->saveon_onetime}}}</td>
+			<td>{{{$order->coop + $order->coop_onetime}}}</td>
 			<td style="border-bottom:1px solid #000;"></td>
 		</tr>
 	@endforeach
@@ -50,8 +50,8 @@
 		<tr>
 			<td>{{{$order->user->name}}} ({{{$order->user->getPhone()}}})</td>
 			<td>{{{$order->user->address()}}}</td>
-			<td>{{{$order->saveon}}}</td>
-			<td>{{{$order->coop}}}</td>
+			<td>{{{$order->saveon + $order->saveon_onetime}}}</td>
+			<td>{{{$order->coop + $order->coop_onetime}}}</td>
 		</tr>
 	@endforeach
 </table>
