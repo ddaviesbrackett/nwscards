@@ -35,7 +35,7 @@
 			    <label for="email">Email address</label>
 			    <input type="email" class="form-control" id="email" name="email" placeholder="email">
 			  </div>
-			  <button type="submit" class="btn btn-primary">Send Reminder</button>
+			  <button type="submit" class="btn btn-danger">Send Reminder</button>
 			</div>
 		</div>
 		</div>

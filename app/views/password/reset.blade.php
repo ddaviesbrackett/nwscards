@@ -44,7 +44,7 @@
 						<span class='help-block'>{{{$errors->first('password_confirmation')}}}</span>
 					@endif
 				</div>
-			  <button type="submit" class="btn btn-primary">Reset Password</button>
+			  <button type="submit" class="btn btn-danger">Reset Password</button>
 			</div>
 		</div>
 		</div>
