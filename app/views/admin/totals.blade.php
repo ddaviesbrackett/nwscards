@@ -14,8 +14,7 @@
 <div class="container-fluid text-center">
 <h2>Total users: {{{$totalUsers}}}</h2>
 <h2>Cards by store and order frequency</h2>
-<p>Note: Monthly totals include bi-weekly totals.</p>
-<p>Note again:  this is recurring orders *only* - do not use for ordering!  you'll miss the one-time orders!!</p>
+<p>Note:  this is recurring orders *only* - do not use for ordering!  you'll miss the one-time orders!!</p>
 <table class='table text-left'>
 	<tr>
 		<th></th>
