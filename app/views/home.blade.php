@@ -366,7 +366,7 @@
 			    <label for="password">Message</label>
 			    <textarea class="form-control msg" id="msg" name="msg" placeholder="your message" rows="6"></textarea>
 			  </div>
-			  <button type="submit" class="btn btn-primary">Send</button>
+			  <button type="submit" class="btn btn-danger">Send</button>
 			</div>
 			<div class="success alert alert-success alert-dismissible hidden" role="alert">
 				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
