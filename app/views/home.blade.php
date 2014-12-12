@@ -247,7 +247,7 @@
 	    </div>
 	    <div id="faq12" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>We will have updated amounts on a monthly basis.  Your teacher or class rep can request a report as needed. Reports will also be published in the bulletin and on this website. </p>
+	        <p>You can see how much each class has raised on the <a href="/tracking/leaderboard">main tracking page</a> - or by clicking the class link on your account page.</p>
 	      </div>
 	    </div>
 	  </div>
