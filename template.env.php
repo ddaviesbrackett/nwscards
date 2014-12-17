@@ -11,4 +11,5 @@ return array(
     'mandrill_key' => 'INVALID',
     'error_to_address' => 'INVALID',
     'error_from_name' => 'INVALID',
+    'ga_code' => '',
 );
