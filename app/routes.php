@@ -31,6 +31,7 @@ Route::post('/stripe/webhook', 'StripeWebHookController@handleWebhook');
 
 //profit tracking
 Route::get('/tracking/leaderboard', 'TrackingController@getLeaderboard', ['as' => 'leaderboard']);
+Route::get('/tracking/', 'TrackingController@getLeaderboard', ['as' => 'leaderboard']);
 Route::get('/tracking/{bucketname}', 'TrackingController@getBucket', ['as' => 'tracking-bucket']);
 
 //Administrator treehouse
