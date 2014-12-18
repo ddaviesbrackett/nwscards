@@ -47,7 +47,6 @@
 		</div>
 		<div class="collapse navbar-collapse" id="subnav-collapse">
 			<ul class="nav navbar-nav navbar-left">
-				<li><a href="/tracking/leaderboard">View Fundraising Reports</a></li>
 				@if(! OrderController::IsBlackoutPeriod() )
 					<li><a href="/edit">Change Your Order</a></li>
 					@if ($user->schedule != 'none')
@@ -61,6 +60,7 @@
 						</a></li>
 					@endif
 				@endif
+				<li><a href="/tracking/leaderboard">View Reports</a></li>
 			</ul>
 		</div>
 	</div>
