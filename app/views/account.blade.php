@@ -45,9 +45,10 @@
 		    <span class="icon-bar"></span>
 		  </button>
 		</div>
-		@if(! OrderController::IsBlackoutPeriod() )
-			<div class="collapse navbar-collapse" id="subnav-collapse">
-				<ul class="nav navbar-nav navbar-left">
+		<div class="collapse navbar-collapse" id="subnav-collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="/tracking/leaderboard">View Fundraising Reports</a></li>
+				@if(! OrderController::IsBlackoutPeriod() )
 					<li><a href="/edit">Change Your Order</a></li>
 					@if ($user->schedule != 'none')
 						<li><a href="{{action('OrderController@Suspend')}}">Suspend Your Recurring Order</a></li>
@@ -59,9 +60,9 @@
 							{{{$user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'}}}	
 						</a></li>
 					@endif
-				</ul>
-			</div>
-		@endif
+				@endif
+			</ul>
+		</div>
 	</div>
 </header>
 </div>
