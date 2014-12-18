@@ -156,11 +156,11 @@
 							{{{$order->cutoffdate->deliverydate()->format('F jS Y')}}}
 						</td>
 						<td>
-							@if($order->saveon > 0)
-								{{{$order->saveon}}} Save-On
+							@if($order->saveon + $order->saveon_onetime > 0)
+								{{{$order->saveon + $order->saveon_onetime}}} Save-On
 							@endif
-							@if($order->coop > 0)
-								{{{$order->coop}}} Co-Op
+							@if($order->coop + $order->coop_onetime > 0)
+								{{{$order->coop + $order->coop_onetime}}} Co-Op
 							@endif
 						</td>
 						<td>
