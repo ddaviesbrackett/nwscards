@@ -160,11 +160,13 @@ class AdminController extends BaseController {
 		//update order profits for all the orders in the cutoff
 		$profits = $this->generateProfits($cutoff);
 		$cutoff->orders->load('user')->each(function($order) use ($profits) {
-			$profit = ($order->saveon * $profits['saveon']) + ($order->coop * $profits['coop']);
+			$saveon = $order->saveon + $order->saveon_onetime;
+			$coop = $order->coop + $order->coop_onetime;
+			$profit = ($saveon * $profits['saveon']) + ($coop * $profits['coop']);
 			
 			//stripe takes its cut
 			if($order->isCreditCard()) {
-				$profit -= ($order->saveon + $order->coop) * 2.9;
+				$profit -= ($saveon + $coop) * 2.9;
 				$profit -= 0.30;
 			}
 			$order->profit = $profit;
