@@ -1,4 +1,4 @@
-<?php namespace NWSCards;
+<?php namespace NWSCards\components;
 use Illuminate\Support\ServiceProvider;
 
 class TimedActionsServiceProvider extends ServiceProvider {

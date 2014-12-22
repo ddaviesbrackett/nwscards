@@ -123,7 +123,7 @@ return array(
 		'Illuminate\Workbench\WorkbenchServiceProvider',
 		'Cartalyst\Sentry\SentryServiceProvider',
 		'Laravel\Cashier\CashierServiceProvider',
-		'NWSCards\TimedActionsServiceProvider',
+		'NWSCards\components\TimedActionsServiceProvider',
 	),
 
 	/*

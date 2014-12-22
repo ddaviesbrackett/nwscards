@@ -40,7 +40,7 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	{
 		if ($plan instanceof PlanInterface) $plan = $plan->getStripeId();
 
-		return new NWSCardsStripeGateWay($this, $plan);
+		return new \NWSCards\components\overrides\StripeGateway($this, $plan);
 	}
 
 	public function hasStripePlan()

@@ -1,4 +1,4 @@
-<?php namespace NWSCards\eventHandlers;
+<?php namespace NWSCards\components\eventHandlers;
 use \CutoffDate;
 class PickupReminderHandler {
 	public function handle($date) {

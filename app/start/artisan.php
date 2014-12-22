@@ -1,5 +1,5 @@
 <?php
-
+use NWSCards\commands;
 /*
 |--------------------------------------------------------------------------
 | Register The Artisan Commands
@@ -11,5 +11,5 @@
 |
 */
 
-Artisan::add(new AssignAdminRights);
-Artisan::add(new NightlyProcessing);
+Artisan::add(new commands\AssignAdminRights());
+Artisan::add(new commands\NightlyProcessing());
