@@ -22,12 +22,10 @@ class OrderController extends BaseController {
 
 		$user = Sentry::getUser();
 
-		if ($user->hasStripePlan())
-		{
-			$user->subscription()->cancelNow();
-		}
 		//suspending while you're already suspended shouldn't clobber your saved schedule
-		$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
+		if($user->schedule != 'none') {
+			$user->schedule_suspended = $user->schedule;
+		}
 		$user->schedule = 'none';
 		$user->save();
 		Mail::send('emails.suspend', ['user' => $user, 'isChange' => true], function($message) use ($user){
@@ -48,20 +46,7 @@ class OrderController extends BaseController {
 		$user = Sentry::getUser();
 		if($user->schedule_suspended != 'none') {
 			$user->schedule = $user->schedule_suspended;
-			
-			if ( $user->isCreditCard() )
-			{
-				$plan = null;
-				if($user->schedule == 'biweekly'){
-					$plan = '14days';
-				}
-				else {
-					$plan = '28days';
-				}
-				$chargedate = BaseController::getCutoffs()[$user->schedule]['charge'];
-				$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($user->saveon + $user->coop);
-				$gateway->create(null, array(), $gateway->getStripeCustomer());
-			}
+
 			$user->save();
 			Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){
 				$message->subject('Grocery card order resumed');
@@ -151,12 +136,12 @@ class OrderController extends BaseController {
  		$validator = OrderController::GetValidator($in);
 		$validator->mergeRules('email', 'unique:users,email,' . $user->id);
 
-		// process the login
+		// process the edit
 		if ($validator->fails()) {
 			return Redirect::to('/edit')
 				->withErrors($validator)
 				->withInput(Input::all());
-		} else {
+		} else if ( !(OrderController::IsBlackoutPeriod()) ) {
 			$user->email = $in['email'];
 			$user->name = $in['name'];
 			$user->phone = $in['phone'];
@@ -181,101 +166,48 @@ class OrderController extends BaseController {
 			{
 				$user->password = $in['password'];
 			}
+			
+			$user->deliverymethod = $in['deliverymethod'] == 'mail';
+			$user->referrer = $in['referrer'];
+			$user->pickupalt = $in['pickupalt'];
+			$user->employee = array_key_exists('employee', $in);
 
+			$user->saveon_onetime = $in['saveon_onetime'];
+			$user->coop_onetime = $in['coop_onetime'];
+			$user->schedule_onetime = $in['schedule_onetime'];
+	
+			$user->saveon = $in['saveon'];
+			$user->coop = $in['coop'];
+			
+			if($in['schedule'] == 'none' && $user->schedule != 'none')
+			{
+				$user->schedule_suspended = $user->schedule;
+			}
 			$cardToken = ( ($in['payment'] == 'credit') && isset($in['stripeToken']) ) ? $in['stripeToken'] : null;
 
-			$bIsSubscribed = $user->hasStripePlan();
-			
-			// if they are paying with credit already, let them change the card.
-			if ( ( $cardToken != null ) && ( $user->isCreditcard() ) && ( $bIsSubscribed ) )
-			{
-				$user->subscription()->updateCard($cardToken);
-				$cardToken = null;
-			}
-
-			if ( !(OrderController::IsBlackoutPeriod()) )
-			{
-				$user->deliverymethod = $in['deliverymethod'] == 'mail';
-				$user->referrer = $in['referrer'];
-				$user->pickupalt = $in['pickupalt'];
-				$user->employee = array_key_exists('employee', $in);
-
-				$user->saveon_onetime = $in['saveon_onetime'];
-				$user->coop_onetime = $in['coop_onetime'];
-				$user->schedule_onetime = $in['schedule_onetime'];
-
-				$bStripePlanChanged = ( ($user->saveon != $in['saveon']) || ($user->coop != $in['coop']) || ($user->schedule != $in['schedule']) );
+			$user->schedule = $in['schedule'];
 		
-				$user->saveon = $in['saveon'];
-				$user->coop = $in['coop'];
-				
-				$plan = null;
-				if($in['schedule'] == 'biweekly')
-				{
-					$plan = '14days';
-				}
-				else if($in['schedule'] == 'monthly' || $in['schedule'] == 'monthly-second')
-				{
-					$plan = '28days';
-				}
-				else //schedule is none - save old schedule for resume, cancel credit card
-				{
-					$user->schedule_suspended = $user->schedule == 'none' ? $user->schedule_suspended : $user->schedule;
-					if ($bIsSubscribed)
-					{
-						$user->subscription()->cancelNow();
-						$bIsSubscribed = false;
-					}
-				}
-
-				$user->schedule = $in['schedule'];
+			$stripeUser = $user->subscription()->getStripeCustomer();
+			$stripeUser->email = $user->email;
+			$stripeUser->description = $user->name;
 			
-				$stripeUser = $user->subscription()->getStripeCustomer();
-				$stripeUser->email = $user->email;
-				$stripeUser->description = $user->name;
-				
-				if( $in['payment'] == 'debit' )
-				{
-					$extras = [
-						'debit-transit'=>$in['debit-transit'],
-						'debit-institution'=>$in['debit-institution'],
-						'debit-account'=>$in['debit-account'],
-					];
-					$stripeUser->metadata = $extras;
-					
-					if ($bIsSubscribed)
-					{
-						$user->subscription()->cancelNow();
-						$bIsSubscribed = false;
-					}
+			if( $in['payment'] == 'debit' )
+			{
+				$extras = [
+					'debit-transit'=>$in['debit-transit'],
+					'debit-institution'=>$in['debit-institution'],
+					'debit-account'=>$in['debit-account'],
+				];
+				$stripeUser->metadata = $extras;
 
-					$user->payment = 0;
-
-					// cancelling plan sets stripe-active to 0. need to reset it here.
-					$user->stripe_active = 1;
-				}
-			
-				$stripeUser->save();
-			
-				 if ( $plan != null && 
-				 		( ( !$bIsSubscribed && $cardToken != null ) // credit card selected -> new stripe subscription
-					  	 || ( $bIsSubscribed && $bStripePlanChanged ) ) // changing stripe subscription
-					) 
-				{
-					$user->payment = 1;
-
-					// to avoid prorating, just cancel and recreate plan.
-					if ($bIsSubscribed)
-					{
-						$user->subscription()->cancelNow();
-					}
-
-					//subscribing to a new plan.
-					$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
-					$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
-					$gateway->create($cardToken, array(), $gateway->getStripeCustomer());
-				}
+				$user->payment = 0;
 			}
+			else if ( $cardToken != null )
+			{
+				$user->updateCard($cardToken);
+				$user->payment = 1;
+			}
+			$stripeUser->save();
 				
 			if ($user->save())
 			{
@@ -362,25 +294,11 @@ class OrderController extends BaseController {
 				'pickupalt' => $in['pickupalt'],
 			], true);
 			try {
-				$plan = null;
-				if($in['schedule'] == 'biweekly'){
-					$plan = '14days';
-				}
-				else if($in['schedule'] == 'monthly' || $in['schedule'] == 'monthly-second'){
- 					$plan = '28days';
-				}
 				$cardToken = null;
 				if(isset($in['stripeToken'])){
 					$cardToken = $in['stripeToken'];
 				}
-				$gateway = null;
-				if(isset($cardToken) && $in['saveon']+$in['coop'] > 0) {
-						$chargedate = BaseController::getCutoffs()[$in['schedule']]['charge'];
-						$gateway = $user->subscription($plan)->trialFor($chargedate)->quantity($in['saveon']+$in['coop']);
-				}
-				else {
-					$gateway = $user->subscription(null); //just create them with no subs if they don't have a card
-				}
+				$gateway = $user->subscription(null);
 				$extras = [
 					'email' => $user->email, 
 					'description' => $user->name,

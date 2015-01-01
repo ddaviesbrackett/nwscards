@@ -17,6 +17,6 @@ class TimedActionsServiceProvider extends ServiceProvider {
 		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\OrderGenerationHandler');
 		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\DeadlineReminderHandler');
 		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\PickupReminderHandler');
-		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\OnetimeCreditOrderHandler');
+		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\CreditOrderHandler');
 	}
 }

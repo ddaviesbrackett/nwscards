@@ -43,11 +43,6 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return new \NWSCards\components\overrides\StripeGateway($this, $plan);
 	}
 
-	public function hasStripePlan()
-	{
-		return $this->onPlan('28days') || $this->onPlan('14days');
-	}
-
 	public function classesSupported() {
 		$ret = [];
 		if($this->marigold) $ret[] = 'marigold';

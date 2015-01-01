@@ -1,7 +1,7 @@
 <?php namespace NWSCards\components\eventHandlers;
 use \CutoffDate;
 use Stripe_Charge;
-class OnetimeCreditOrderHandler {
+class CreditOrderHandler {
 	public function handle($date) {
 		\Stripe::setApiKey($_ENV['stripe_secret_key']);
 		$target = $date->copy()->subDays(5);
@@ -12,17 +12,17 @@ class OnetimeCreditOrderHandler {
 
 		foreach($cutoff->orders as $order)
 		{
-			$onetime = $order->saveon_onetime + $order->coop_onetime;
-			if($order->isCreditcard() && ($order->saveon + $order->coop == 0) && $onetime != 0 )
+			$cards = $order->saveon_onetime + $order->coop_onetime + $order->saveon + $order->coop;
+			if($order->isCreditcard() && $cards != 0 )
 			{
 				Stripe_Charge::create([
 					'customer' => $order->user->stripe_id,
-					'amount' => $onetime * 100 * 100, //amount is in cents
+					'amount' => $cards * 100 * 100, //amount is in cents
 					'currency' => 'cad',
-					'description' => 'one-time grocery card order for '.$cutoff->deliverydate(),
+					'description' => 'grocery card order for '.$cutoff->deliverydate(),
 					]);
 			}
 		}
-		return "one-time CC orders charged for " . $date;
+		return "CC orders charged for " . $date;
 	}
 }
