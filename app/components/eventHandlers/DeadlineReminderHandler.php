@@ -29,6 +29,7 @@ class DeadlineReminderHandler {
 		$usersToBeg = \User::where('stripe_active', '=', 1)
 			->where('schedule', '=', 'none')
 			->where('schedule_onetime', '=', 'none')
+			->where('no_beg', '<>', 1)
 			->get();
 
 		foreach($usersToBeg as $user)

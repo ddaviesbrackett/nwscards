@@ -40,12 +40,12 @@ class NightlyProcessing extends Command {
 	{
 		$date = Carbon::parse($this->argument('date'), 'America/Los_Angeles');
 		
-		$eventResults = array_where(Event::fire('timed.nightly', [$date]), function($k, $v) {
+		$eventResults = array_where(\Event::fire('timed.nightly', [$date]), function($k, $v) {
 			return !is_null($v);
 		});
 		if(count($eventResults) > 0){
 			if (! empty($_ENV['error_to_address'])) {
-				Mail::send('emails.nightly', ['model' => $eventResults], function($message) use ($date){
+				\Mail::send('emails.nightly', ['model' => $eventResults], function($message) use ($date){
 					$message->subject('nightly processing: '.$date);
 					$message->to($_ENV['error_to_address'], 'Error Person');
 					$message->from('noreply@grocerycards.nelsonwaldorf.org', $_ENV['error_from_name']);

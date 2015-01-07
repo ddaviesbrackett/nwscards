@@ -14,9 +14,9 @@ class TimedActionsServiceProvider extends ServiceProvider {
 	}
 
 	private function registerNightlies() {
-		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\OrderGenerationHandler');
-		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\DeadlineReminderHandler');
-		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\PickupReminderHandler');
-		\Event::listen('timed.nightly', 'NWSCards\eventHandlers\CreditOrderHandler');
+		\Event::listen('timed.nightly', 'NWSCards\components\eventHandlers\OrderGenerationHandler');
+		\Event::listen('timed.nightly', 'NWSCards\components\eventHandlers\DeadlineReminderHandler');
+		\Event::listen('timed.nightly', 'NWSCards\components\eventHandlers\PickupReminderHandler');
+		\Event::listen('timed.nightly', 'NWSCards\components\eventHandlers\CreditOrderHandler');
 	}
 }
