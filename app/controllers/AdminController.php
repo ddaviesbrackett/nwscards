@@ -139,6 +139,17 @@ class AdminController extends BaseController {
 		return View::make('admin.order', ['pickup'=>$pickup, 'mail'=>$mail]);
 	}
 
+	public function getNewSaleForm()
+	{
+		return View::make('admin.newsale', ['order'=>null]);
+	}
+
+	public function postNewSaleForm()
+	{
+		
+		return View::make('admin.newsale', ['order'=>null]);
+	}
+
 	public function getProfitSettingForm($cutoff) {
 		return View::make('admin.profitform', ['cutoff'=>$cutoff]);
 	}
