@@ -20,8 +20,11 @@
 <div class="container-fluid">
 <h3>Record a new expense</h3>
 {{Form::open(['route'=>['admin-postexpense'], 'method'=>'POST', 'class'=>'new-expense'])}}
+    @if($errors->edit->has('error'))
+        <span class='help-block'>{{{$errors->edit->first('error')}}}</span>
+    @endif
     <div class="form-group">
-		<label for='date' class='text-right'>Date:</label>
+		    <label for='date' class='text-right'>Date:</label>
       	<input type="date" class="form-control" placeholder="" id="date" name="date" value="{{Form::getValueAttribute('date', '')}}"/>
     </div>
     <div class="form-group">
@@ -37,7 +40,7 @@
     </div>
     <div class="form-group">
       <label for='class_id' class='text-right'>Account:</label>
-      <input type="number" class="form-control" placeholder="" id="class_id" name="class_id" value="{{Form::getValueAttribute('class_id', 13)}}"/>
+      {{Form::select('class_id', $schoolclasses, Form::getValueAttribute('class_id', 1), ['class'=>'form-control'])}}
     </div>
     <div class="form-group text-right">
       <div class="col-sm-12">
@@ -56,7 +59,7 @@
 	</tr>
 	@foreach($model as $exp)
 		<tr>
-			<td>{{{$exp->expense_date}}}</td>
+			<td>{{{$exp->expense_date->toDateString()}}}</td>
 			<td>{{{$exp->description}}}</td>
 			<td>{{{$exp->amount}}}</td>
 			<td>{{{$exp->schoolclass->name}}}</td>

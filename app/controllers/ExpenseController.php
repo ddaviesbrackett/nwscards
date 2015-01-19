@@ -4,8 +4,7 @@ use Carbon\Carbon;
 class ExpenseController extends BaseController {
 	public function getExpenses()
 	{
-		$expenses = Expense::orderby('updated_at', 'desc')->with('schoolclass')->get();
-		return View::make('admin.expenses', ['model'=>$expenses]);
+		return $this->result();
 	}
 
 	public function postExpense()
@@ -34,13 +33,16 @@ class ExpenseController extends BaseController {
 		$expense->expense_date = $date;
 		$expense = $schoolclass->expenses()->save($expense);
 
-		$expenses = Expense::orderby('updated_at', 'desc')->with('schoolclass')->get();
-		return View::make('admin.expenses', ['model'=>$expenses]);
+		return $this->result();
 	}
 
 	public function getEditExpense($exp)
 	{
-		return View::make('admin.expenseform', ['expense' => $exp]);
+		$schoolclasses = [];
+		foreach(SchoolClass::all() as $sc) {
+			$schoolclasses[$sc->id] = $sc->name;
+		}
+		return View::make('admin.expenseform', ['expense' => $exp, 'schoolclasses' => $schoolclasses]);
 	}
 
 	public function postEditExpense($exp)
@@ -53,7 +55,7 @@ class ExpenseController extends BaseController {
 				'date' => 'required|date',
 			]);
 		if($validator->fails()) {
-			return Redirect::to('/admin/expenses')->withErrors($validator)->withInput(Input::all());
+			return Redirect::to('/admin/expenses')->withErrors(['error', 'something went wrong with edit.  All fields are required.'], 'edit');
 		}
 		$class = Input::get('class_id');
 		$amt = Input::get('amount');
@@ -71,21 +73,29 @@ class ExpenseController extends BaseController {
 		$exp->schoolclass()->associate($schoolclass);
 		$exp->expense_date = Carbon::parse($date);
 		$exp->save();
-
-		$expenses = Expense::orderby('updated_at', 'desc')->with('schoolclass')->get();
-		return View::make('admin.expenses', ['model'=>$expenses]);
+		
+		return Redirect::to('/admin/expenses');
 	}
 
 	public function getDeleteExpense($exp)
 	{
-		return View::make('admin.expenseform', ['expense' => $exp]); //TODO WRONG
+		return View::make('admin.expensedeleteform', ['expense' => $exp]);
 	}
 
 	public function postDeleteExpense($exp)
 	{
 		$exp->delete();
 
+		return Redirect::to('/admin/expenses');
+	}
+
+	private function result($extra = [])
+	{
 		$expenses = Expense::orderby('updated_at', 'desc')->with('schoolclass')->get();
-		return View::make('admin.expenses', ['model'=>$expenses]);
+		$schoolclasses = [];
+		foreach(SchoolClass::all() as $sc) {
+			$schoolclasses[$sc->id] = $sc->name;
+		}
+		return View::make('admin.expenses', array_merge(['model'=>$expenses, 'schoolclasses'=> $schoolclasses], $extra));
 	}
 }

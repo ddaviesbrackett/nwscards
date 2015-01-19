@@ -22,6 +22,6 @@ class Expense extends Eloquent {
 
 	public function getDates()
 	{
-	    return array('expense_date, updated_at, created_at');
+	    return ['expense_date', 'updated_at', 'created_at'];
 	}
 }
