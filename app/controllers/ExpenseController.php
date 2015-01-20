@@ -55,7 +55,7 @@ class ExpenseController extends BaseController {
 				'date' => 'required|date',
 			]);
 		if($validator->fails()) {
-			return Redirect::to('/admin/expenses')->withErrors(['error', 'something went wrong with edit.  All fields are required.'], 'edit');
+			return Redirect::to('/admin/expenses')->withErrors(['error' => 'something went wrong with edit.  All fields are required.'], 'edit');
 		}
 		$class = Input::get('class_id');
 		$amt = Input::get('amount');

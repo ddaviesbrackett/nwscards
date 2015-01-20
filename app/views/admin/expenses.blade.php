@@ -21,26 +21,40 @@
 <h3>Record a new expense</h3>
 {{Form::open(['route'=>['admin-postexpense'], 'method'=>'POST', 'class'=>'new-expense'])}}
     @if($errors->edit->has('error'))
+      <div class="form-group has-error">
         <span class='help-block'>{{{$errors->edit->first('error')}}}</span>
+      </div>
     @endif
-    <div class="form-group">
+    <div class="form-group{{$errors->has('date')?' has-error':'';}}">
 		    <label for='date' class='text-right'>Date:</label>
       	<input type="date" class="form-control" placeholder="" id="date" name="date" value="{{Form::getValueAttribute('date', '')}}"/>
+        @if($errors->has('date'))
+          <span class='help-block'>{{{$errors->first('date')}}}</span>
+        @endif
     </div>
-    <div class="form-group">
+    <div class="form-group{{$errors->has('description')?' has-error':'';}}">
       <label for='description' class='text-right'>Description:</label>
       <input type="text" class="form-control" placeholder="" id="description" name="description" value="{{Form::getValueAttribute('description', '')}}"/>
+      @if($errors->has('description'))
+        <span class='help-block'>{{{$errors->first('description')}}}</span>
+      @endif
     </div>
-    <div class="form-group">
+    <div class="form-group{{$errors->has('amount')?' has-error':'';}}">
       <label for='amount' class='text-right'>Amount:</label>
       <div class="input-group">
         <span class="input-group-addon">$</span>
         <input type="number" min="0" step="0.01" class="form-control" placeholder="" id="amount" name="amount" value="{{Form::getValueAttribute('amount', 0)}}"/>
       </div>
+       @if($errors->has('amount'))
+        <span class='help-block'>{{{$errors->first('amount')}}}</span>
+      @endif
     </div>
-    <div class="form-group">
+    <div class="form-group{{$errors->has('class_id')?' has-error':'';}}">
       <label for='class_id' class='text-right'>Account:</label>
       {{Form::select('class_id', $schoolclasses, Form::getValueAttribute('class_id', 1), ['class'=>'form-control'])}}
+      @if($errors->has('class_id'))
+        <span class='help-block'>{{{$errors->first('class_id')}}}</span>
+      @endif
     </div>
     <div class="form-group text-right">
       <div class="col-sm-12">
