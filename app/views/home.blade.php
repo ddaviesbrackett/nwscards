@@ -19,6 +19,7 @@
 <div class="masthead">
 	<h1>Buy Grocery Cards<br/>Raise Money</h1>
 	<h3>We've raised ${{{$total}}} so far<br/>Help us raise more &mdash; <em>without spending any extra!</em></h3>
+	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>
 	@if (Sentry::check())
 		<a class="btn btn-outline-inverse btn-lg" href="/edit">Change Order</a>
 	@else
