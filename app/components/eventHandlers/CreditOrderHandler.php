@@ -5,7 +5,7 @@ use Stripe_CardError;
 class CreditOrderHandler {
 	public function handle($date) {
 		\Stripe::setApiKey($_ENV['stripe_secret_key']);
-		$target = $date->copy()->subDays(5);
+		$target = $date->copy()->subDays(4);
 		$cutoff = CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();
 		if(! isset($cutoff)) {
 			return;
