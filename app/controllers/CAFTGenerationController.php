@@ -32,43 +32,40 @@ class CAFTGenerationController extends BaseController {
 		$total = 0;
 
 		$totalDollarValue = 0; // in cents
-
-		foreach($cutoff->orders as $order)
+		$debitOrders = $cutoff->orders()->where('payment', '=', 0)->get();
+		foreach($debitOrders as $order)
 		{
-			if(! $order->isCreditcard())
+			$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
+			if ($total % 6 == 0)
 			{
-				$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
-				if ($total % 6 == 0)
-				{
-					$content .= "\r\nD" . sprintf('%09d', $linenum) . $originatorinfo;
-				}
-
-				$user = $order->user;
-				$gateway = new Laravel\Cashier\StripeGateway($user);
-				$stripeCustomer = $gateway->getStripeCustomer();
-
-				$orderAmount = $order->totalCards() * 10000;
-				$totalDollarValue += $orderAmount;
-
-				$content .= '450'; //this needs to be a transaction type code thanks donna!
-				$content .=  sprintf('%010.10d', $orderAmount); //amount
-				$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
-				$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
-				$content .= sprintf('%-12.12s', $stripeCustomer->metadata['debit-account']);
-				$content .=  $this->spaces(22); //internal use
-				$content .= $this->zeroes(3); //internal use
-				$content .= 'NWS GROC CARDS '; //our short name
-				$content .= sprintf("%30.30s", $order->user->name); //payor name - $order->user->name, but formatted
-				$content .= 'NWS Grocery Card Fundraiser   '; //our long name
-				$content .= $originatorID;
-				$content .= sprintf('%19.19s', 'User:' . $user->ID . ' Order:' . $order->ID); // originator cross reference
-				$content .= '080922010'; //institutional id number for returns = 0 . institution . transit
-				$content .= '152010386243'; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
-				$content .= 'NWS GROC CARDS '; // information to identify transaction to recipient
-				$content .= $this->spaces(24);
-				$content .= $this->zeroes(11);
-				$total++;
+				$content .= "\r\nD" . sprintf('%09d', $linenum) . $originatorinfo;
 			}
+
+			$user = $order->user;
+			$gateway = new Laravel\Cashier\StripeGateway($user);
+			$stripeCustomer = $gateway->getStripeCustomer();
+
+			$orderAmount = $order->totalCards() * 10000;
+			$totalDollarValue += $orderAmount;
+
+			$content .= '450'; //this needs to be a transaction type code thanks donna!
+			$content .=  sprintf('%010.10d', $orderAmount); //amount
+			$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
+			$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
+			$content .= sprintf('%-12.12s', $stripeCustomer->metadata['debit-account']);
+			$content .=  $this->spaces(22); //internal use
+			$content .= $this->zeroes(3); //internal use
+			$content .= 'NWS GROC CARDS '; //our short name
+			$content .= sprintf("%30.30s", $order->user->name); //payor name - $order->user->name, but formatted
+			$content .= 'NWS Grocery Card Fundraiser   '; //our long name
+			$content .= $originatorID;
+			$content .= sprintf('%19.19s', 'User:' . $user->id . ' Order:' . $order->id); // originator cross reference
+			$content .= '080922010'; //institutional id number for returns = 0 . institution . transit
+			$content .= '152010386243'; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
+			$content .= 'NWS GROC CARDS '; // information to identify transaction to recipient
+			$content .= $this->spaces(24);
+			$content .= $this->zeroes(11);
+			$total++;
 		}
 
 		// pad record with extra spaces
@@ -82,7 +79,7 @@ class CAFTGenerationController extends BaseController {
 		$content .= "\r\n";
 
 		// send Z record indicating end of file
-		$content .= 'Z' . sprintf('%09d', $total / 6 + 2) . $originatorinfo . sprintf('%014d', $totalDollarValue) . sprintf('%08d', $total) . $this->zeroes(66) . $this->spaces(1352) . "\r\n";
+		$content .= 'Z' . sprintf('%09d', $total / 6 + 2) . $originatorinfo . sprintf('%014d', $totalDollarValue) . sprintf('%08d', $debitOrders->count()) . $this->zeroes(66) . $this->spaces(1352) . "\r\n";
 
 		$resp = Response::make($content);
 
