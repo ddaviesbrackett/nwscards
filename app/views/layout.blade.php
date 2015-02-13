@@ -53,7 +53,8 @@
 					            <li><a href="/admin/orders">Orders</a></li>
 					            <li><a href="/tracking/leaderboard">Tracking</a></li>
 					            <li><a href="/admin/impersonate">Change Another User</a></li>
-					            <li><a href="/admin/recordsale">Record an Off-cycle Sale</a></li>
+					            <li><a href="/admin/expenses">Expenses</a></li>
+					            <!--<li><a href="/admin/recordsale">Cash Sales</a></li>-->
 					          </ul>
 					        </li>
 							@endif
