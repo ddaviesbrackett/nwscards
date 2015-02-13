@@ -10,7 +10,7 @@ class Expense extends Eloquent {
 	protected $table = 'expenses';
 
 	protected $fillable = [
-		'date',
+		'expense_date',
 		'amount',
 		'description',
 		'class_id',
