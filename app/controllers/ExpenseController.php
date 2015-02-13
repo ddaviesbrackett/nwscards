@@ -91,7 +91,7 @@ class ExpenseController extends BaseController {
 
 	private function result($extra = [])
 	{
-		$expenses = Expense::orderby('updated_at', 'desc')->with('schoolclass')->get();
+		$expenses = Expense::orderby('date', 'desc')->with('schoolclass')->get();
 		$schoolclasses = [];
 		foreach(SchoolClass::all() as $sc) {
 			$schoolclasses[$sc->id] = $sc->name;
