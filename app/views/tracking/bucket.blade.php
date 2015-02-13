@@ -43,6 +43,6 @@
 		@endforeach
 	@endif
 </table>
-<p>Total paid out: {{{money_format( '$%n', $expenses->sum('amount'))}}}</p>
+<p>Total available: {{{money_format( '$%n', $sum - $expenses->sum('amount'))}}}</p>
 </div>
 @stop
