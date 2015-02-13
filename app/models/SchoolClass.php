@@ -11,6 +11,7 @@ class SchoolClass extends Eloquent {
 
 	protected $fillable = [
 		'name',
+		'bucketname',
 	];
 
 	public function expenses() {

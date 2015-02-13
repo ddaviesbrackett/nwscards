@@ -13,6 +13,7 @@
 	<h3>{{{$name}}} currently has {{{$currentSupporters}}} supporters.</h3>
 </div>
 <div class="container-fluid">
+<h4>Funds Raised</h4>
 <table class='table'>
 	<tr>
 		<th>Order</th>
@@ -27,5 +28,21 @@
 		@endforeach
 	@endif
 </table>
+<h4>Funds Paid Out</h4>
+<table class='table'>
+	<tr>
+		<th>Payout</th>
+		<th>Amount</th>
+	</tr>
+	@if (! empty($expenses))
+		@foreach($expenses as $expense)
+			<tr>
+				<td>{{{$expense->expense_date->format('F jS')}}}</td>
+				<td>{{{money_format('$%n',$expense->amount)}}}</td>
+			</tr>
+		@endforeach
+	@endif
+</table>
+<p>Total paid out: {{{money_format( '$%n', $expenses->sum('amount'))}}}</p>
 </div>
 @stop

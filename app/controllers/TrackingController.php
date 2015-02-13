@@ -11,6 +11,7 @@ class TrackingController extends BaseController {
 		$pastSupporters = 0;
 		$projectionSupporters = 0;
 		$currentSupporters = 0;
+		$expenses = null;
 		if(! empty($name) ) {
 			$orders = Order::with('cutoffdate')->where($bucketname, '>', 0)
 				->groupBy('cutoff_date_id')
@@ -25,11 +26,14 @@ class TrackingController extends BaseController {
 				$pastSupporters = $orders[0]->supporters + $orders[1]->supporters;
 			}
 			$currentSupporters = $bucketname == 'pac' || $bucketname == 'tuitionreduction'?User::count():User::where($bucketname, '=', 1)->count();
+
+			$expenses = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail()->expenses()->orderBy('expense_date', 'desc')->get();
 		}
 
 		return View::make('tracking.bucket', [
 			'name' => $name,
 			'orders' => $orders,
+			'expenses' => $expenses,
 			'sum' =>$totalprofit,
 			'projection' => $projection,
 			'pastSupporters' => $pastSupporters,
@@ -45,7 +49,7 @@ class TrackingController extends BaseController {
 		$bucketnames = $this->classIds;
 		$bucketnames[] = 'pac';
 		$bucketnames[] = 'tuitionreduction';
-		//initialize
+
 		array_map(function($classId) use (&$buckets, &$sqlparams, $bucketnames){
 			$buckets[$classId] = ['count'=>0, 'amount'=> 0];
 		}, $bucketnames);
