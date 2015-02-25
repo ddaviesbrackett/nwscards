@@ -58,6 +58,13 @@ App::error(function(Exception $exception, $code)
 	}
 });
 
+App::error(function(Illuminate\Session\TokenMismatchException $exception, $code)
+{
+	return Redirect::to(Request::header('Referer'))
+		->withErrors(['error' => 'Whoops!  Something went wrong with your form - it was probably open too long. Please try submitting it again.'], 'tme')
+		->withInput(Input::all());
+});
+
 /*
 |--------------------------------------------------------------------------
 | Maintenance Mode Handler

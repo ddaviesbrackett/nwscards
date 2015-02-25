@@ -73,6 +73,29 @@
 				</div>
 			</div>
 		</header>
+		@if($errors->tme->has('error'))
+			<div class="modal fade" id="tokenerror">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title">Error</h4>
+			      </div>
+			      <div class="modal-body">
+			        <p>{{{$errors->tme->first('error')}}}</p>
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			      </div>
+			    </div>
+			  </div>
+			</div>
+			<script>
+				$(function(){
+					$('#tokenerror').modal();
+				});
+			</script>
+		@endif
 		@yield('content')
 		<div class='text-center footer'>
 			We appreciate your support<br> This fundraiser is presented and adminstered by the <a href="mailto:grocerycards@nelsonwaldorf.org">Nelson Waldorf School Parent Association</a>
