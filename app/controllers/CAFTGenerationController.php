@@ -24,7 +24,7 @@ class CAFTGenerationController extends BaseController {
 
 	public function getResult($cutoff, $filenum)
 	{
-		$originatorID = '8090220100'; // originator ID from CAFT
+		$originatorID = $_ENV['caft_originator_id']; // originator ID from CAFT
 		$filenumber = sprintf('%04.4d', $filenum);
 		$originatorinfo = $originatorID . $filenumber;
 		//caft magic
@@ -48,7 +48,7 @@ class CAFTGenerationController extends BaseController {
 			$orderAmount = $order->totalCards() * 10000;
 			$totalDollarValue += $orderAmount;
 
-			$content .= '450'; //this needs to be a transaction type code thanks donna!
+			$content .= '450'; //transaction type code
 			$content .=  sprintf('%010.10d', $orderAmount); //amount
 			$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
 			$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
@@ -60,8 +60,8 @@ class CAFTGenerationController extends BaseController {
 			$content .= 'NWS Grocery Card Fundraiser   '; //our long name
 			$content .= $originatorID;
 			$content .= sprintf('%19.19s', 'User:' . $user->id . ' Order:' . $order->id); // originator cross reference
-			$content .= '080922010'; //institutional id number for returns = 0 . institution . transit
-			$content .= '152010386243'; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
+			$content .= $_ENV['caft_return_instititution_id']; //institutional id number for returns = 0 . institution . transit
+			$content .= $_ENV['caft_return_account_id']; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
 			$content .= 'NWS GROC CARDS '; // information to identify transaction to recipient
 			$content .= $this->spaces(24);
 			$content .= $this->zeroes(11);

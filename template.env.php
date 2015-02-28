@@ -12,4 +12,7 @@ return array(
     'error_to_address' => 'INVALID',
     'error_from_name' => 'INVALID',
     'ga_code' => '',
+    'caft_originator_id' => '0000000000',
+    'caft_return_institution_id' => '000000000',
+    'caft_return_account_id'=>'000000000000' 
 );
