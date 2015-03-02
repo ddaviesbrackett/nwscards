@@ -41,10 +41,10 @@ class CutoffDate extends Eloquent {
 		return (new \Carbon\Carbon($this->cutoff, 'America/Los_Angeles'));
 	}
 	public function chargedate() {
-		return $this->cutoffdate()->addDays(5);
+		return (new \Carbon\Carbon($this->charge, 'America/Los_Angeles'));
 	}
 
 	public function deliverydate() {
-		return $this->cutoffdate()->addDays(7);	
+		return (new \Carbon\Carbon($this->delivery, 'America/Los_Angeles'));
 	}
 }
