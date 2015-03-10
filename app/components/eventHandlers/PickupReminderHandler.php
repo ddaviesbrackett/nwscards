@@ -13,7 +13,7 @@ class PickupReminderHandler {
 			$user = $order->user;
 			if(!$user->deliverymethod)
 			{
-				\Mail::send('emails.pickupreminder', ['user' => $user, 'order' => $order], function($message) use ($user){
+				\Mail::send('emails.pickupreminder', ['user' => $user, 'order' => $order], function($message) use ($user, $target){
 					$message->subject(sprintf('Remember to pick up your grocery cards %s', $target->format('l')));
 					$message->to($user->email, $user->name);
 				});
