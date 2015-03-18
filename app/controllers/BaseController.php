@@ -34,7 +34,7 @@ class BaseController extends Controller {
 	}
 
 	/*
-	* cutoff dates are the last day on which we can accept an order; orders are charged 5 days later, and delivered 7 days later (so, 2 days after charge).
+	* cutoff dates are the last day on which we can accept an order
 	*/
 	public static function getCutoffs( $target = NULL ) {;
 		if(is_null($target)){
