@@ -37,8 +37,8 @@ class AssignAdminRights extends Command {
 	 */
 	public function fire()
 	{
-		$group = Sentry::findGroupByName('Administrator');
-		$user = Sentry::findUserByLogin($this->argument('user'));
+		$group = \Sentry::findGroupByName('Administrator');
+		$user = \Sentry::findUserByLogin($this->argument('user'));
 		if(! $user->addGroup($group)) {
 			throw new Exception("could not add user to group");
 		}
