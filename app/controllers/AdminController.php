@@ -118,7 +118,7 @@ class AdminController extends BaseController {
 			$dt = new \Carbon\Carbon($date->cutoff);
 			$viewmodel[] = [
 				'id' => $date->id,
-				'delivery' => (new \Carbon\Carbon($date->delivery))->addDays(7)->format('F jS'),
+				'delivery' => (new \Carbon\Carbon($date->delivery))->format('F jS'),
 				'orders' => $date->orders->count(),
 				'saveon' => $date->orders->sum('saveon') + $date->orders->sum('saveon_onetime'),
 				'coop' => $date->orders->sum('coop') + $date->orders->sum('coop_onetime'),
