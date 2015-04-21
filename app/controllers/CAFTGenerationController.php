@@ -35,37 +35,40 @@ class CAFTGenerationController extends BaseController {
 		$debitOrders = $cutoff->orders()->where('payment', '=', 0)->get();
 		foreach($debitOrders as $order)
 		{
-			$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
-			if ($total % 6 == 0)
-			{
-				$content .= "\r\nD" . sprintf('%09d', $linenum) . $originatorinfo;
-			}
-
 			$user = $order->user;
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
+			$acct = $stripeCustomer->metadata['debit-account'];
+			if(is_numeric($acct) && $acct != 0){
+				$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
+				if ($total % 6 == 0)
+				{
+					$content .= "\r\nD" . sprintf('%09d', $linenum) . $originatorinfo;
+				}
 
-			$orderAmount = $order->totalCards() * 10000;
-			$totalDollarValue += $orderAmount;
 
-			$content .= '450'; //transaction type code
-			$content .=  sprintf('%010.10d', $orderAmount); //amount
-			$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
-			$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
-			$content .= sprintf('%-12.12s', $stripeCustomer->metadata['debit-account']);
-			$content .=  $this->spaces(22); //internal use
-			$content .= $this->zeroes(3); //internal use
-			$content .= 'NWS GROC CARDS '; //our short name
-			$content .= sprintf("%30.30s", $order->user->name); //payor name - $order->user->name, but formatted
-			$content .= 'NWS Grocery Card Fundraiser   '; //our long name
-			$content .= $originatorID;
-			$content .= sprintf('%19.19s', 'User:' . $user->id . ' Order:' . $order->id); // originator cross reference
-			$content .= $_ENV['caft_return_instititution_id']; //institutional id number for returns = 0 . institution . transit
-			$content .= $_ENV['caft_return_account_id']; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
-			$content .= 'NWS GROC CARDS '; // information to identify transaction to recipient
-			$content .= $this->spaces(24);
-			$content .= $this->zeroes(11);
-			$total++;
+				$orderAmount = $order->totalCards() * 10000;
+				$totalDollarValue += $orderAmount;
+
+				$content .= '450'; //transaction type code
+				$content .=  sprintf('%010.10d', $orderAmount); //amount
+				$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
+				$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
+				$content .= sprintf('%-12.12s', $acct);
+				$content .=  $this->spaces(22); //internal use
+				$content .= $this->zeroes(3); //internal use
+				$content .= 'NWS GROC CARDS '; //our short name
+				$content .= sprintf("%30.30s", $order->user->name); //payor name - $order->user->name, but formatted
+				$content .= 'NWS Grocery Card Fundraiser   '; //our long name
+				$content .= $originatorID;
+				$content .= sprintf('%19.19s', 'User:' . $user->id . ' Order:' . $order->id); // originator cross reference
+				$content .= $_ENV['caft_return_institution_id']; //institutional id number for returns = 0 . institution . transit
+				$content .= $_ENV['caft_return_account_id']; //account for returns LEFT JUSTIFIED OMIT BLANKS AND DASHES
+				$content .= 'NWS GROC CARDS '; // information to identify transaction to recipient
+				$content .= $this->spaces(24);
+				$content .= $this->zeroes(11);
+				$total++;
+			}
 		}
 
 		// pad record with extra spaces
@@ -83,7 +86,7 @@ class CAFTGenerationController extends BaseController {
 
 		$resp = Response::make($content);
 
-		//$resp->header('Content-Disposition', 'attachment; filename=caft-' . $cutoff->cutoffdate());
+		$resp->header('Content-Disposition', 'attachment;filename=caft-' . $cutoff->cutoffdate() . '.aft');
 
 		return $resp;
 	}
