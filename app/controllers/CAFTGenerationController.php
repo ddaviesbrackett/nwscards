@@ -30,6 +30,7 @@ class CAFTGenerationController extends BaseController {
 		//caft magic
 		$content = 'A000000001' . $originatorinfo . Carbon\Carbon::now()->formatLocalized('0%y%j') . '86900' . $this->spaces(20) . 'CAD' . $this->spaces(1406);
 		$total = 0;
+		$skipped = 0;
 
 		$totalDollarValue = 0; // in cents
 		$debitOrders = $cutoff->orders()->where('payment', '=', 0)->get();
@@ -38,7 +39,7 @@ class CAFTGenerationController extends BaseController {
 			$user = $order->user;
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
-			$acct = $stripeCustomer->metadata['debit-account'];
+			$acct = trim($stripeCustomer->metadata['debit-account']);
 			if(is_numeric($acct) && $acct != 0){
 				$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
 				if ($total % 6 == 0)
@@ -53,7 +54,7 @@ class CAFTGenerationController extends BaseController {
 				$content .= '450'; //transaction type code
 				$content .=  sprintf('%010.10d', $orderAmount); //amount
 				$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
-				$content .=  '0' . sprintf('%03.3d', $stripeCustomer->metadata['debit-institution']) . sprintf('%05.5d', $stripeCustomer->metadata['debit-transit']);
+				$content .=  '0' . sprintf('%03.3d', trim($stripeCustomer->metadata['debit-institution'])) . sprintf('%05.5d', trim($stripeCustomer->metadata['debit-transit']));
 				$content .= sprintf('%-12.12s', $acct);
 				$content .=  $this->spaces(22); //internal use
 				$content .= $this->zeroes(3); //internal use
@@ -69,6 +70,9 @@ class CAFTGenerationController extends BaseController {
 				$content .= $this->zeroes(11);
 				$total++;
 			}
+			else {
+				$skipped++;
+			}
 		}
 
 		// pad record with extra spaces
@@ -82,7 +86,7 @@ class CAFTGenerationController extends BaseController {
 		$content .= "\r\n";
 
 		// send Z record indicating end of file
-		$content .= 'Z' . sprintf('%09d', $total / 6 + 2) . $originatorinfo . sprintf('%014d', $totalDollarValue) . sprintf('%08d', $debitOrders->count()) . $this->zeroes(66) . $this->spaces(1352) . "\r\n";
+		$content .= 'Z' . sprintf('%09d', $total / 6 + 2) . $originatorinfo . sprintf('%014d', $totalDollarValue) . sprintf('%08d', $debitOrders->count() - $skipped) . $this->zeroes(66) . $this->spaces(1352) . "\r\n";
 
 		$resp = Response::make($content);
 
