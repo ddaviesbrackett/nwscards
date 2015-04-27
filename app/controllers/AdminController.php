@@ -141,13 +141,56 @@ class AdminController extends BaseController {
 
 	public function getNewSaleForm()
 	{
-		return View::make('admin.newsale', ['order'=>null]);
+		return View::make('admin.newsale', ['pointsale'=>null, 'pointsales'=> Pointsale::orderby('saledate', 'desc')->get()]);
 	}
 
 	public function postNewSaleForm()
 	{
+		$in = Input::only(
+			'payment',
+			'saveon_dollars',
+			'coop_dollars',
+			'saledate');
 		
-		return View::make('admin.newsale', ['order'=>null]);
+		$validator = Validator::make($in, [
+				'payment'=>'in:0,1',
+				'saledate'=>'required'
+			]);
+		$basicrulespassed = $validator->passes();
+		$so = $in['saveon_dollars'];
+		$co = $in['coop_dollars'];
+		if(filter_var($so, FILTER_VALIDATE_INT) === false || 
+			filter_var($co, FILTER_VALIDATE_INT) === false	||
+			$so + $co <= 0)  {
+				$validator->errors()->add('saletotal', 'Total sales must be greater than 0');
+			}
+		try {
+			$dt = \Carbon\Carbon::parse($in['saledate']);
+			$in['saledate'] = $dt;
+		}
+		catch (Exception $e) {
+			$validator->errors()->add('saledate', 'Sale Date must be some kind of date');
+		}
+		if(count($validator->errors()) > 0) {
+			return Redirect::to('/admin/recordsale')
+				->withErrors($validator)
+				->withInput(Input::all());
+		}
+		else {
+			$profits = $this->generateProfits(CutoffDate::where('saveon_cheque_value','>', 0)->orderby('cutoff', 'desc')->first());
+			$saveonProfit = $so * $profits['saveon'] / 100;
+			$coopProfit = $co * $profits['coop'] / 100;
+			$sale = new Pointsale($in);
+			$sale->profit = $saveonProfit + $coopProfit;
+			$sale->save();
+			$pac = SchoolClass::where('bucketname', '=', 'pac')->first()->id;
+			$tr = SchoolClass::where('bucketname', '=', 'tuitionreduction')->first()->id;
+			$sale->schoolclasses()->attach([
+				$pac => ['profit' => $saveonProfit * 0.25 + $coopProfit * 0.25], 
+				$tr => ['profit' => $saveonProfit * 0.75 + $coopProfit * 0.75]]);
+		}
+
+		return Redirect::to('/admin/recordsale');
 	}
 
 	public function getProfitSettingForm($cutoff) {

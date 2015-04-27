@@ -83,6 +83,7 @@ class OrderController extends BaseController {
 		$user = Sentry::getUser();
 		$s_o = Input::get('saveon_onetime');
 		$c_o = Input::get('coop_onetime');
+		//FIXME no debit order may exceed $5000 total - so, sum of saveon, coop, s_o, c_o may not exceed 50
 		if(filter_var($s_o, FILTER_VALIDATE_INT) !== false && 
 			filter_var($c_o, FILTER_VALIDATE_INT) !== false	&& 
 			$s_o >= 0 && 
