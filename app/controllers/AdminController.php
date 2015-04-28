@@ -172,7 +172,7 @@ class AdminController extends BaseController {
 			$validator->errors()->add('saledate', 'Sale Date must be some kind of date');
 		}
 		if(count($validator->errors()) > 0) {
-			return Redirect::to('/admin/recordsale')
+			return Redirect::to('/admin/pointsale')
 				->withErrors($validator)
 				->withInput(Input::all());
 		}
@@ -190,7 +190,7 @@ class AdminController extends BaseController {
 				$tr => ['profit' => $saveonProfit * 0.75 + $coopProfit * 0.75]]);
 		}
 
-		return Redirect::to('/admin/recordsale');
+		return Redirect::to('/admin/pointsale');
 	}
 
 	public function getProfitSettingForm($cutoff) {
