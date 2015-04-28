@@ -22,10 +22,10 @@ class CAFTGenerationController extends BaseController {
 		return $spc;
 	}
 
-	public function getResult($cutoff, $filenum)
+	public function getResult($cutoff)
 	{
 		$originatorID = $_ENV['caft_originator_id']; // originator ID from CAFT
-		$filenumber = sprintf('%04.4d', $filenum);
+		$filenumber = sprintf('%04.4d', Input::get('filenum'));
 		$originatorinfo = $originatorID . $filenumber;
 		//caft magic
 		$content = 'A000000001' . $originatorinfo . Carbon\Carbon::now()->formatLocalized('0%y%j') . '86900' . $this->spaces(20) . 'CAD' . $this->spaces(1406);

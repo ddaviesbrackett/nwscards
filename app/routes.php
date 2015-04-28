@@ -69,7 +69,7 @@ Route::get('/admin/unimpersonate/',
 Route::get('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getProfitSettingForm', 'as' => 'admin-getprofit']);
 Route::post('/admin/orderprofits/{dateforprofit}', ['before'=>['auth','admin', 'csrf'], 'uses' => 'AdminController@postProfitSettingForm', 'as' => 'admin-postprofit']);
 
-Route::get('/admin/caftfile/{dateforprofit}/{filenum}', ['before'=>['auth','admin'], 'uses' => 'CAFTGenerationController@getResult', 'as' => 'admin-getcaftfile']);
+Route::get('/admin/caftfile/{dateforprofit}', ['before'=>['auth','admin'], 'uses' => 'CAFTGenerationController@getResult', 'as' => 'admin-getcaftfile']);
 
 Route::get('/admin/pointsale', ['before'=>['auth','admin'], 'uses' => 'AdminController@getNewSaleForm', 'as' => 'admin-getnewsale']);
 Route::post('/admin/pointsale', ['before'=>['auth','admin', 'csrf'], 'uses' => 'AdminController@postNewSaleForm', 'as' => 'admin-postnewsale']);

@@ -45,5 +45,19 @@
 <p>
 	Total amount: {{{$total}}}00
 </p>
+<h3>Download CAFT file for upload to C1</h3>
+<p>
+	<form method="GET" action="/admin/caftfile/{{{$cutoff}}}" class="form">
+	<div class="form-group">
+		<label for="filenum">File Number</label>
+		<input name="filenum" type="text"/>
+	</div>
+	<div class="form-group">
+		<button type='submit' class='btn btn-danger btn-lg'>
+			Get CAFT File
+		</button>
+		</div>
+	</form>
+</p>
 </div>
 @stop

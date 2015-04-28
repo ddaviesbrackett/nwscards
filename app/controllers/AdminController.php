@@ -71,7 +71,7 @@ class AdminController extends BaseController {
 			];
 		}
 
-		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total]); 
+		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total, 'cutoff'=>$cutoffId]); 
 	}
 
 	public function getTotals()

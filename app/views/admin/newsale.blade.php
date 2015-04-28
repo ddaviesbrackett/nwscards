@@ -13,16 +13,16 @@
 </div>
 <div class="container-fluid">
 	<h3>Record a new Point Sale</h3>
-	{{Form::model($pointsale,['url'=>'/admin/recordsale', 'method'=>'POST', 'class'=>'form'])}}
+	{{Form::model($pointsale,['url'=>'/admin/pointsale', 'method'=>'POST', 'class'=>'form'])}}
 		{{Form::input('hidden', 'payment', 0)}}
-		<div class="form-group">
+		<div class="form-group  {{{$errors->has('saledate')?'has-error':''}}}">
 			<label for="dt">Date of Sale</label>
 			{{ Form::input('text', 'saledate', null, ['class' => 'form-control', 'placeholder' => 'YYYY-MM-DD']) }}
 			@if($errors->has('saledate'))
 				<span class='help-block'>{{{$errors->first('saledate')}}}</span>
 			@endif
 		</div>
-		<div class="form-group">
+		<div class="form-group {{{$errors->has('coop_dollars')?'has-error':''}}}">
 			<label for="coop_dollars">Coop total value (IN DOLLARS NOT CARDS)</label>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
@@ -32,7 +32,7 @@
 				<span class='help-block'>{{{$errors->first('coop_dollars')}}}</span>
 			@endif
 		</div>
-		<div class="form-group">
+		<div class="form-group {{{$errors->has('saveon_dollars')?'has-error':''}}}">
 			<label for="saveon_dollars">Save-On total value (IN DOLLARS NOT CARDS)</label>
 			<div class="input-group">
 				<span class="input-group-addon">$</span>
@@ -42,22 +42,31 @@
 				<span class='help-block'>{{{$errors->first('saveon_dollars')}}}</span>
 			@endif
 		</div>
-		<div class="form-group">
-			@if($errors->has('saletotal'))
+		@if($errors->has('saletotal'))
+			<div class="form-group has-error">
 				<span class='help-block'>{{{$errors->first('saletotal')}}}</span>
-			@endif
-		</div>
+			</div>
+		@endif
 		<div class="form-group">
-				<button type='submit' class='btn btn-danger btn-lg'>
-						Record Point Sale
-				</button>
+			<button type='submit' class='btn btn-danger btn-lg'>
+				Record Point Sale
+			</button>
 		</div>
 	{{Form::close()}}
 	<h3> Existing Sales </h3>
-	<ul>
+	<table class="table">
+		<tr>
+			<th>Sale Date</th>
+			<th>Amount</th>
+			<th>Profit</th>
+		</tr>
 	@foreach ($pointsales as $ps)
-		<li>{{{$ps->saledate->format('l, F jS')}}}:{{{money_format('$%n',$ps->profit)}}}</li>
+		<tr>
+			<td>{{{$ps->saledate->format('l, F jS')}}}</td>
+			<td>{{{money_format('$%n',$ps->saveon_dollars + $ps->coop_dollars)}}}</td>
+			<td>{{{money_format('$%n',$ps->profit)}}}</td>
+		</tr>
 	@endforeach
-	</ul>
+	</table>
 </div>
 @stop
