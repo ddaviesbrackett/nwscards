@@ -28,6 +28,23 @@
 		@endforeach
 	@endif
 </table>
+@if ( ! empty($pointsales))
+	<h4>Amount Raised by Point Sales</h4>
+	<table class='table'>
+		<tr>
+			<th>Sale</th>
+			<th>Amount</th>
+			<th>Profit</th>
+		</tr>
+		@foreach($pointsales as $pointsale)
+			<tr>
+				<td>{{{$pointsale->saledate->format('F jS')}}}</td>
+				<td>{{{money_format('$%n',$pointsale->saveon_dollars + $pointsale->coop_dollars)}}}</td>
+				<td>{{{money_format('$%n', $pointsale->pivot->profit)}}}</td>
+			</tr>
+		@endforeach
+	</table>
+@endif
 <h4>Funds Paid Out</h4>
 <table class='table'>
 	<tr>
