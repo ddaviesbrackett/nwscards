@@ -5,6 +5,12 @@
 @stop
 
 @section('head-extra')
+<script>
+	//reload the popup every time, so it doesn't have stale data in it
+	$(document).on('hidden.bs.modal', function (e) {
+		$(e.target).removeData('bs.modal').find('.modal-content').html('');
+	});
+</script>
 @stop
 
 @section('content')
@@ -59,14 +65,23 @@
 			<th>Sale Date</th>
 			<th>Amount</th>
 			<th>Profit</th>
+			<th></th>
 		</tr>
 	@foreach ($pointsales as $ps)
 		<tr>
 			<td>{{{$ps->saledate->format('l, F jS')}}}</td>
 			<td>{{{money_format('$%n',$ps->saveon_dollars + $ps->coop_dollars)}}}</td>
 			<td>{{{money_format('$%n',$ps->profit)}}}</td>
+			<td><a data-toggle="modal" data-target="#saleform" href="{{URL::route('admin-getdeletesale', ['sale' => $ps->id])}}">Delete</a></td>
 		</tr>
 	@endforeach
 	</table>
+</div>
+
+<div class="modal fade" id="saleform" tabindex="-1" role="dialog" aria-labelledby="salelabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
 </div>
 @stop

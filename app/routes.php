@@ -37,6 +37,7 @@ Route::get('/tracking/{bucketname}', 'TrackingController@getBucket', ['as' => 't
 //Administrator treehouse
 Route::model('dateforprofit', 'CutoffDate');
 Route::model('expense', 'Expense');
+Route::model('sale', 'Pointsale');
 
 Route::get('/admin/caft/{id}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft', 'as' => 'admin-caft']);
 Route::get('/admin/totals', ['before'=>['auth','admin'], 'uses' => 'AdminController@getTotals']);
@@ -82,6 +83,9 @@ Route::post('/admin/expenses/{expense}/edit', ['before'=>['auth','admin'], 'uses
 
 Route::get('/admin/expenses/{expense}/delete', ['before'=>['auth','admin'], 'uses' => 'ExpenseController@getDeleteExpense', 'as' => 'admin-getdeleteexpense']);
 Route::post('/admin/expenses/{expense}/delete', ['before'=>['auth','admin'], 'uses' => 'ExpenseController@postDeleteExpense', 'as' => 'admin-postdeleteexpense']);
+
+Route::get('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@getDeletePointsale', 'as' => 'admin-getdeletesale']);
+Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@postDeletePointsale', 'as' => 'admin-postdeletesale']);
 
 //stuff everything needs
 View::share('dates', BaseController::getFormattedDates());

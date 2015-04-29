@@ -193,6 +193,19 @@ class AdminController extends BaseController {
 		return Redirect::to('/admin/pointsale');
 	}
 
+	public function getDeletePointsale($ps)
+	{
+		return View::make('admin.pointsaledeleteform', ['ps' => $ps]);
+	}
+
+	public function postDeletePointsale($ps)
+	{
+		$ps->schoolclasses()->detach();
+		$ps->delete();
+
+		return Redirect::to('/admin/pointsale');
+	}
+
 	public function getProfitSettingForm($cutoff) {
 		return View::make('admin.profitform', ['cutoff'=>$cutoff]);
 	}
