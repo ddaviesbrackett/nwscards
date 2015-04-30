@@ -22,6 +22,11 @@ class CAFTGenerationController extends BaseController {
 		return $spc;
 	}
 
+	private function stripAndTrim($stringOfNumbers)
+	{
+		return trim(preg_replace("/[^\d]*/", "", $stringOfNumbers));
+	}
+
 	public function getResult($cutoff)
 	{
 		$originatorID = $_ENV['caft_originator_id']; // originator ID from CAFT
@@ -39,7 +44,7 @@ class CAFTGenerationController extends BaseController {
 			$user = $order->user;
 			$gateway = new Laravel\Cashier\StripeGateway($user);
 			$stripeCustomer = $gateway->getStripeCustomer();
-			$acct = trim($stripeCustomer->metadata['debit-account']);
+			$acct = $this->stripAndTrim($stripeCustomer->metadata['debit-account']);
 			if(is_numeric($acct) && $acct != 0){
 				$linenum = ($total / 6) + 2; //1-indexed, starting with 2 because the A record is 1
 				if ($total % 6 == 0)
@@ -54,7 +59,7 @@ class CAFTGenerationController extends BaseController {
 				$content .= '450'; //transaction type code
 				$content .=  sprintf('%010.10d', $orderAmount); //amount
 				$content .=  $cutoff->chargedate()->formatLocalized('0%y%j'); //due date
-				$content .=  '0' . sprintf('%03.3d', trim($stripeCustomer->metadata['debit-institution'])) . sprintf('%05.5d', trim($stripeCustomer->metadata['debit-transit']));
+				$content .=  '0' . sprintf('%03.3d', $this->stripAndTrim($stripeCustomer->metadata['debit-institution'])) . sprintf('%05.5d', $this->stripAndTrim($stripeCustomer->metadata['debit-transit']));
 				$content .= sprintf('%-12.12s', $acct);
 				$content .=  $this->spaces(22); //internal use
 				$content .= $this->zeroes(3); //internal use
