@@ -28,7 +28,7 @@
 		@endforeach
 	@endif
 </table>
-@if ( ! empty($pointsales))
+@if ( ! empty($pointsales) && count($pointsales) > 0)
 	<h4>Amount Raised by Point Sales</h4>
 	<table class='table'>
 		<tr>
@@ -43,21 +43,21 @@
 		@endforeach
 	</table>
 @endif
-<h4>Funds Paid Out</h4>
-<table class='table'>
-	<tr>
-		<th>Payout</th>
-		<th>Amount</th>
-	</tr>
-	@if (! empty($expenses))
-		@foreach($expenses as $expense)
-			<tr>
-				<td>{{{$expense->expense_date->format('F jS')}}}</td>
-				<td>{{{money_format('$%n',$expense->amount)}}}</td>
-			</tr>
-		@endforeach
-	@endif
-</table>
+@if (! empty($expenses) && count($expenses) > 0)
+	<h4>Funds Paid Out</h4>
+	<table class='table'>
+		<tr>
+			<th>Payout</th>
+			<th>Amount</th>
+		</tr>
+			@foreach($expenses as $expense)
+				<tr>
+					<td>{{{$expense->expense_date->format('F jS')}}}</td>
+					<td>{{{money_format('$%n',$expense->amount)}}}</td>
+				</tr>
+			@endforeach
+	</table>
+@endif
 <p>Total available: {{{money_format( '$%n', $sum - $expenses->sum('amount'))}}}</p>
 </div>
 @stop
