@@ -9,12 +9,13 @@ Route::get('/logout', 'HomeController@getLogout');
 
 //account creation/view/update
 Route::get('/account', array('before' => 'auth', 'uses' => 'OrderController@getAccount'));
-Route::post('/account', array('before' => 'csrf'/*auth too*/, 'uses' =>'OrderController@postAccount'));
+Route::get('/account/extracards', array('before' => 'auth', 'uses' => 'OrderController@getAccount')); //with onetime form showing
+Route::post('/account', array('before' => ['csrf', 'auth'], 'uses' =>'OrderController@postAccount'));
 Route::get('/new', 'OrderController@getNew');
 Route::post('/new', array('before' => 'csrf', 'uses' =>'OrderController@postNew'));
 
 Route::get('/edit', array('before' => 'auth', 'uses' => 'OrderController@getEdit'));
-Route::post('/edit', array('before' => 'auth', 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
+Route::post('/edit', array('before' => ['auth', 'csrf'], 'before' => 'csrf', 'uses' =>'OrderController@postEdit'));
 Route::get('/Suspend', array('before' => 'auth', 'uses' =>'OrderController@Suspend'));
 Route::get('/Resume', array('before' => 'auth', 'uses' =>'OrderController@Resume'));
 Route::get('/account/onetime', ['before'=>'auth', 'uses' => 'OrderController@getOnetime', 'as' => 'account-getonetime']);
@@ -88,4 +89,6 @@ Route::get('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses'
 Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@postDeletePointsale', 'as' => 'admin-postdeletesale']);
 
 //stuff everything needs
-View::share('dates', BaseController::getFormattedDates());
+View::composer('*', function($view) {
+	$view->with('dates', BaseController::getFormattedDates());
+});

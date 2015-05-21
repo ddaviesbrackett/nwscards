@@ -6,15 +6,26 @@
 
 @section('head-extra')
 <script>
-	//reload the popup every time, so it doesn't have stale data in it
-	$(document).on('hidden.bs.modal', function (e) {
-		$(e.target).removeData('bs.modal').find('.modal-content').html('');
-	});
 	$(function() {
 		$('#onetimeform').on('blur', 'input[type="number"]', function(ev){
 			var $this = $(this);
 			var val = parseInt($this.val(), 10);
 			$this.closest('.form-group').find('.alert').toggleClass('hidden', !val || val < 10).find('.amt').text(val);
+		}).on('show.bs.modal', function (e){
+			$(e.target).find('.modal-content').load("{{URL::route('account-getonetime')}}");
+			history.pushState && history.pushState('extracards-open', '', '/account/extracards');
+		}).on('hidden.bs.modal', function (e) {
+			//reload the popup every time, so it doesn't have stale data in it
+			$(e.target).removeData('bs.modal').find('.modal-content').html('');
+			history.pushState && history.pushState(null, '', '/account');
+		});
+		if(history.state == 'extracards-open' || {{$onetimeform?'true':'false'}}){
+			$('#onetimeform').modal();
+		}
+		$(window).on('popstate',function (e) {
+			if(history.state == 'extracards-open'){
+				$('#onetimeform').modal();
+			}
 		});
 	});
 </script>
@@ -55,7 +66,7 @@
 						<li><a href="{{action('OrderController@Resume')}}">Resume Your Recurring Order</a></li>
 					@endif
 					@if($user->saveon + $user->coop > 0 && $user->schedule != 'none')
-						<li><a data-toggle="modal" data-target="#onetimeform" href="{{URL::route('account-getonetime')}}">
+						<li><a data-toggle="modal" data-target="#onetimeform">
 							{{{$user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'}}}	
 						</a></li>
 					@endif
@@ -183,6 +194,7 @@
 <div class="modal fade" id="onetimeform" tabindex="-1" role="dialog" aria-labelledby="onetimeLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
+    	{{$onetimeform}}
     </div>
   </div>
 </div>
