@@ -8,7 +8,7 @@
 	will need to sign for the cards. </p>
 
 	<p>Thank you for your support,<br/>
-	Donna Davies Brackett</p>
+	Snow Colbeck</p>
 
 	<p>NWS Grocery Cards Committee</p>
 </body>
