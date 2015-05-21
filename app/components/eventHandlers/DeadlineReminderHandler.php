@@ -16,6 +16,7 @@ class DeadlineReminderHandler {
 			->orWhere('schedule', '=', $currentMonthly)
 			->orWhere('schedule_onetime', '=', $currentMonthly);
 		})*/
+		->where('no_beg', '<>', 1)
 		->get();
 
 		foreach($users as $user)
