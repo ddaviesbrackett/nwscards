@@ -92,3 +92,6 @@ Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses
 View::composer('*', function($view) {
 	$view->with('dates', BaseController::getFormattedDates());
 });
+
+//no throttle
+$throttleProvider = Sentry::getThrottleProvider()->disable();
