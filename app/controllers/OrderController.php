@@ -96,7 +96,7 @@ class OrderController extends BaseController {
 				$cutoffs = $this->getCutoffs();
 				$sched = $cutoffs['biweekly']['cutoff'] == $cutoffs['monthly']['cutoff'] ? 'monthly' : 'monthly-second';
 			}
-			$user->schedule_onetime = 'monthly'; //$sched; AFTER LAST ORDER CHANGE THIS BACK
+			$user->schedule_onetime = $sched;
 			$user->save();
 			Session::flash('ordermessage', 'order updated');
 		}
