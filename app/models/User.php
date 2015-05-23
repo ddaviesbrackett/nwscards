@@ -69,6 +69,10 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return $this->belongsToMany('CutoffDate', 'orders');
 	}
 
+	public function schoolclasses() {
+		return $this->belongsToMany('SchoolClass', 'classes_users', 'user_id', 'class_id');
+	}
+
 	public function isAdmin() {
 		$groups = $this->getGroups();
 		$isAdmin = false;

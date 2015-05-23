@@ -39,6 +39,10 @@ class Order extends Eloquent {
 		return $this->belongsTo('CutoffDate', 'cutoff_date_id');
 	}
 
+	public function schoolclasses() {
+		return $this->belongsToMany('SchoolClass', 'classes_orders', 'order_id', 'class_id')->withPivot('profit');
+	}
+
 	public function isCreditcard() {
 		return $this->payment;
 	}

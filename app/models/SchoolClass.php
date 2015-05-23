@@ -21,4 +21,12 @@ class SchoolClass extends Eloquent {
 	public function pointsales() {
 		return $this->belongsToMany('Pointsale', 'classes_pointsales', 'class_id', 'pointsale_id')->withPivot('profit');
 	}
+
+	public function orders() {
+		return $this->belongsToMany('Order', 'classes_orders', 'class_id', 'order_id')->withPivot('profit');
+	}
+
+	public function users() {
+		return $this->belongsToMany('users', 'classes_users', 'class_id', 'pointsale_id');
+	}
 }
