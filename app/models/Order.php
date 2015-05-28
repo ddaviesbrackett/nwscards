@@ -47,24 +47,6 @@ class Order extends Eloquent {
 		return $this->payment;
 	}
 
-	public function classesSupported() {
-		$ret = [];
-		if($this->marigold > 0) $ret[] = 'marigold';
-		if($this->daisy > 0) $ret[] = 'daisy';
-		if($this->sunflower > 0) $ret[] = 'sunflower';
-		if($this->bluebell > 0) $ret[] = 'bluebell';
-		if($this->class_1 > 0) $ret[] = 'class_1';
-		if($this->class_2 > 0) $ret[] = 'class_2';
-		if($this->class_3 > 0) $ret[] = 'class_3';
-		if($this->class_4 > 0) $ret[] = 'class_4';
-		if($this->class_5 > 0) $ret[] = 'class_5';
-		if($this->class_6 > 0) $ret[] = 'class_6';
-		if($this->class_7 > 0) $ret[] = 'class_7';
-	 	if($this->class_8 > 0) $ret[] = 'class_8';
-
-	 	return $ret;
-	}
-
 	public function totalCards() {
 		return $this->coop + $this->saveon + $this->coop_onetime + $this->saveon_onetime;
 	}

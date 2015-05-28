@@ -39,8 +39,8 @@
 	Supporting:
 	<ul style='list-style-type:none;padding-left:0;'>
 		<li><b><a href="https://grocerycards.nelsonwaldorf.org/tracking/tuitionreduction">the Tuition Reduction Fund</a></b></li>
-		@foreach ($user->classesSupported() as $class)
-			<li><b><a href="https://grocerycards.nelsonwaldorf.org/tracking/{{{$class}}}">{{{User::className($class)}}}</a></b></li>
+		@foreach ($user->schoolclasses as $class)
+			<li><b><a href="https://grocerycards.nelsonwaldorf.org/tracking/{{{$class->bucketname}}}">{{{$class->name}}}</a></b></li>
 		@endforeach
 	</ul>
 	<p>
