@@ -14,6 +14,10 @@ class SchoolClass extends Eloquent {
 		'bucketname',
 	];
 
+	public static function choosable() {
+		return SchoolClass::where('bucketname', '<>', 'tuitionreduction')->where('bucketname', '<>', 'pac')->orderBy('displayorder', 'asc')->get()->toArray();
+	}
+
 	public function expenses() {
 		return $this->hasMany('Expense', 'class_id');
 	}

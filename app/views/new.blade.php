@@ -307,59 +307,14 @@
 				</div>
 			</div>
 			<span class='help-block individual-classes'>If you select more than one class, proceeds will be divided equally between the classes.</span>
+			
 			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('marigold') }}
-					Marigold Daycare
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('daisy') }}
-					Daisy Daycare
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('sunflower') }}
-					Sunflower Kindergarten
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('bluebell') }}
-					Bluebell Kindergarten
-				</label></div></div>
-			</div>
-			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_1') }}
-					Class 1 (Ms. Kraus and Ms. Fukada)
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_2') }}
-					Class 2 (Ms. Longson)
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_3') }}
-					Class 3 (Mr. Fukada)
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_4') }}
-					Class 4 (Ms. Guthrie)
-				</label></div></div>
-			</div>
-			<div class="form-group individual-classes">
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_5') }}
-					Class 5 (Ms. Mulligan)
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_6') }}
-					Class 6 (Mr. Goncalves)
-				</label></div></div>
-			<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_7') }}
-					Class 7 (Ms. Thayer)
-				</label></div></div>
-				<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
-					{{ Form::checkbox('class_8') }}
-					Class 8 (Ms. Oese-Lloyd)
-				</label></div></div>
+				@for($i = 0; $i < count($classes); $i++)
+					<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
+						{{ Form::checkbox($classes[$i]['bucketname'], 1, Form::getValueAttribute($classes[$i]['bucketname'], isset($user) && in_array($classes[$i]['id'], $user->schoolclasses->lists('id')))) }}
+						{{$classes[$i]['name']}}
+					</label></div></div>
+				@endfor
 			</div>
 			<div class="form-group individual-classes" style="margin-top:10px;">
 				<label for="referrer" class="col-sm-3 text-right">Referring Family:</label>
