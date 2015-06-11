@@ -70,7 +70,7 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 	}
 
 	public function schoolclasses() {
-		return $this->belongsToMany('SchoolClass', 'classes_users', 'user_id', 'class_id');
+		return $this->belongsToMany('SchoolClass', 'classes_users', 'user_id', 'class_id')->orderBy('displayorder');
 	}
 
 	public function isAdmin() {

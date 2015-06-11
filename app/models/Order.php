@@ -40,7 +40,7 @@ class Order extends Eloquent {
 	}
 
 	public function schoolclasses() {
-		return $this->belongsToMany('SchoolClass', 'classes_orders', 'order_id', 'class_id')->withPivot('profit');
+		return $this->belongsToMany('SchoolClass', 'classes_orders', 'order_id', 'class_id')->withPivot('profit')->orderBy('displayorder');
 	}
 
 	public function isCreditcard() {
