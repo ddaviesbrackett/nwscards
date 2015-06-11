@@ -226,7 +226,9 @@ class AdminController extends BaseController {
 
 		//update order profits for all the orders in the cutoff
 		$profits = $this->generateProfits($cutoff);
-		$cutoff->orders->load('user')->each(function($order) use ($profits) {
+		$pacClassId = SchoolClass::where('bucketname', '=', 'tuitionreduction')->pluck('id');
+		$tuitionClassId = SchoolClass::where('bucketname', '=', 'tuitionreduction')->pluck('id');
+		$cutoff->orders->load('user')->each(function($order) use ($profits, $pacClassId, $tuitionClassId) {
 			$saveon = $order->saveon + $order->saveon_onetime;
 			$coop = $order->coop + $order->coop_onetime;
 			$profit = ($saveon * $profits['saveon']) + ($coop * $profits['coop']);
@@ -238,25 +240,28 @@ class AdminController extends BaseController {
 			}
 			$order->profit = $profit;
 
-			$supp = $order->user->classesSupported();
-			$buckets = count($supp);
-			if($buckets > 0) {
+			$buckets = $order->schoolclasses()->count();
+
+			$pac = 0;
+			$tuitionreduction = 0;
+			
+			if($buckets > 2) {
 				$perBucket = $profit / $buckets;
-				$splits = AdminController::splits();
-				$order->pac = 0;
-				$order->tuitionreduction = 0;
-				foreach($supp as $class)
+				foreach($order->schoolclasses()->where('bucketname','<>', 'pac')->andWhere('bucketname', '<>', 'tuitionreduction')->get() as $class)
 				{
-					$order->{$class} = $perBucket * $splits[$class]['class'];
-					$order->pac += $perBucket * $splits[$class]['pac'];
-					$order->tuitionreduction += $perBucket * $splits[$class]['tuitionreduction'];
+					$order->schoolclasses()->updateExistingPivot($class->id, ['profit' => $perBucket * $class->classsplit]);
+					$pac += $perBucket * $class->pacsplit;
+					$tuitionreduction += $class->tuitionsplit;
 				}
 			}
 			else
 			{
-				$order->pac = $profit * 0.25;
-				$order->tuitionreduction = $profit * 0.75;
+				$pac = $profit * 0.25;
+				$tuitionreduction = $profit * 0.75;
 			}
+
+			$order->schoolclasses()->updateExistingPivot($pacClassId, ['profit' => $pac);
+			$order->schoolclasses()->updateExistingPivot($tuitionClassId, ['profit' => $tuitionreduction);
 			$order->save();
 		});
 
@@ -264,23 +269,5 @@ class AdminController extends BaseController {
 
 		//back to the main order page
 		return Redirect::to('/admin/orders');
-	}
-
-	public static function splits()
-	{
-		return [
-			'marigold' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'daisy' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'sunflower' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'bluebell' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_1' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_2' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_3' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_4' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_5' => ['class' => 0.5, 'pac' => 0.1, 'tuitionreduction' => 0.4],
-			'class_6' => ['class' => 0.6, 'pac' => 0.05, 'tuitionreduction' => 0.35],
-			'class_7' => ['class' => 0.7, 'pac' => 0.05, 'tuitionreduction' => 0.25],
-			'class_8' => ['class' => 0.8, 'pac' => 0.05, 'tuitionreduction' => 0.15],
-		];
 	}
 }

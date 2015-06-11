@@ -1,0 +1,3 @@
+#these statements generate the statements necessary to populate the linking tables.  Run this, copy the output to the query window, run that.
+select concat('insert into classes_users (user_id, class_id) select id,',cl.id,' from users',case when cl.bucketname = 'pac' or cl.bucketname = 'tuitionreduction' then ';' else concat(' where users.', cl.bucketname, ' <> 0;') end ) from classes cl;
+select concat('insert into classes_orders (profit, order_id, class_id) select ',cl.bucketname,', id,',cl.id,' from orders',case when cl.bucketname = 'pac' or cl.bucketname = 'tuitionreduction' then 'where profit <> 0;' else concat(' where orders.', cl.bucketname, ' <> 0;') end ) from classes cl;

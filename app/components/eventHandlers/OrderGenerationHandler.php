@@ -48,6 +48,7 @@ class OrderGenerationHandler {
 					$user->save();
 				}
 				$order->cutoffdate()->associate($cutoff);
+				$order->schoolclasses()->sync($user->schoolclasses);
 				$user->orders()->save($order);
 
 				//since we're now entering the blackout period, we can add one-time orders to credit card invoices

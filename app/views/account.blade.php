@@ -129,9 +129,8 @@
 		@if($user->schedule != 'none' || $user->schedule_onetime != 'none')
 			Supporting:
 			<ul style='list-style-type:none;padding-left:0;'>
-				<li><b><a href="/tracking/tuitionreduction">the Tuition Reduction Fund</a></b></li>
-				@foreach ($user->classesSupported() as $class)
-					<li><b><a href="/tracking/{{{$class}}}">{{{User::className($class)}}}</a></b></li>
+				@foreach ($user->schoolclasses as $class)
+					<li><b><a href="/tracking/{{{$class->name}}}">{{{$class->name}}}</a></b></li>
 				@endforeach
 			</ul>
 			<p>
@@ -160,7 +159,6 @@
 					<th>Date</th>
 					<th>Cards</th>
 					<th>Class(es)</th>
-					<th>Other</th>
 				</tr>
 				@foreach($user->orders as $order)
 					<tr>
@@ -176,13 +174,9 @@
 							@endif
 						</td>
 						<td>
-							@foreach($order->classesSupported() as $class)
-								{{{User::className($class)}}}: ${{{$order[$class]}}}<br/>
+							@foreach ($order->schoolclasses as $class)
+								{{{$class->name}}}: ${{{$class->pivot->profit}}}<br/>
 							@endforeach
-						</td>
-						<td>
-							Tuition Reduction: ${{{$order->tuitionreduction}}}<br/>
-							PAC: ${{{$order->pac}}}
 						</td>
 					</tr>
 				@endforeach

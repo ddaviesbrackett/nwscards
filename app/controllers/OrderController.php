@@ -2,6 +2,21 @@
 
 class OrderController extends BaseController {
 
+	public static function classIdMap() {
+		return Cache::rememberForever('classIdMap', function() {
+			$classes = SchoolClass::all();
+			$map = [];
+			$classes->each(function ($cl) use (&$map) {
+				$map[$cl->id] = $cl->bucketname;
+			});
+			return $map;
+		});
+	}
+
+	public static function resetClassIdMap() {
+		return Cache::forget('classIdMap');
+	}
+
 	public function getAccount()
 	{
 		$user = Sentry::getUser();
@@ -96,7 +111,7 @@ class OrderController extends BaseController {
 				$cutoffs = $this->getCutoffs();
 				$sched = $cutoffs['biweekly']['cutoff'] == $cutoffs['monthly']['cutoff'] ? 'monthly' : 'monthly-second';
 			}
-			$user->schedule_onetime = 'monthly'; //$sched; AFTER LAST ORDER CHANGE THIS BACK
+			$user->schedule_onetime = $sched;
 			$user->save();
 			Session::flash('ordermessage', 'order updated');
 		}
@@ -106,7 +121,7 @@ class OrderController extends BaseController {
 	public function getNew()
 	{
 		$visibleorder = Session::getOldInput('visibleorder', 'recurring');
-		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null, 'visibleorder'=> $visibleorder]);
+		return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> null, 'visibleorder'=> $visibleorder, 'classes' => SchoolClass::choosable()]);
 	}
 
 	public function getEdit()
@@ -118,7 +133,7 @@ class OrderController extends BaseController {
 		else
 		{
 			$visibleorder = Session::getOldInput('visibleorder', 'recurring');
-			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> $visibleorder]);
+			return View::make('new', ['stripeKey' => $_ENV['stripe_pub_key'], 'user'=> Sentry::getUser(), 'visibleorder'=> $visibleorder, 'classes' => SchoolClass::choosable()]);
 		}
 	}
 
@@ -151,19 +166,14 @@ class OrderController extends BaseController {
 			$user->address2 = $in['address2'];
 			$user->city = $in['city'];
 			$user->postal_code = $in['postal_code'];
-			$user->marigold = array_key_exists('marigold', $in);
-			$user->daisy = array_key_exists('daisy', $in);
-			$user->sunflower = array_key_exists('sunflower', $in);
-			$user->bluebell = array_key_exists('bluebell', $in);
-			$user->class_1 = array_key_exists('class_1', $in);
-			$user->class_2 = array_key_exists('class_2', $in);
-			$user->class_3 = array_key_exists('class_3', $in);
-			$user->class_4 = array_key_exists('class_4', $in);
-			$user->class_5 = array_key_exists('class_5', $in);
-			$user->class_6 = array_key_exists('class_6', $in);
-			$user->class_7 = array_key_exists('class_7', $in);
-			$user->class_8 = array_key_exists('class_8', $in);
 
+			$schoolclasses = array_filter(OrderController::classIdMap(), function($bucketname) use ($in) {
+				return array_key_exists($bucketname, $in) || 
+					   $bucketname == 'tuitionreduction' || 
+					   $bucketname == 'pac';
+				});
+
+			$user->schoolclasses()->sync(array_keys($schoolclasses));
 			if (Input::has('password'))
 			{
 				$user->password = $in['password'];
@@ -272,18 +282,6 @@ class OrderController extends BaseController {
 				'city'		=>$in['city'],
 				'province'	=>'BC',
 				'postal_code'	=>$in['postal_code'],
-				'marigold' => array_key_exists('marigold', $in),
-				'daisy' => array_key_exists('daisy', $in),
-				'sunflower' => array_key_exists('sunflower', $in),
-				'bluebell' => array_key_exists('bluebell', $in),
-				'class_1' => array_key_exists('class_1', $in),
-				'class_2' => array_key_exists('class_2', $in),
-				'class_3' => array_key_exists('class_3', $in),
-				'class_4' => array_key_exists('class_4', $in),
-				'class_5' => array_key_exists('class_5', $in),
-				'class_6' => array_key_exists('class_6', $in),
-				'class_7' => array_key_exists('class_7', $in),
-				'class_8' => array_key_exists('class_8', $in),
 				'saveon' => $in['saveon'],
 				'coop' => $in['coop'],
 				'schedule' => $in['schedule'],
@@ -295,7 +293,16 @@ class OrderController extends BaseController {
 				'referrer' => $in['referrer'],
 				'pickupalt' => $in['pickupalt'],
 			], true);
+
 			try {
+				$schoolclasses = array_filter(OrderController::classIdMap(), function($bucketname) use ($in) {
+					return array_key_exists($bucketname, $in) || 
+						   $bucketname == 'tuitionreduction' || 
+						   $bucketname == 'pac';
+					});
+
+				$user->schoolclasses()->sync(array_keys($schoolclasses));
+
 				$cardToken = null;
 				if(isset($in['stripeToken'])){
 					$cardToken = $in['stripeToken'];
@@ -340,7 +347,7 @@ class OrderController extends BaseController {
 
 	public static function GetBlackoutEndDate()
 	{
-		return BaseController::getCutoffs()['biweekly']['cutoff']->addDays(-7);
+		return CutoffDate::find(Order::max('cutoff_date_id'))->delivery;
 	}
 
 	// Blackout period is from cutoff wednesday just before midnight until card pickup wednesday morning.
