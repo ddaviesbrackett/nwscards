@@ -202,7 +202,7 @@
 	    </div>
 	    <div id="faq9" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>The last order for this school year will be June 3. </p>
+	        <p>The last order for the 2015-2016 school year will be June 1 2016. </p>
 			<p>You will be given the opportunity to renew your order if you would like to continue.</p>
 	      </div>
 	    </div>
@@ -233,7 +233,7 @@
 	    </div>
 	    <div id="faq11" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Your class teacher and class rep can request money from us when it’s needed. Requests need to be submitted to grocerycards{AT}nelsonwaldorf.org. </p>
+	        <p>Your class teacher and class rep can request money from us when it’s needed. Requests can be made using <a href="https://docs.google.com/uc?authuser=0&id=0B2sI4qt1poXCOERSNnZnbFpEWms&export=download">this form</a>. Completed forms can be left at the School office. </p>
 			<p>Because this fundraiser requires a larger amount of cash to float each purchase of cards, all the money raised will be held by the Parent Association and used for that purpose until the class needs it.</p>
 	      </div>
 	    </div>
