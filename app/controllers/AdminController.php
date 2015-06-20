@@ -136,7 +136,7 @@ class AdminController extends BaseController {
 			->orderBy('users.name', 'asc')->with('user')->get();
 		$pickup = $orders->filter(function($order){ return ! $order->deliverymethod;});
 		$mail = $orders->filter(function($order){ return $order->deliverymethod;});
-		return View::make('admin.order', ['pickup'=>$pickup, 'mail'=>$mail]);
+		return View::make('admin.order', ['pickup'=>$pickup, 'mail'=>$mail, 'date' =>CutoffDate::find($id)->deliverydate()->format('F jS Y')]);
 	}
 
 	public function getNewSaleForm()
@@ -260,8 +260,8 @@ class AdminController extends BaseController {
 				$tuitionreduction = $profit * 0.75;
 			}
 
-			$order->schoolclasses()->updateExistingPivot($pacClassId, ['profit' => $pac);
-			$order->schoolclasses()->updateExistingPivot($tuitionClassId, ['profit' => $tuitionreduction);
+			$order->schoolclasses()->updateExistingPivot($pacClassId, ['profit' => $pac]);
+			$order->schoolclasses()->updateExistingPivot($tuitionClassId, ['profit' => $tuitionreduction]);
 			$order->save();
 		});
 

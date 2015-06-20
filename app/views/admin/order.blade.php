@@ -12,7 +12,7 @@
 
 @section('content')
 <div class="masthead">
-	<h1>Card Pickup Sheet</h1>
+	<h1>Card Pickup Sheet for {{$date}}</h1>
 </div>
 <div class="container-fluid">
 <table class='table'>
@@ -36,7 +36,7 @@
 </table>
 </div>
 <div class="masthead" style="page-break-before:always;">
-	<h1>Card Mailing Sheet</h1>
+	<h1>Card Mailing Sheet for {{$date}}</h1>
 </div>
 <div class="container-fluid">
 <table class='table'>
