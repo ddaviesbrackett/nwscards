@@ -2,8 +2,8 @@
        	I authorize the Nelson Waldorf School Parent Association (hereinafter “PAC”) to make pre-authorized debits (PAD) from my account with the aforementioned 
        	financial institution, either:
        	<ul>
-	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on June 3, 2015</li>
-	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on June 3, 2015</li>
+	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 6, 2016</li>
+	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 6, 2016</li>
        	</ul>
        	as selected on the order form.
        	<p>
@@ -22,10 +22,12 @@
 		<h4>CHANGE AND/OR CANCELLATION: </h4>
 
 		<p>I will advise PAC of any changes to this Agreement including, without limitation, changes to my account number, 
-		  by sending a written notice to PAC at grocerycards@nelsonwaldorf.org at least 10 business days prior to the next withdrawal. 
-		I retain the right to revoke my authorization at any time, by sending a written notice to PAC at grocerycards@nelsonwaldorf.org 
+		  by sending a written notice to PAC at grocerycards@nelsonwaldorf.org or by updating my order 
+		  at <a href="https://grocerycards.nelsonwaldorf.org/account">my account page</a> 
 		  at least 10 business days prior to the next withdrawal. 
-		To obtain a sample of the cancellation form or for more information on my right to cancel a PAD Agreement, 
+		I retain the right to revoke my authorization at any time, by sending a written notice to PAC at grocerycards@nelsonwaldorf.org or by updating my order 
+		at <a href="https://grocerycards.nelsonwaldorf.org/account">my account page</a>.
+		  at least 10 business days prior to the next withdrawal. To obtain a sample of the cancellation form or for more information on my right to cancel a PAD Agreement, 
 		I may contact my financial institution or consult the Canadian Payments Association at <a href="http://www.cdnpay.ca">www.cdnpay.ca</a>. 
 		I agree to release the financial institution of any liability if the revocation is not respected, except in the case of gross negligence on its part. 
 		I agree that the financial institution at which I maintain the account is not required to verify that the payment is debited in accordance with this authorization. 
