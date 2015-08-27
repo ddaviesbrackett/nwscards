@@ -7,6 +7,9 @@ Route::get('/login', 'HomeController@getLogin');
 Route::post('/login', 'HomeController@postLogin');
 Route::get('/logout', 'HomeController@getLogout');
 
+//ultra-special login-and-resume from an email link
+Route::get('/email-resume', ['uses' => 'OrderController@EmailResume']);
+
 //account creation/view/update
 Route::get('/account', array('before' => 'auth', 'uses' => 'OrderController@getAccount'));
 Route::get('/account/extracards', array('before' => 'auth', 'uses' => 'OrderController@getAccount')); //with onetime form showing

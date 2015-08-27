@@ -43,6 +43,7 @@ class OrderController extends BaseController {
 			$user->schedule_suspended = $user->schedule;
 		}
 		$user->schedule = 'none';
+		$user->reactivation_code = $user->getRandomString();
 		$user->save();
 		Mail::send('emails.suspend', ['user' => $user, 'isChange' => true], function($message) use ($user){
 			$message->subject('Grocery card order suspended');
@@ -50,6 +51,33 @@ class OrderController extends BaseController {
 		});
 		Session::flash('ordermessage', 'order suspended');
 		return Redirect::to('/account');	
+	}
+
+	public function EmailResume()
+	{
+		if(OrderController::IsBlackoutPeriod())
+		{
+			return View::make('edit-blackout');
+		}
+
+		$code = Input::get( 'code' );
+		$uid = Input::get( 'uid' );
+
+
+		$user = User::find($uid);
+		if(! is_null($user) &&
+			$user->reactivation_code == $code &&
+			$user->schedule == 'none' && 
+			! is_null($user->schedule_suspended) &&
+			$user->schedule_suspended != 'none')
+		{
+			Sentry::login($user);
+			return $this->Resume();
+		}
+		else
+		{
+			return View::make('email-resume-error');
+		}
 	}
 
 	public function Resume()
@@ -60,7 +88,8 @@ class OrderController extends BaseController {
 		}
 
 		$user = Sentry::getUser();
-		if($user->schedule_suspended != 'none') {
+		if($user->schedule_suspended != 'none' && 
+			! is_null($user->schedule_suspended)) {
 			$user->schedule = $user->schedule_suspended;
 
 			$user->save();
