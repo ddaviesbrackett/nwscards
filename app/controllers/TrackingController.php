@@ -55,9 +55,12 @@ class TrackingController extends BaseController {
 	public function getLeaderboard()
 	{
 		$total = 0;
+		foreach(SchoolClass::all() as $class)
+		{
+			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+		}
 
 		$buckets = [];
-
 		foreach(SchoolClass::where('displayorder', '>=', '-1')->orderby('displayorder', 'asc')->get() as $class)
 		{
 			$buckets[$class->bucketname] = ['nm'=>$class->name,

@@ -6,9 +6,7 @@ class HomeController extends BaseController {
 		$total = 0;
 		foreach(SchoolClass::all() as $class)
 		{
-			$buckets[$class->bucketname] = ['count'=>$class->users->count(),
-											 'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
-			$total += $buckets[$class->bucketname]['amount']; 
+			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
 		}
 
 		return View::make('home', ['total'=>$total]);
