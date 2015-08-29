@@ -4,30 +4,17 @@ class TrackingController extends BaseController {
 
 	public function getBucket($bucketname)
 	{
-		$name = User::className($bucketname);
-		$orders = null;
-		$totalprofit = 0;
-		$projection = 0;
-		$pastSupporters = 0;
-		$projectionSupporters = 0;
-		$currentSupporters = 0;
-		$expenses = null;
-		$pointsales = null;
+		$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
 
-		
-		if(! empty($name) ) {
+		$orders = $sc->orders;
+		$currentSupporters = $sc->users->count();
+		$expenses = $sc->expenses()->orderBy('expense_date', 'desc')->get();
+		$pointsales = $sc->pointsales()->orderBy('saledate', 'desc')->get();
 
-			$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
-			$orders = $sc->orders;
-			$currentSupporters = $sc->users->count();
-			$expenses = $sc->expenses()->orderBy('expense_date', 'desc')->get();
-			$pointsales = $sc->pointsales()->orderBy('saledate', 'desc')->get();
-
-			$totalprofit = $orders->getTotalProfit() + $sc->pointsales->getTotalProfit();
-		}
+		$totalprofit = $orders->getTotalProfit() + $sc->pointsales->getTotalProfit();
 
 		return View::make('tracking.bucket', [
-			'name' => $name,
+			'name' => $sc->name,
 			'orders' => $orders,
 			'expenses' => $expenses,
 			'pointsales' => $pointsales,
