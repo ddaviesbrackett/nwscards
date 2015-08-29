@@ -28,6 +28,6 @@ class Pointsale extends Eloquent {
 
 	public function newCollection(array $models = [])
 	{
-	    return new PointSales($models);
+	    return new Pointsales($models);
 	}
 }
