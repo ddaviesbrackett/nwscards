@@ -32,8 +32,6 @@ class TrackingController extends BaseController {
 			'expenses' => $expenses,
 			'pointsales' => $pointsales,
 			'sum' =>$totalprofit,
-			'projection' => '(unavailable)',
-			'pastSupporters' => '(unavailable)',
 			'currentSupporters' => $currentSupporters,
 			]);
 	}
