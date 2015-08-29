@@ -48,7 +48,6 @@ class TrackingController extends BaseController {
 			$buckets[$class->bucketname] = ['nm'=>$class->name,
 											'count'=>$class->users->count(),
 											'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
-			$total += $buckets[$class->bucketname]['amount']; 
 		}
 
 		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);
