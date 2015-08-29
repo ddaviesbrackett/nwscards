@@ -18,11 +18,11 @@
 		<th>Order</th>
 		<th>Amount Raised</th>
 	</tr>
-	@if (! empty($orders))
-		@foreach($orders as $order)
+	@if (! empty($profitMap))
+		@foreach($profitMap as $cutoffdateid => $profit)
 			<tr>
-				<td>{{{$order->cutoffdate->deliverydate()->format('F jS')}}}</td>
-				<td>{{{money_format('$%n',$order->profit)}}}</td>
+				<td>{{{CutoffDate::find($cutoffdateid)->deliverydate()->format('F jS')}}}</td>
+				<td>{{{money_format('$%n',$profit)}}}</td>
 			</tr>
 		@endforeach
 	@endif

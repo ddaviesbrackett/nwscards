@@ -6,16 +6,27 @@ class TrackingController extends BaseController {
 	{
 		$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
 
+		$profitMap = [];
 		$orders = $sc->orders;
 		$currentSupporters = $sc->users->count();
 		$expenses = $sc->expenses()->orderBy('expense_date', 'desc')->get();
 		$pointsales = $sc->pointsales()->orderBy('saledate', 'desc')->get();
 
+		foreach($orders as $order)
+		{
+			$profitMap[$order->cutoffdate->id] = 0;
+		}
+
+		foreach($orders as $order)
+		{
+			$profitMap[$order->cutoffdate->id] += $order->pivot->profit;
+		}
+
 		$totalprofit = $orders->getTotalProfit() + $sc->pointsales->getTotalProfit();
 
 		return View::make('tracking.bucket', [
 			'name' => $sc->name,
-			'orders' => $orders,
+			'profitMap' => $profitMap,
 			'expenses' => $expenses,
 			'pointsales' => $pointsales,
 			'sum' =>$totalprofit,
