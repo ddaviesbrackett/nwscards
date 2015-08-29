@@ -13,6 +13,9 @@ class TrackingController extends BaseController {
 		$currentSupporters = 0;
 		$expenses = null;
 		$pointsales = null;
+
+		$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
+		
 		if(! empty($name) ) {
 			$orders = Order::with('cutoffdate')->where($bucketname, '>', 0)
 				->groupBy('cutoff_date_id')
@@ -26,10 +29,10 @@ class TrackingController extends BaseController {
 				$projection = $totalprofit + (($orders[0]->profit + $orders[1]->profit) * $monthsleft);
 				$pastSupporters = $orders[0]->supporters + $orders[1]->supporters;
 			}
-			$currentSupporters = $bucketname == 'pac' || $bucketname == 'tuitionreduction'?User::count():User::where($bucketname, '=', 1)->count();
+			$currentSupporters = $sc->users->count();
 
-			$expenses = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail()->expenses()->orderBy('expense_date', 'desc')->get();
-			$pointsales = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail()->pointsales()->orderBy('saledate', 'desc')->get();
+			$expenses = $sc->expenses()->orderBy('expense_date', 'desc')->get();
+			$pointsales = $sc->pointsales()->orderBy('saledate', 'desc')->get();
 
 			foreach($pointsales as $ps)
 			{
