@@ -31,6 +31,6 @@ class SchoolClass extends Eloquent {
 	}
 
 	public function users() {
-		return $this->belongsToMany('users', 'classes_users', 'class_id', 'pointsale_id');
+		return $this->belongsToMany('User', 'classes_users', 'class_id', 'user_id');
 	}
 }

@@ -54,4 +54,9 @@ class Order extends Eloquent {
 	public function hasOnetime() {
 		return $this->coop_onetime + $this->saveon_onetime > 0;
 	}
+
+	public function newCollection(array $models = [])
+	{
+	    return new Orders($models);
+	}
 }

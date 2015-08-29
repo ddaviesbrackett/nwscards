@@ -51,27 +51,17 @@ class TrackingController extends BaseController {
 
 	public function getLeaderboard()
 	{
-		$total = Order::sum('profit');
+		$total = 0;
 
 		$buckets = [];
-		$bucketnames = $this->classIds;
-		$bucketnames[] = 'pac';
-		$bucketnames[] = 'tuitionreduction';
+		$classes = SchoolClass::all();
 
-		array_map(function($classId) use (&$buckets){
-			$buckets[$classId] = ['count'=>0, 'amount'=> 0];
-		}, $bucketnames);
-
-		array_map(function($classId) use (&$buckets){
-				$buckets[$classId]['count'] = $classId == 'pac' || $classId == 'tuitionreduction'?User::count():User::where($classId, '=', 1)->count();
-				$buckets[$classId]['amount'] = Order::where($classId, '>', 0)->sum($classId);
-				$pointsales = SchoolClass::where('bucketname', '=', $classId)->firstOrFail()->pointsales()->orderBy('saledate', 'desc')->get();
-				foreach($pointsales as $ps)
-				{
-					$buckets[$classId]['amount'] += $ps->pivot->profit;
-				}
-				
-			}, $bucketnames);
+		foreach($classes as $class)
+		{
+			$buckets[$class->bucketname] = ['count'=>$class->users->count(),
+											 'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
+			$total += $buckets[$class->bucketname]['amount'];
+		}
 
 		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);
 	}

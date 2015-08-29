@@ -2,7 +2,6 @@
 
 class BaseController extends Controller {
 	
-	protected $classIds = ['marigold', 'daisy', 'sunflower', 'bluebell', 'class_1', 'class_2', 'class_3', 'class_4', 'class_5', 'class_6', 'class_7', 'class_8'];
 	/**
 	 * Setup the layout used by the controller.
 	 *

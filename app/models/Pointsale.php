@@ -25,4 +25,9 @@ class Pointsale extends Eloquent {
 	public function isCreditcard() {
 		return $this->payment;
 	}
+
+	public function newCollection(array $models = [])
+	{
+	    return new PointSales($models);
+	}
 }
