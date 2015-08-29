@@ -8,7 +8,7 @@ You can press this button to get your cards again:
 <a style="display:block;margin:3em auto;padding:1em;text-align:center;max-width:25em;color:White;background-color:#a40016;border-radius:5px;" 
 href="https://grocerycards.nelsonwaldorf.org/email-resume?uid={{{$user->id}}}}&code={{{$user->reactivation_code}}}"><span style="font-size:2em;">Resume My Order</span></a>
 <p>You can also resume your order at <a href="https://grocerycards.nelsonwaldorf.org/Resume">https://grocerycards.nelsonwaldorf.org/Resume</a>.
-This will reactivate your account. You can then make changes or edit your order as needed. It is easy. 
+This will reactivate your account. You can then make changes or edit your order as needed. It is easy. </p>
 
 <p>(Forgot your password? Don't worry you can reset it when you log in.)</p>
 
