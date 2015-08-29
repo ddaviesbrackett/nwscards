@@ -12,9 +12,10 @@ class SpecialAugustHandler {
 
 	public static function sendAugustEmail($user)
 	{
-		\Mail::send('emails.special-september-resume', ['user' => $user, 'order' => $order], function($message) use ($user){
+		\Mail::send('emails.special-september-resume', ['user' => $user], function($message) use ($user){
 			$message->subject('The Grocery Card Fairies are ready for your order!');
 			$message->to($user->email, $user->name);
 		});
 	}
 }
+
