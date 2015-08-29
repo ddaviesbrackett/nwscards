@@ -1,19 +1,20 @@
 <?php namespace NWSCards\components\eventHandlers;
 use \CutoffDate;
-class SpecialMarchHandler {
-	public function handle() {
+class SpecialAugustHandler {
+	public static function handle() {
 
 		foreach(User::where('nobeg', '<>', 1)->where('schedule', '=', 'none') as $user)
-		{
-			$user = $order->user;
-			if(!$user->deliverymethod)
-			{
-				\Mail::send('emails.special-september-resume', ['user' => $user, 'order' => $order], function($message) use ($user){
-					$message->subject('The Grocery Card Fairies are ready for your order!');
-					$message->to($user->email, $user->name);
-				});
-			}
+		{			
+			SpecialAugustHandler::sendAugustEmail($user);
 		}
 		return "special march pickup reminders sent";
+	}
+
+	public static function sendAugustEmail($user)
+	{
+		\Mail::send('emails.special-september-resume', ['user' => $user, 'order' => $order], function($message) use ($user){
+			$message->subject('The Grocery Card Fairies are ready for your order!');
+			$message->to($user->email, $user->name);
+		});
 	}
 }
