@@ -3,7 +3,7 @@ use \CutoffDate;
 class SpecialAugustHandler {
 	public static function handle() {
 
-		foreach(User::where('nobeg', '<>', 1)->where('schedule', '=', 'none') as $user)
+		foreach(User::where('no_beg', '<>', 1)->where('schedule', '=', 'none') as $user)
 		{			
 			SpecialAugustHandler::sendAugustEmail($user);
 		}
