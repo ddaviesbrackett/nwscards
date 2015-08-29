@@ -14,30 +14,16 @@ class TrackingController extends BaseController {
 		$expenses = null;
 		$pointsales = null;
 
-		$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
 		
 		if(! empty($name) ) {
-			$orders = Order::with('cutoffdate')->where($bucketname, '>', 0)
-				->groupBy('cutoff_date_id')
-				->join('cutoffdates', 'cutoffdates.id', '=', 'orders.cutoff_date_id')
-				->orderBy('cutoffdates.cutoff','desc')
-				->get([DB::raw('SUM('.$bucketname.') as profit'), DB::raw('count('.$bucketname.') as supporters'), 'cutoff_date_id']);
-			$totalprofit = Order::sum($bucketname);
-			if(count($orders) > 1)
-			{
-				$monthsleft = \Carbon\Carbon::createFromDate(2015,7,1)->diffInMonths();
-				$projection = $totalprofit + (($orders[0]->profit + $orders[1]->profit) * $monthsleft);
-				$pastSupporters = $orders[0]->supporters + $orders[1]->supporters;
-			}
-			$currentSupporters = $sc->users->count();
 
+			$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
+			$orders = $sc->orders;
+			$currentSupporters = $sc->users->count();
 			$expenses = $sc->expenses()->orderBy('expense_date', 'desc')->get();
 			$pointsales = $sc->pointsales()->orderBy('saledate', 'desc')->get();
 
-			foreach($pointsales as $ps)
-			{
-				$totalprofit += $ps->pivot->profit;
-			}
+			$totalprofit = $orders->getTotalProfit() + $sc->pointsales->getTotalProfit();
 		}
 
 		return View::make('tracking.bucket', [
@@ -46,8 +32,8 @@ class TrackingController extends BaseController {
 			'expenses' => $expenses,
 			'pointsales' => $pointsales,
 			'sum' =>$totalprofit,
-			'projection' => $projection,
-			'pastSupporters' => $pastSupporters,
+			'projection' => '(unavailable)',
+			'pastSupporters' => '(unavailable)',
 			'currentSupporters' => $currentSupporters,
 			]);
 	}
