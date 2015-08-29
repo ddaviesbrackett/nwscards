@@ -19,7 +19,7 @@
 	</tr>
 	@foreach($buckets as $name => $vals)
 		<tr>
-			<td><a href="/tracking/{{$name}}">{{{\User::className($name)}}}</a></td>
+			<td><a href="/tracking/{{$name}}">{{{$vals['nm']}}}</a></td>
 			<td>{{{money_format('$%n',$vals['amount'])}}}</td>
 			<td>{{{$vals['count']}}}</td>
 		</tr>
