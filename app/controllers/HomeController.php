@@ -3,7 +3,15 @@
 class HomeController extends BaseController {
 	public function getHome()
 	{
-		return View::make('home', array('total'=>Order::all()->sum('profit') + Pointsale::all()->sum('profit')));
+		$total = 0;
+		foreach(SchoolClass::all() as $class)
+		{
+			$buckets[$class->bucketname] = ['count'=>$class->users->count(),
+											 'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
+			$total += $buckets[$class->bucketname]['amount']; 
+		}
+
+		return View::make('home', ['total'=>$total]);
 	}
 
 

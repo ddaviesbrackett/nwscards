@@ -54,9 +54,8 @@ class TrackingController extends BaseController {
 		$total = 0;
 
 		$buckets = [];
-		$classes = SchoolClass::all();
 
-		foreach($classes as $class)
+		foreach(SchoolClass::all() as $class)
 		{
 			$buckets[$class->bucketname] = ['count'=>$class->users->count(),
 											 'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
