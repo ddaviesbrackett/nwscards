@@ -13,3 +13,4 @@ use NWSCards\commands;
 
 Artisan::add(new commands\AssignAdminRights());
 Artisan::add(new commands\NightlyProcessing());
+Artisan::add(new commands\AugustReminder());
