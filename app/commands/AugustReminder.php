@@ -37,15 +37,16 @@ class AugustReminder extends Command {
 	 */
 	public function fire()
 	{
-		$users = \User::where('no_beg', '<>', 1)->where('schedule', '=', 'none');
+		$users = \User::where('no_beg', '<>', 1)->where('schedule', '=', 'none')->get();
 		foreach($users as $user)
 		{			
 			\Mail::send('emails.special-september-resume', ['user' => $user], function($message) use ($user){
 				$message->subject('The Grocery Card Fairies are ready for your order! Please resume before September 1!');
 				$message->to($user->email, $user->name);
 			});
+			$this->info("mail sent to ".$user->email);
 		}
-		return "special august pickup reminders sent to ".$users>count();
+		$this->info("special august pickup reminders sent to ".$users->count()." users.");
 	}
 
 	/**

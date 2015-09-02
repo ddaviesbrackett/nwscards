@@ -48,8 +48,8 @@ class OrderGenerationHandler {
 					$user->save();
 				}
 				$order->cutoffdate()->associate($cutoff);
-				$order->schoolclasses()->sync($user->schoolclasses);
 				$user->orders()->save($order);
+				$order->schoolclasses()->sync($user->schoolclasses);
 
 				//since we're now entering the blackout period, we can add one-time orders to credit card invoices
 				//orders that are onetime-ONLY get dealt with separately on charge day, because this is easier than sorting through Stripe's API docs
