@@ -4,7 +4,11 @@ class TrackingController extends BaseController {
 
 	public function getBucket($bucketname)
 	{
-		$sc = SchoolClass::where('bucketname', '=', $bucketname)->firstOrFail();
+		$sc = SchoolClass::where('bucketname', '=', $bucketname)->first();
+		if(is_null($sc))
+		{
+			return Redirect::to('/tracking');
+		}
 
 		$profitMap = [];
 		$orders = $sc->orders;
