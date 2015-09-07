@@ -74,25 +74,6 @@ class AdminController extends BaseController {
 		return View::make('admin.caft', ['model'=>$viewmodel, 'total' => $total, 'cutoff'=>$cutoffId]); 
 	}
 
-	public function getTotals()
-	{
-		$userQuery = DB::table('users');
-		$userMonthlyQuery = DB::table('users')->where('schedule', '=', 'monthly');
-		$userMonthlySecondQuery = DB::table('users')->where('schedule', '=', 'monthly-second');
-		$biweeklyQuery = DB::table('users')->where('schedule', '=', 'biweekly');
-		$classtotals = [];
-		array_map(function($classid) use (&$classtotals, $userQuery) {
-			$classtotals[User::className($classid)] = $userQuery->sum($classid);
-		}, $this->classIds);
-		return View::make('admin.totals', [
-			'totalUsers'=>$userQuery->count(), 
-			'monthly'=>['saveon'=>$userMonthlyQuery->sum('saveon'), 'coop'=>$userMonthlyQuery->sum('coop')], 
-			'monthlySecond'=>['saveon'=>$userMonthlySecondQuery->sum('saveon'), 'coop'=>$userMonthlySecondQuery->sum('coop')], 
-			'biweekly'=>['saveon'=>$biweeklyQuery->sum('saveon'), 'coop'=>$biweeklyQuery->sum('coop')], 
-			'classes'=>$classtotals,
-			]);
-	}
-
 	private function generateProfits($date) {
 		$saveon = 0.0;
 		$coop = 0.0;

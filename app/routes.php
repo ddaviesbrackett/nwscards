@@ -44,7 +44,6 @@ Route::model('expense', 'Expense');
 Route::model('sale', 'Pointsale');
 
 Route::get('/admin/caft/{id}', ['before'=>['auth','admin'], 'uses' => 'AdminController@getCaft', 'as' => 'admin-caft']);
-Route::get('/admin/totals', ['before'=>['auth','admin'], 'uses' => 'AdminController@getTotals']);
 Route::get('/admin/orders', ['before'=>['auth','admin'], 'uses' => 'AdminController@getOrders']);
 Route::get('/admin/order/{id}', 
 	[

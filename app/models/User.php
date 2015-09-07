@@ -43,24 +43,6 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 		return new \NWSCards\components\overrides\StripeGateway($this, $plan);
 	}
 
-	public function classesSupported() {
-		$ret = [];
-		if($this->marigold) $ret[] = 'marigold';
-		if($this->daisy) $ret[] = 'daisy';
-		if($this->sunflower) $ret[] = 'sunflower';
-		if($this->bluebell) $ret[] = 'bluebell';
-		if($this->class_1) $ret[] = 'class_1';
-		if($this->class_2) $ret[] = 'class_2';
-		if($this->class_3) $ret[] = 'class_3';
-		if($this->class_4) $ret[] = 'class_4';
-		if($this->class_5) $ret[] = 'class_5';
-		if($this->class_6) $ret[] = 'class_6';
-		if($this->class_7) $ret[] = 'class_7';
-	 	if($this->class_8) $ret[] = 'class_8';
-
-	 	return $ret;
-	}
-
 	public function orders() {
 		return $this->hasMany('Order')->orderBy('created_at', 'desc');
 	}
@@ -114,26 +96,6 @@ class User extends SentryUser implements UserInterface, RemindableInterface, Bil
 			default:
 				throw new Exception("Invalid schedule");
 				break;
-		}
-	}
-
-	public static function className($class) {
-		switch ($class) {
-			case 'marigold': return 'Marigolds';
-			case 'daisy': return 'Daisies';
-			case 'sunflower': return 'Sunflowers';
-			case 'bluebell': return 'Bluebells';
-			case 'class_1': return 'Class 1';
-			case 'class_2': return 'Class 2';
-			case 'class_3': return 'Class 3';
-			case 'class_4': return 'Class 4';
-			case 'class_5': return 'Class 5';
-			case 'class_6': return 'Class 6';
-			case 'class_7': return 'Class 7';
-			case 'class_8': return 'Class 8';
-			case 'pac': return 'PAC';
-			case 'tuitionreduction': return 'Tuition Reduction Fund';
-			default: return null;
 		}
 	}
 
