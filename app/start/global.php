@@ -53,7 +53,7 @@ App::error(function(Exception $exception, $code)
 		Mail::send('emails.error', [
 				'error' => $exception, 
 				'url' => Request::path(), 
-				'input' => Input::except(['password', 'password-repeat']) 
+				'input' => Input::except(['password', 'password-repeat']),
 				'headers' => Request::instance()->headers], function($message) use ($exception){
 			$message->subject('Grocery card website error:'.$exception->getMessage());
 			$message->to($_ENV['error_to_address'], 'Error Person');
