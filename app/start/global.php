@@ -50,7 +50,11 @@ App::error(function(Exception $exception, $code)
 {
 	Log::error($exception);
 	if (! empty($_ENV['error_to_address'])) {
-		Mail::send('emails.error', ['error' => $exception, 'url' => Request::path() ], function($message) use ($exception){
+		Mail::send('emails.error', [
+				'error' => $exception, 
+				'url' => Request::path(), 
+				'input' => Input::except(['password', 'password-repeat']) 
+				'headers' => Request::instance()->headers], function($message) use ($exception){
 			$message->subject('Grocery card website error:'.$exception->getMessage());
 			$message->to($_ENV['error_to_address'], 'Error Person');
 			$message->from('noreply@grocerycards.nelsonwaldorf.org', $_ENV['error_from_name']);
