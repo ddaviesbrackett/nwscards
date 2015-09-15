@@ -41,7 +41,7 @@ class AugustReminder extends Command {
 		foreach($users as $user)
 		{			
 			\Mail::send('emails.special-september-resume', ['user' => $user], function($message) use ($user){
-				$message->subject('The Grocery Card Fairies are ready for your order! Please resume before September 1!');
+				$message->subject('The Grocery Card Fairies are ready for your order! Resume today!');
 				$message->to($user->email, $user->name);
 			});
 			$this->info("mail sent to ".$user->email);
