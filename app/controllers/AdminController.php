@@ -228,7 +228,7 @@ class AdminController extends BaseController {
 			
 			if($buckets > 2) {
 				$perBucket = $profit / $buckets;
-				foreach($order->schoolclasses()->where('bucketname','<>', 'pac')->andWhere('bucketname', '<>', 'tuitionreduction')->get() as $class)
+				foreach($order->schoolclasses()->where('bucketname','<>', 'pac')->where('bucketname', '<>', 'tuitionreduction')->get() as $class)
 				{
 					$order->schoolclasses()->updateExistingPivot($class->id, ['profit' => $perBucket * $class->classsplit]);
 					$pac += $perBucket * $class->pacsplit;
