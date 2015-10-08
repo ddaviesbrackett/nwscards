@@ -207,7 +207,7 @@ class AdminController extends BaseController {
 
 		//update order profits for all the orders in the cutoff
 		$profits = $this->generateProfits($cutoff);
-		$pacClassId = SchoolClass::where('bucketname', '=', 'tuitionreduction')->pluck('id');
+		$pacClassId = SchoolClass::where('bucketname', '=', 'pac')->pluck('id');
 		$tuitionClassId = SchoolClass::where('bucketname', '=', 'tuitionreduction')->pluck('id');
 		$cutoff->orders->load('user')->each(function($order) use ($profits, $pacClassId, $tuitionClassId) {
 			$saveon = $order->saveon + $order->saveon_onetime;
@@ -227,12 +227,12 @@ class AdminController extends BaseController {
 			$tuitionreduction = 0;
 			
 			if($buckets > 2) {
-				$perBucket = $profit / $buckets;
+				$perBucket = $profit / ($buckets - 2); //pac and tuitionreduction don't count anymore
 				foreach($order->schoolclasses()->where('bucketname','<>', 'pac')->where('bucketname', '<>', 'tuitionreduction')->get() as $class)
 				{
 					$order->schoolclasses()->updateExistingPivot($class->id, ['profit' => $perBucket * $class->classsplit]);
 					$pac += $perBucket * $class->pacsplit;
-					$tuitionreduction += $class->tuitionsplit;
+					$tuitionreduction += $perBucket * $class->tuitionsplit;
 				}
 			}
 			else
