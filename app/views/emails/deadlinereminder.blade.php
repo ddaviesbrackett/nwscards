@@ -3,7 +3,7 @@
 	<h2>Hi {{{$user->name}}},</h2>
 	
 	<p>
-		Need to change your grocery card order? You have until tomorrow, {{{$cutoff->cutoffdate()->format('l, F jS')}}}, at midnight. 
+		Need to change your grocery card order? You have until tomorrow, {{{$cutoff->cutoffdate()->subHour()->format('l, F jS')}}}, at midnight. 
 		@if($user->saveon > 0 || $user->coop > 0 || $user->saveon_onetime > 0 || $user->coop_onetime > 0)
 			If you do not change your order by then, your account will be debited or your credit card will be charged the amount of your order 
 			on {{{$cutoff->chargedate()->format('l, F jS')}}}. 
@@ -49,7 +49,7 @@
 	@endif
 	<p>
 		Thank you for your support,<br/>
-		Donna Davies Brackett<br/>
+		Snow Colbeck<br/>
 	<p>NWS Grocery Cards Committee</p>
 	</p>
 </body>
