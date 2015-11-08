@@ -4,12 +4,18 @@ class HomeController extends BaseController {
 	public function getHome()
 	{
 		$total = 0;
+                $totalThisYear=0;
 		foreach(SchoolClass::all() as $class)
 		{
 			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+                        $ordersCollection=$class->orders()->where('updated_at','>','2015-09-01 00:00:00')->get();
+                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-09-01 00:00:00')->get();
+                        
+                        $totalThisYear+=$ordersCollection->getTotalProfit();
+                        $totalThisYear+=$pointsaleCollection->getTotalProfit();
 		}
 
-		return View::make('home', ['total'=>$total]);
+		return View::make('home', ['total'=>$total,'totalThisYear'=>$totalThisYear]);
 	}
 
 
