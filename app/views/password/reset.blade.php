@@ -36,6 +36,8 @@
 					@if($errors->has('password'))
 						<span class='help-block'>{{{$errors->first('password')}}}</span>
 					@endif
+                                        <span class='help-block'>please choose a new, strong password between 6 to 15 characters. You'll be able to change your order with it.</span>
+
 				</div>
 				<div class='form-group{{$errors->has("password_confirmation")?" has-error":"";}}'>
 					<label for='password_confirmation'>Password (again):</label>
