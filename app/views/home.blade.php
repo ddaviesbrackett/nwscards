@@ -18,10 +18,9 @@
 @section('content')
 <div class="masthead">
 	<h1>Buy Grocery Cards<br/>Raise Money</h1>
-        
 	<h3>
             This year we've raised so far - {{{money_format('$%n',$totalThisYear)}}}<br/>
-            From October 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>
+            From July 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>
             Help us raise more &mdash; <em>without spending any extra!</em>
         </h3>
 	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>
@@ -33,6 +32,41 @@
 	<a class="link order" href="/account">Checking on an existing order? Click here</a>
 </div>
 <div class="container-fluid text-center">
+        <a name="pickupdates"></a>
+        <h2>Here are the dates for the rest of this year:</h2>
+        <center>
+            <table border="0">
+            <tr>
+                <td align="center" style="padding-right:10px;"><b>Change deadline</b></td>
+                 <td align="center"><b>Pick up day</b></td>
+            </tr>
+            <tr>
+                <td align="center">Mar 1st</td>
+                <td align="center">Mars 9th</td>
+            </tr>
+           <tr>
+                <td align="center">Mars 29th</td>
+                <td align="center">April 6th</td>
+            </tr>
+           <tr>
+                <td align="center">April 12th</td>
+                <td align="center">April 20th</td>
+            </tr>
+           <tr>
+                <td align="center">April 26th</td>
+                <td align="center">May 4th</td>
+            </tr>
+           <tr>
+                <td align="center">May 10th</td>
+                <td align="center">may 18</td>
+            </tr>
+           <tr>
+                <td align="center">May 24th</td>
+                <td align="center">June 1st</td>
+            </tr>
+        </table>
+            </center>
+        <br>
 	<a name="about"></a>
 	<h2>Waldorf Education for Every Child</h2>
 	<p>
@@ -51,6 +85,7 @@
 		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; 
 		<a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>.
 	</p>
+        
 	<a name="method"></a>
 	<h2>How we raise money from your groceries</h2>
 	<p>
@@ -149,7 +184,7 @@
 	    </div>
 	    <div id="faq5" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>You can pick up your cards on the Wednesday following your charge dates (which depends on whether you have ordered bi-weekly or monthly). You will recieve and email a few days before reminding you of the pickup day.</p>
+	        <p>You can pick up your cards on the Wednesday following your charge dates (which depends on whether you have ordered bi-weekly or monthly). You will receive an email a few days before reminding you of the pickup day.</p>
 			<p>We will be at the bottom of the main stairs between 8 – 8.30am and 2.30 – 3pm under the grocery cards banner.</p>
 	      </div>
 	    </div>
@@ -172,13 +207,27 @@
 	    <div class="panel-heading">
 	      <h4 class="panel-title">
 	        <a data-toggle="collapse" data-parent="#accordion" href="#faq7">
+	          When do I order?
+	        </a>
+	      </h4>
+	    </div>
+	    <div id="faq7" class="panel-collapse collapse">
+	      <div class="panel-body">
+	        <p>To put in an order or to order extra cards you have until Tuesday midnight the week before the next pick-up-Wednesday.</p>
+	      </div>
+	    </div>
+	  </div>            
+	  <div class="">
+	    <div class="panel-heading">
+	      <h4 class="panel-title">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#faq7">
 	          How do I change my order?
 	        </a>
 	      </h4>
 	    </div>
 	    <div id="faq7" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>You can change an existing order with <a href="/edit">this form</a>. Please note that you can't change your order while orders are being processed.</p>
+	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>
 	      </div>
 	    </div>
 	  </div>
@@ -192,8 +241,7 @@
 	    </div>
 	    <div id="faq8" class="panel-collapse collapse">
 	      <div class="panel-body">
-	        <p>Contact us using <a href="#contact">the form below</a> – and we’ll help you out.</p>
-			<p>Please note we require 10 days’ notice to cancel an order.</p>
+	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>
 	      </div>
 	    </div>
 	  </div>
@@ -223,7 +271,7 @@
 	    <div id="faq10" class="panel-collapse collapse">
 	      <div class="panel-body">
 	        <p>Because we receive such a small amount for each card sold, the best way to raise money is to have recurring orders.</p>
-			<p>We may have some cards available for cash purchases on pick-up days. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to the tuition reduction fund and PAC.</p>
+			<p>We do have cards available for cash purchases on pick-up days, though. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to the tuition reduction fund and PAC.</p>
 			<p>Some classes may also have cards available for cash purchases – and those sales will support that particular class.</p>
 	      </div>
 	    </div>
@@ -302,6 +350,7 @@
 	    </div>
 	    <div id="faq15" class="panel-collapse collapse">
 	      <div class="panel-body">
+                  <p>You can make a one-time-order and designate your child’s class as the beneficiary. <a class="btn btn-danger btn-lg" href="/new">Sign up here</a></p>
 	        <p>You can sign up other people to buy grocery cards (friends, neighbours, family members) and ask them to designate your child’s class as the beneficiary.</p>
 			<p>PAC will have some cards available for cash purchase on pick-up days. These sales will benefit the tuition reduction fund and PAC projects – but they won’t be tracked for class accounts.</p>
 	      </div>
