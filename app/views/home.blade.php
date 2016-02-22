@@ -41,11 +41,11 @@
                  <td align="center"><b>Pick up day</b></td>
             </tr>
             <tr>
-                <td align="center">Mar 1st</td>
-                <td align="center">Mars 9th</td>
+                <td align="center">March 1st</td>
+                <td align="center">March 9th</td>
             </tr>
            <tr>
-                <td align="center">Mars 29th</td>
+                <td align="center">March 29th</td>
                 <td align="center">April 6th</td>
             </tr>
            <tr>
@@ -206,12 +206,12 @@
 	  <div class="">
 	    <div class="panel-heading">
 	      <h4 class="panel-title">
-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq7">
+	        <a data-toggle="collapse" data-parent="#accordion" href="#faq37">
 	          When do I order?
 	        </a>
 	      </h4>
 	    </div>
-	    <div id="faq7" class="panel-collapse collapse">
+	    <div id="faq37" class="panel-collapse collapse">
 	      <div class="panel-body">
 	        <p>To put in an order or to order extra cards you have until Tuesday midnight the week before the next pick-up-Wednesday.</p>
 	      </div>
