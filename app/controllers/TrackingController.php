@@ -45,13 +45,15 @@ class TrackingController extends BaseController {
 		{
 			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
 		}
-
+               
 		$buckets = [];
 		foreach(SchoolClass::where('displayorder', '>=', '-1')->orderby('displayorder', 'asc')->get() as $class)
 		{
-			$buckets[$class->bucketname] = ['nm'=>$class->name,
-											'count'=>$class->users->count(),
-											'amount'=> $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit()];
+                    $buckets[$class->bucketname]['nm']=$class->name;
+                    $class_user_count=DB::select('SELECT count(*) as class_users from classes_users WHERE 1 AND class_id='.$class->id.' GROUP BY class_id');
+                    $buckets[$class->bucketname]['count']=$class_user_count[0]->class_users;                       
+                    //$buckets[$class->bucketname]['count']=$class->users->count();     
+                    $buckets[$class->bucketname]['amount']= $class->orders->getTotalProfit()+ $class->pointsales->getTotalProfit();                  
 		}
 
 		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);
