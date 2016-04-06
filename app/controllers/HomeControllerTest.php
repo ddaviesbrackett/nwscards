@@ -1,6 +1,6 @@
 <?php
 
-class HomeController extends BaseController {
+class HomeControllerTest extends BaseController {
 	public function getHome()
 	{
 		$total = 0;
