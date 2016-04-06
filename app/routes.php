@@ -2,6 +2,8 @@
 //main page
 Route::get('/', 'HomeController@getHome');
 
+Route::get('/test', 'HomeControllerTest@getHome');
+
 //login/logout
 Route::get('/login', 'HomeController@getLogin');
 Route::post('/login', 'HomeController@postLogin');
