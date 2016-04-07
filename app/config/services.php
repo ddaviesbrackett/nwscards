@@ -15,8 +15,8 @@ return array(
 	*/
 
 	'mailgun' => array(
-		'domain' => '',
-		'secret' => '',
+		'domain' => 'mg.nelsonwaldorf.org',
+		'secret' => 'key-d3555d79a7d8bdf98264377800e60696',
 	),
 
 	'mandrill' => array(
