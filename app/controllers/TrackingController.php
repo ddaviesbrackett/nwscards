@@ -41,9 +41,12 @@ class TrackingController extends BaseController {
 	public function getLeaderboard()
 	{
 		$total = 0;
+                $classes_arr=[];
+
 		foreach(SchoolClass::all() as $class)
 		{
 			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+                        $classes_arr[$class->id]= $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
 		}
                
 		$buckets = [];
@@ -52,10 +55,10 @@ class TrackingController extends BaseController {
                     $buckets[$class->bucketname]['nm']=$class->name;
                     $class_user_count=DB::select('SELECT count(*) as class_users from classes_users WHERE 1 AND class_id='.$class->id.' GROUP BY class_id');
                     $buckets[$class->bucketname]['count']=$class_user_count[0]->class_users;                       
-                    //$buckets[$class->bucketname]['count']=$class->users->count();     
-                    $buckets[$class->bucketname]['amount']= $class->orders->getTotalProfit()+ $class->pointsales->getTotalProfit();                  
+                    //$buckets[$class->bucketname]['count']=$class->users->count();   
+                    //$class->orders->getTotalProfit()+$class->pointsales->getTotalProfit() 
+                    $buckets[$class->bucketname]['amount']=$classes_arr[$class->id];                
 		}
 
 		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);
-	}
-}
+	}}
