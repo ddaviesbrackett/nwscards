@@ -2,19 +2,20 @@
        	I authorize the Nelson Waldorf School Parent Association (hereinafter “PAC”) to make pre-authorized debits (PAD) from my account with the aforementioned 
        	financial institution, either:
        	<ul>
-	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 6, 2016</li>
-	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 6, 2016</li>
+	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 5, 2017</li>
+	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 5, 2017</li>
        	</ul>
-       	as selected on the order form.
+       as selected on the order form on my account page at grocerycards@nelsonwaldorf.org. 
+       <p>This is a variable PAD: For each withdrawal my account will be debited for the total amount on my order form (recurring order plus any one-time order) as ordered for each scheduled order at grocerycards@nelsonwaldorf.org. I agreed that PC may reduce the standard period of pre-notification for variable amount PADs. PC will send me notice of the amount of each PAD at least 4 calendar days before the PAD is due. </p>
        	<p>
        	Each withdrawal will correspond to a fixed amount equal to the total stated on the order form.  
        	I understand my account will be debited two business days before the published delivery dates for my order frequency. 
        	</p>
-       	</p>
+       	<p>Type of Pre-Authorized Debit: PERSONAL </p>
+        
        	<h4>WAIVER</h4>  
        	<p>
-       	I hereby waive any and all requirements for pre-notification of debiting.  
-       	I will receive a copy of this Agreement by email and waive all other confirmation before the first payment.  
+        I hereby waive any and all requirements for pre-notification of debiting. As a Written Confirmation of this PAD Agreement, including information on my account and my financial institution as detailed in my order on my account page at grocerycards@nelsonwaldorf.org, I will receive a copy of this Agreement by email at least 4 calendar days before the first PAD withdrawal and waive all other confirmation before the first payment.  
        	</p>
        	<h4>SIGNATURES</h4>
        	<b>I guarantee that all persons whose signatures are required for this account have authorized this agreement.</b>

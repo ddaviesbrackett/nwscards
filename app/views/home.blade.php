@@ -35,51 +35,60 @@
         <a name="pickupdates"></a>
         <h2>Here are the dates for the rest of this year:</h2>
         <center>
-            <table border="0">
+            <table border="0" width="400px;">
             <tr>
                 <td align="center" style="padding-right:10px;"><b>Change deadline</b></td>
                  <td align="center"><b>Pick up day</b></td>
             </tr>
             <tr>
-                <td align="center">March 1st</td>
-                <td align="center">March 9th</td>
+                <td align="center">August 30th 2016</td>
+                <td align="center">September 7th 2016</td>
             </tr>
            <tr>
-                <td align="center">March 29th</td>
-                <td align="center">April 6th</td>
+                <td align="center">September 13th 2016</td>
+                <td align="center">September 21st 2016</td>
             </tr>
            <tr>
-                <td align="center">April 12th</td>
-                <td align="center">April 20th</td>
+                <td align="center">September 27th 2016</td>
+                <td align="center">October 5th 2016</td>
             </tr>
            <tr>
-                <td align="center">April 26th</td>
-                <td align="center">May 4th</td>
+                <td align="center">October 11th 2016</td>
+                <td align="center">October 19th 2016</td>
             </tr>
            <tr>
-                <td align="center">May 10th</td>
-                <td align="center">may 18</td>
+                <td align="center">October 25th 2016</td>
+                <td align="center">November 2nd 2016</td>
             </tr>
            <tr>
-                <td align="center">May 24th</td>
-                <td align="center">June 1st</td>
+                <td align="center">November 8th 2016</td>
+                <td align="center">November 16th 2016</td>
             </tr>
-        </table>
+           <tr>
+                <td align="center">November 29th 2016</td>
+                <td align="center">December 7th 2016</td>
+            </tr>
+           <tr>
+                <td align="center">December 27th 2016</td>
+                <td align="center">January 4th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">January 10th 2017</td>
+                <td align="center">January 18th 2017</td>
+            </tr>
+            </table>
             </center>
         <br>
 	<a name="about"></a>
 	<h2>Waldorf Education for Every Child</h2>
 	<p>
-		Did you know the Nelson Waldorf School has a generous tuition reduction program? 
-		No family is turned away for financial reasons. 
+        Did you know the Nelson Waldorf School offers tuition assistance for lower income families? 
+        	</p>
+	<p>
+		To ensure that accessibility continues, the Nelson Waldorf School Parent Association runs a school-wide grocery card fundraiser to supplement tuition and to fund extra curricular expenses for students. A percentage of money raised is also allocated to all-school projects, such as playground maintenance and improvement.  
 	</p>
 	<p>
-		To ensure that accessibility contuinues, the Nelson Waldorf School Parent Association
-		is running a school-wide grocery card fundraiser to support a tuition reduction fund,
-		individual classes and other all-school projects, such as playground maintenance and improvement.  
-	</p>
-	<p>
-		Your grocery card order helps keep the Nelson Waldorf School available to all families who want it.
+		Your grocery card order helps keep the Nelson Waldorf School vibrant and available to all families who want it.
 	</p>
 	<p>
 		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; 

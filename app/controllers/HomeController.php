@@ -8,8 +8,8 @@ class HomeController extends BaseController {
 		foreach(SchoolClass::all() as $class)
 		{
 			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
-                        $ordersCollection=$class->orders()->where('updated_at','>','2015-09-01 00:00:00')->get();
-                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-09-01 00:00:00')->get();
+                        $ordersCollection=$class->orders()->where('updated_at','>','2016-09-01 00:00:00')->get();
+                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-06-01 00:00:00')->get();
                         
                         $totalThisYear+=$ordersCollection->getTotalProfit();
                         $totalThisYear+=$pointsaleCollection->getTotalProfit();
