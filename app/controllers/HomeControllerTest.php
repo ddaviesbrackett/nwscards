@@ -14,6 +14,12 @@ class HomeControllerTest extends BaseController {
                         $totalThisYear+=$ordersCollection->getTotalProfit();
                         $totalThisYear+=$pointsaleCollection->getTotalProfit();
 		}
+                $data = ['msg'=>'Hello world', 'nm'=>'', 'em'=>''];
+                Mail::send('emails.contact', $data, function ($message) {
+                    $message->subject('Home Page contact request');                    
+                    $message->from("grocerycards@nelsonwaldorf.org", "Yaron");
+                    $message->to('yaronshaool@gmail.com');
+                });
 
 		return View::make('homeTest', ['total'=>$total,'totalThisYear'=>$totalThisYear]);
 	}

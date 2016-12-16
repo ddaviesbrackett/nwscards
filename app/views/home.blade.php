@@ -40,34 +40,6 @@
                 <td align="center" style="padding-right:10px;"><b>Change deadline</b></td>
                  <td align="center"><b>Pick up day</b></td>
             </tr>
-            <tr>
-                <td align="center">August 30th 2016</td>
-                <td align="center">September 7th 2016</td>
-            </tr>
-           <tr>
-                <td align="center">September 13th 2016</td>
-                <td align="center">September 21st 2016</td>
-            </tr>
-           <tr>
-                <td align="center">September 27th 2016</td>
-                <td align="center">October 5th 2016</td>
-            </tr>
-           <tr>
-                <td align="center">October 11th 2016</td>
-                <td align="center">October 19th 2016</td>
-            </tr>
-           <tr>
-                <td align="center">October 25th 2016</td>
-                <td align="center">November 2nd 2016</td>
-            </tr>
-           <tr>
-                <td align="center">November 8th 2016</td>
-                <td align="center">November 16th 2016</td>
-            </tr>
-           <tr>
-                <td align="center">November 29th 2016</td>
-                <td align="center">December 7th 2016</td>
-            </tr>
            <tr>
                 <td align="center">December 27th 2016</td>
                 <td align="center">January 4th 2017</td>
@@ -75,6 +47,42 @@
            <tr>
                 <td align="center">January 10th 2017</td>
                 <td align="center">January 18th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">January 24th 2017</td>
+                <td align="center">February 1st 2017</td>
+            </tr>
+           <tr>
+                <td align="center">February 7th 2017</td>
+                <td align="center">February 15th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">January 21st 2017</td>
+                <td align="center">March 1st 2017</td>
+            </tr>
+           <tr>
+                <td align="center">Spring Break</td>
+                <td align="center">Spring Break</td>
+            </tr>
+           <tr>
+                <td align="center">March 28th 2017</td>
+                <td align="center">April 5th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">April 11th 2017</td>
+                <td align="center">April 19th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">April 25th 2017</td>
+                <td align="center">May 3rd 2017</td>
+            </tr>
+           <tr>
+                <td align="center">May 9th 2017</td>
+                <td align="center">May 17th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">May 30th 2017</td>
+                <td align="center">June 7th 2017</td>
             </tr>
             </table>
             </center>
