@@ -5,16 +5,25 @@ class HomeController extends BaseController {
 	{
 		$total = 0;
                 $totalThisYear=0;
+                
+                /* this need to be fixed.  I also changed the home to remove the raised so far */
 		foreach(SchoolClass::all() as $class)
 		{
-			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+                        $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');
+                        $total+=$class_profit[0]->classTotal+ $class->pointsales->getTotalProfit(); 
+                        //$classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit(); 
+
+                        //getTotalProfit is not working and collapse the website. Need to re create it.
+			//$total += $class->orders->getTotalProfit();
+                        //$total += $class->pointsales->getTotalProfit(); 
+                 
                         $ordersCollection=$class->orders()->where('updated_at','>','2016-09-01 00:00:00')->get();
                         $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-06-01 00:00:00')->get();
                         
                         $totalThisYear+=$ordersCollection->getTotalProfit();
                         $totalThisYear+=$pointsaleCollection->getTotalProfit();
 		}
-
+                
 		return View::make('home', ['total'=>$total,'totalThisYear'=>$totalThisYear]);
 	}
 

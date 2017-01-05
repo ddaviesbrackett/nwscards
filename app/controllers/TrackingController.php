@@ -45,8 +45,12 @@ class TrackingController extends BaseController {
 
 		foreach(SchoolClass::all() as $class)
 		{
-			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
-                        $classes_arr[$class->id]= $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+                        $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');
+                        $total+=$class_profit[0]->classTotal + $class->pointsales->getTotalProfit(); 
+                        $classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit(); 
+                        
+			//$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
+                        //$classes_arr[$class->id]= $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); 
 		}
                
 		$buckets = [];
