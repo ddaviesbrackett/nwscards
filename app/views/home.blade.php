@@ -35,7 +35,7 @@
 </div>
 <div class="container-fluid text-center">
         <a name="pickupdates"></a>
-        <h2>Here are the dates for the rest of this year:</h2>
+        <h2>Dates for 2017 - 2018:</h2>
         <center>
             <table border="0" width="400px;">
             <tr>
@@ -43,48 +43,88 @@
                  <td align="center"><b>Pick up day</b></td>
             </tr>
            <tr>
-                <td align="center">December 27th 2016</td>
-                <td align="center">January 4th 2017</td>
+                <td align="center">August 29th 2017</td>
+                <td align="center">September 6th 2017</td>
             </tr>
            <tr>
-                <td align="center">January 10th 2017</td>
-                <td align="center">January 18th 2017</td>
+                <td align="center">September 12th 2017</td>
+                <td align="center">September 20th 2017</td>
             </tr>
            <tr>
-                <td align="center">January 24th 2017</td>
-                <td align="center">February 1st 2017</td>
+                <td align="center">September 26th 2017</td>
+                <td align="center">October 4th 2017</td>
             </tr>
            <tr>
-                <td align="center">February 7th 2017</td>
-                <td align="center">February 15th 2017</td>
+                <td align="center">October 10th 2017</td>
+                <td align="center">October 18th 2017</td>
             </tr>
            <tr>
-                <td align="center">January 21st 2017</td>
-                <td align="center">March 1st 2017</td>
+                <td align="center">October 31st 2017</td>
+                <td align="center">November 8th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">November 14th 2017</td>
+                <td align="center">November 22th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">November 28th 2017</td>
+                <td align="center">December 6th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">December 12th 2017</td>
+                <td align="center">December 20th 2017</td>
+            </tr>
+           <tr>
+                <td align="center">Christmas Break</td>
+                <td align="center">Christmas Break</td>
+            </tr>
+           <tr>
+                <td align="center">January 2nd 2018</td>
+                <td align="center">January 10th 2018</td>
+            </tr>
+           <tr>
+                <td align="center">January 16th 2018</td>
+                <td align="center">January 24th 2018</td>
+            </tr>
+           <tr>
+                <td align="center">January 30th 2018</td>
+                <td align="center">February 7th 2018</td>
+            </tr>
+           <tr>
+                <td align="center">PRO-D week</td>
+                <td align="center">PRO-D week</td>
+            </tr>
+           <tr>
+                <td align="center">February 20th 2018</td>
+                <td align="center">February 28th 2018</td>
+            </tr>
+           <tr>
+                <td align="center">March 6th 2018</td>
+                <td align="center">March 14th 2018</td>
             </tr>
            <tr>
                 <td align="center">Spring Break</td>
                 <td align="center">Spring Break</td>
             </tr>
            <tr>
-                <td align="center">March 28th 2017</td>
-                <td align="center">April 5th 2017</td>
+                <td align="center">April 3rd 2018</td>
+                <td align="center">April 11th 2018</td>
             </tr>
            <tr>
-                <td align="center">April 11th 2017</td>
-                <td align="center">April 19th 2017</td>
+                <td align="center">April 17th 2018</td>
+                <td align="center">April 15th 2018</td>
             </tr>
            <tr>
-                <td align="center">April 25th 2017</td>
-                <td align="center">May 3rd 2017</td>
+                <td align="center">May 1st 2018</td>
+                <td align="center">May 9th 2018</td>
             </tr>
            <tr>
-                <td align="center">May 9th 2017</td>
-                <td align="center">May 17th 2017</td>
+                <td align="center">May 15th 2018</td>
+                <td align="center">May 23rd 2018</td>
             </tr>
            <tr>
-                <td align="center">May 30th 2017</td>
-                <td align="center">June 7th 2017</td>
+                <td align="center">May 29th 2018</td>
+                <td align="center">June 6th 2018</td>
             </tr>
             </table>
             </center>
