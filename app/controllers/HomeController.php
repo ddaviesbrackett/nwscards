@@ -7,8 +7,10 @@ class HomeController extends BaseController {
                 $totalThisYear=0;
                 
                 /* this need to be fixed.  I also changed the home to remove the raised so far */
+                
 		foreach(SchoolClass::all() as $class)
 		{
+                         
                         $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');
                         $total+=$class_profit[0]->classTotal+ $class->pointsales->getTotalProfit(); 
                         //$classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit(); 
@@ -17,13 +19,15 @@ class HomeController extends BaseController {
 			//$total += $class->orders->getTotalProfit();
                         //$total += $class->pointsales->getTotalProfit(); 
                  
-                        $ordersCollection=$class->orders()->where('updated_at','>','2016-09-01 00:00:00')->get();
+                        $ordersCollection=$class->orders()->where('updated_at','>','2017-09-01 00:00:00')->get();
                         $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-06-01 00:00:00')->get();
                         
                         $totalThisYear+=$ordersCollection->getTotalProfit();
                         $totalThisYear+=$pointsaleCollection->getTotalProfit();
+                        
+                        
 		}
-                
+                 
 		return View::make('home', ['total'=>$total,'totalThisYear'=>$totalThisYear]);
 	}
 
