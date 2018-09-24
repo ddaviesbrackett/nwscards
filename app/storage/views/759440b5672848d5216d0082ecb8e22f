@@ -1,0 +1,11 @@
+<p>On path <?php echo e($url); ?>:</p>
+<p>having been passed:
+<ul>
+<?php $__empty_1 = true; foreach($input as $k => $v): $__empty_1 = false; ?>
+	<li><?php echo e($k); ?>:<?php echo e($v); ?></li>
+<?php endforeach; if ($__empty_1): ?>
+	<li>Nothing</li>
+<?php endif; ?>
+</ul>
+</p>
+<pre><?php echo e($error); ?></pre>

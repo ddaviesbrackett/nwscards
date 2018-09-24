@@ -26,16 +26,18 @@ class OrderGenerationHandler {
 				$q->where('schedule', '=', 'biweekly')
 				  ->orWhere('schedule', '=', $currentMonthly)
 				  ->orWhere('schedule_onetime', '=', $currentMonthly);
+                                
 			})
-			->get();
+                        ->get(); 
 
+ 
 			foreach($users as $user) {
 				$order = new Order([
 					'paid' => 0,
 					'payment' => $user->payment,
 					'deliverymethod' => $user->deliverymethod,
 					]);
-				if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{
+                                if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{
 					$order->coop = $user->coop;
 					$order->saveon = $user->saveon;
 				}

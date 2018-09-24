@@ -1,0 +1,53 @@
+<?php $__env->startSection('title'); ?>
+	Order list
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<script>
+	//reload the popup every time, so it doesn't have stale data in it
+	$(document).on('hidden.bs.modal', function (e) {
+		$(e.target).removeData('bs.modal').find('.modal-content').html('');
+	});
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>Order list</h1>
+</div>
+<div class="container-fluid">
+<table class='table'>
+	<tr>
+		<th></th>
+		<th>Delivery Date</th>
+		<th># Orders</th>
+		<th>Save-On Cards</th>
+		<th>Co-op Cards</th>
+		<th>Save-On Profit</th>
+		<th>Co-op Profit</th>
+	</tr>
+	<?php foreach($model as $order): ?>
+		<tr>
+			<td>
+				<a href="<?php echo URL::route('admin-order', ['id' => $order['id']]); ?>">Order Sheet</a> &middot;
+				<a href="<?php echo URL::route('admin-caft', ['id' => $order['id']]); ?>">CAFT</a>
+			</td>
+			<td><?php echo e($order['delivery']); ?></td>
+			<td><?php echo e($order['orders']); ?></td>
+			<td><?php echo e($order['saveon']); ?></td>
+			<td><?php echo e($order['coop']); ?></td>
+			<td><a data-toggle="modal" data-target="#profitform" href="<?php echo URL::route('admin-getprofit', ['dateforprofit' => $order['id']]); ?>"><?php echo e($order['saveon_profit']); ?>%</a></td>
+			<td><a data-toggle="modal" data-target="#profitform" href="<?php echo URL::route('admin-getprofit', ['dateforprofit' => $order['id']]); ?>"><?php echo e($order['coop_profit']); ?>%</a></td>
+		</tr>
+	<?php endforeach; ?>
+</table>
+</div>
+
+<div class="modal fade" id="profitform" tabindex="-1" role="dialog" aria-labelledby="profitLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

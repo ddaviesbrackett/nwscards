@@ -1,42 +1,42 @@
-@extends('layout')
 
-@section('title')
+
+<?php $__env->startSection('title'); ?>
 	Home
-@stop
+<?php $__env->stopSection(); ?>
 
-@section('head-extra')
+<?php $__env->startSection('head-extra'); ?>
 	<link rel="stylesheet" href="/styles/home.css"/>
 	<script src="/script/home.js"></script>
-@stop
+<?php $__env->stopSection(); ?>
 
-@section('nav-extra')
+<?php $__env->startSection('nav-extra'); ?>
 	<li><a href="#about">About</a></li>
 	<li><a href="#faq">FAQ</a></li>
 	<li><a href="#contact">Contact</a></li>
-@stop
+<?php $__env->stopSection(); ?>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="masthead">
 	<h1>Buy Grocery Cards<br/>Raise Money</h1>
         
 	<h3>
-            This year we've raised so far - {{{money_format('$%n',$totalThisYear)}}}<br/>
-            From July 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>
+            This year we've raised so far - <?php echo e(money_format('$%n',$totalThisYear)); ?><br/>
+            From July 2014 we've raised - <?php echo e(money_format('$%n',$total)); ?><br/>
             Help us raise more &mdash; <em>without spending any extra!</em>
         </h3>
        
 	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>
        
-	@if (Sentry::check())
+	<?php if(Sentry::check()): ?>
 		<a class="btn btn-outline-inverse btn-lg" href="/edit">Change Order</a>
-	@else
+	<?php else: ?>
 		<a class="btn btn-outline-inverse btn-lg" href="/new">Order Now</a>
-	@endif
+	<?php endif; ?>
 	<a class="link order" href="/account">Checking on an existing order? Click here</a>
 
-        @if(OrderController::IsBlackoutPeriod() )
+        <?php if(OrderController::IsBlackoutPeriod() ): ?>
         <br><span style="color:yellow;"><b>Unfortunately, you can't order now while we process orders.<br>You will be able to make changes again from the next pick-up Wednesday until the following order deadline.</b></span>
-        @endif 
+        <?php endif; ?> 
 </div>
 <div class="container-fluid text-center">
         <a name="pickupdates"></a>
@@ -444,11 +444,11 @@ Also, Parent Council has cards available for cash purchases on pick-up days. How
 	  </div>
 	</div>
 	<p style="margin-top:3em;">
-		@if (Sentry::check())
+		<?php if(Sentry::check()): ?>
 			<a class="btn btn-danger btn-lg" href="/edit">Change Order</a>
-		@else
+		<?php else: ?>
 			<a class="btn btn-danger btn-lg" href="/new">Order Now</a>
-		@endif
+		<?php endif; ?>
 	</p>
 	<a name="contact"></a>
 	<h2>Got another question? We've got answers</h2>
@@ -458,7 +458,8 @@ Also, Parent Council has cards available for cash purchases on pick-up days. How
 	<p>
 			If you have a question or a concern about your order, you can reach us at grocerycards{AT}nelsonwaldorf.org or use the form below.
 	</p>
-	{{Form::open(['url'=>'/contact', 'method'=>'POST', 'class'=>'form contact'])}}
+	<?php echo Form::open(['url'=>'/contact', 'method'=>'POST', 'class'=>'form contact']); ?>
+
 		<div class="row">
 		<div class="col-sm-8 col-sm-push-2">
 			<div class="callout" style='margin-top:20px;'>
@@ -486,7 +487,8 @@ Also, Parent Council has cards available for cash purchases on pick-up days. How
 			</div>
 		</div>
 		</div>
-	{{Form::close()}}
+	<?php echo Form::close(); ?>
+
 	<p>	We will get back to you as soon as possible – usually the same day, but definitely within two business days.</p>
 	<p>
 		Please do not phone the Nelson Waldorf School unless it has been much longer than that. 
@@ -496,4 +498,5 @@ Also, Parent Council has cards available for cash purchases on pick-up days. How
 		Thanks for your understanding. 
 	</p>
 </div>
-@stop
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

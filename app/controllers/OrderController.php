@@ -103,6 +103,16 @@ class OrderController extends BaseController {
 					$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
 				}
 			});
+			Mail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){
+				$message->subject('Grocery card order resumed');
+				$message->to("gerda.hammerer@gmx.net", "Gerda");
+				if(! $user->isCreditCard())
+				{
+					$agreementView = View::make('partial.debitterms');
+					$agreement = '<html><body>'.$agreementView->render().'</body></html>';
+					$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);
+				}
+			});
 			Session::flash('ordermessage', 'order resumed');
 			return Redirect::to('/account');
 		}

@@ -1,0 +1,75 @@
+<html>
+<body>
+<h2>Hi <?php echo e($user->name); ?>,</h2>
+<p> Thank you very much for your grocery card order.  This email is to confirm <?php echo e($isChange?"the changes you just made to ":""); ?>your order.  
+	You can change your order at <a href="https://grocerycards.nelsonwaldorf.org/edit">https://grocerycards.nelsonwaldorf.org/edit</a>.
+	Log in with this email address and the password you signed up with. (Forgot your password? You can reset it at the login screen.)</p>
+<?php if( $user->saveon + $user->coop > 0 && $user->schedule != 'none'): ?>
+	<h2>Your recurring order</h2>
+	<p>
+		You have a <b style="text-transform:capitalize;"><?php echo e($user->getFriendlySchedule()); ?></b> order of<br/>
+		<?php if($user->coop > 0): ?>
+			<b>$<?php echo e($user->coop); ?>00 from Kootenay Co-op</b><br/>
+		<?php endif; ?>
+		<?php if($user->saveon > 0): ?>
+			<b>$<?php echo e($user->saveon); ?>00 from Save-On</b>
+		<?php endif; ?>
+	</p>
+	<p>You will be charged on <b><?php echo e($dates[$user->schedule]['charge']); ?></b>, by <b><?php echo e($user->isCreditCard()?'credit card':'direct debit'); ?></b> (last 4 digits <?php echo e($user->last_four); ?>).</p>
+	<p>Your cards will be available on <b><?php echo e($dates[$user->schedule]['delivery']); ?></b>.</p>
+<?php else: ?>
+	<p>You have no recurring order. You'll make more money for the school if you order more cards!</p>
+<?php endif; ?>
+<?php if($user->saveon_onetime + $user->coop_onetime > 0 && $user->schedule_onetime != 'none'): ?>
+	<h2>Onetime order</h2>
+	<p>
+		You have a <b style="text-transform:capitalize;">one-time</b> order of<br/>
+		<?php if($user->coop_onetime > 0): ?>
+			<b>$<?php echo e($user->coop_onetime); ?>00 from Kootenay Co-op</b><br/>
+		<?php endif; ?>
+		<?php if($user->saveon_onetime > 0): ?>
+			<b>$<?php echo e($user->saveon_onetime); ?>00 from Save-On</b>
+		<?php endif; ?>
+	</p>
+	<p>You will be charged on <b><?php echo e($dates[$user->schedule_onetime]['charge']); ?></b>, by <b><?php echo e($user->isCreditCard()?'credit card':'direct debit'); ?></b> (last 4 digits <?php echo e($user->last_four); ?>).</p>
+	<p>Your cards will be available on <b><?php echo e($dates[$user->schedule_onetime]['delivery']); ?></b>.</p>
+<?php endif; ?>
+
+<?php if($user->schedule != 'none' || $user->schedule_onetime != 'none'): ?>
+	Supporting:
+	<ul style='list-style-type:none;padding-left:0;'>
+		<?php foreach($user->schoolclasses as $class): ?>
+			<li><b><a href="https://grocerycards.nelsonwaldorf.org/tracking/<?php echo e($class->bucketname); ?>"><?php echo e($class->name); ?></a></b></li>
+		<?php endforeach; ?>
+	</ul>
+	<p>
+		Your cards are being
+		<?php if($user->deliverymethod): ?>
+			<b>mailed to you</b> at<br/>
+			<span class="text-left">
+			<?php echo e($user->name); ?><br/>
+				<?php echo e($user->address1); ?><br/>
+				<?php echo e($user->address2?$user->address2 + '<br/>':''); ?>
+
+				<?php echo e($user->city); ?>,
+				<?php echo e($user->province); ?><br/>
+				<?php echo e($user->postal_code); ?>
+
+			</span>
+		<?php else: ?>
+			<b>picked up at the school</b> by you
+			<?php if(($user->pickupalt)): ?>
+					or by <b><?php echo e($user->pickupalt); ?></b>
+			<?php endif; ?>
+		<?php endif; ?>
+	</p>
+<?php endif; ?>
+<?php if(!$user->payment): ?>
+	<p>A copy of the Pre-Authorized Debit Agreement is attached to this email.</p>
+<?php endif; ?>
+	<p>
+		Thank you ever so much,<br/>
+		The Nelson Waldorf School Grocery Card Fundraiser Staff
+	</p>
+</body>
+</html>

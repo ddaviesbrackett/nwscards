@@ -1,8 +1,9 @@
 <?php
-//main page
+//main page1
 Route::get('/', 'HomeController@getHome');
 
 Route::get('/test', 'HomeControllerTest@getHome');
+//Route::get('/testorders', 'HomeControllerTest@generateOrders');
 
 //login/logout
 Route::get('/login', 'HomeController@getLogin');
@@ -91,7 +92,7 @@ Route::post('/admin/expenses/{expense}/delete', ['before'=>['auth','admin'], 'us
 
 Route::get('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@getDeletePointsale', 'as' => 'admin-getdeletesale']);
 Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@postDeletePointsale', 'as' => 'admin-postdeletesale']);
-
+ 
 //stuff everything needs
 View::composer('*', function($view) {
 	$view->with('dates', BaseController::getFormattedDates());

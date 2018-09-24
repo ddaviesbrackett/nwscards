@@ -1,0 +1,198 @@
+<?php $__env->startSection('title'); ?>
+	My Account
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<script>
+	$(function() {
+		$('#onetimeform').on('blur', 'input[type="number"]', function(ev){
+			var $this = $(this);
+			var val = parseInt($this.val(), 10);
+			$this.closest('.form-group').find('.alert').toggleClass('hidden', !val || val < 10).find('.amt').text(val);
+		}).on('show.bs.modal', function (e){
+			$(e.target).find('.modal-content').load("<?php echo URL::route('account-getonetime'); ?>");
+			history.pushState && history.pushState('extracards-open', '', '/account/extracards');
+		}).on('hidden.bs.modal', function (e) {
+			//reload the popup every time, so it doesn't have stale data in it
+			$(e.target).removeData('bs.modal').find('.modal-content').html('');
+			history.pushState && history.pushState(null, '', '/account');
+		});
+		if(history.state == 'extracards-open' || <?php echo $onetimeform?'true':'false'; ?>){
+			$('#onetimeform').modal();
+		}
+		$(window).on('popstate',function (e) {
+			if(history.state == 'extracards-open'){
+				$('#onetimeform').modal();
+			}
+		});
+	});
+</script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead" style="padding-bottom:40px;">
+	<?php if($message == 'order created'): ?>
+		<h1>Your order succeeded</h1>
+	<?php elseif($message == 'order updated'): ?>
+		<h1>Your order was updated</h1>
+	<?php elseif($message == 'order suspended'): ?>
+		<h1>Your order was suspended</h1>
+	<?php elseif($message == 'order resumed'): ?>
+		<h1>Your order was resumed</h1>
+	<?php else: ?>
+		<h1><?php echo e(money_format('%n', $user->orders->sum('profit'))); ?> raised so far</h1>
+	<?php endif; ?>
+</div>
+<div>
+	<header class="navbar subnav" role="navigation">
+		<div class="container-fluid">
+		<div class="navbar-header">
+		  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#subnav-collapse">
+		    <span class="sr-only">Toggle sub-navigation</span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		    <span class="icon-bar"></span>
+		  </button>
+		</div>
+		<div class="collapse navbar-collapse" id="subnav-collapse">
+			<ul class="nav navbar-nav navbar-left">
+				<?php if(! OrderController::IsBlackoutPeriod() ): ?>
+					<li><a href="/edit">Change Your Order</a></li>
+					<?php if($user->schedule != 'none'): ?>
+						<li><a href="<?php echo action('OrderController@Suspend'); ?>">Suspend Your Recurring Order</a></li>
+					<?php elseif($user->saveon+$user->coop> 0): ?>
+						<li><a href="<?php echo action('OrderController@Resume'); ?>">Resume Your Recurring Order</a></li>
+					<?php endif; ?>
+					<?php if($user->saveon + $user->coop > 0 && $user->schedule != 'none'): ?>
+						<li><a data-toggle="modal" data-target="#onetimeform">
+							<?php echo e($user->saveon_onetime+$user->coop_onetime > 0?'Change Extra Cards Order':'Add Extra Cards'); ?>	
+						</a></li>
+					<?php endif; ?>
+				<?php endif; ?>
+				<li><a href="/tracking/leaderboard">View Reports</a></li>
+			</ul>
+		</div>
+	</div>
+</header>
+</div>
+<div class="container-fluid text-center">
+	<?php if(isset($message)): ?>
+		<h2>Confirmation</h2>
+		<p>You'll receive an email shortly (to <?php echo e($user->email); ?>) with your order details.</p>
+	<?php endif; ?>
+	<div class="row">
+		<?php if(! is_null($mostRecentOrder) && $mostRecentOrder->created_at > (new \Carbon\Carbon())->addDays(-8)): ?>
+			<h2>Your current order</h2>
+			<p>The charge date for your current order is <b><?php echo e($mostRecentOrder->cutoffdate->chargedate()->format('l, F jS')); ?></b>.  </p>
+			<p>Your cards will be available <b><?php echo e($mostRecentOrder->cutoffdate->deliverydate()->diffInDays(\Carbon\Carbon::now()->startOfDay()) == 0?'today':$mostRecentOrder->cutoffdate->deliverydate()->format('l, F jS')); ?></b>.</p>
+			<?php if($mostRecentOrder->deliverymethod): ?>
+				<p>Your cards will be mailed to you that day.  They generally arrive on Thursday or Friday.</p>
+			<?php else: ?>
+				<p>You can pick your order up between 8AM and 8:30AM or 2:30PM and 3PM that day, at the bottom of the main stairs.</p>
+			<?php endif; ?>
+		<hr/>
+		<?php endif; ?>
+
+		<?php if( $user->saveon + $user->coop > 0 && $user->schedule != 'none'): ?>
+			<h2>Your recurring order</h2>
+			<p>
+				You have a <b style="text-transform:capitalize;"><?php echo e($user->getFriendlySchedule()); ?></b> order of<br/>
+				<?php if($user->coop > 0): ?>
+					<b>$<?php echo e($user->coop); ?>00 from Kootenay Co-op</b><br/>
+				<?php endif; ?>
+				<?php if($user->saveon > 0): ?>
+					<b>$<?php echo e($user->saveon); ?>00 from Save-On</b>
+				<?php endif; ?>
+			</p>
+			<p>You will be charged on <b><?php echo e($dates[$user->schedule]['charge']); ?></b>, by <b><?php echo e($user->isCreditCard()?'credit card':'direct debit'); ?></b> (last 4 digits <?php echo e($user->last_four); ?>).</p>
+			<p>Your cards will be available on <b><?php echo e($dates[$user->schedule]['delivery']); ?></b>.</p>
+		<?php else: ?>
+			<p>You have no recurring order. You'll make more money for the school if you order more cards!</p>
+		<?php endif; ?>
+		<?php if($user->saveon_onetime + $user->coop_onetime > 0 && $user->schedule_onetime != 'none'): ?>
+			<h2>Onetime order</h2>
+			<p>
+				You have a <b style="text-transform:capitalize;">one-time</b> order of<br/>
+				<?php if($user->coop_onetime > 0): ?>
+					<b>$<?php echo e($user->coop_onetime); ?>00 from Kootenay Co-op</b><br/>
+				<?php endif; ?>
+				<?php if($user->saveon_onetime > 0): ?>
+					<b>$<?php echo e($user->saveon_onetime); ?>00 from Save-On</b>
+				<?php endif; ?>
+			</p>
+			<p>You will be charged on <b><?php echo e($dates[$user->schedule_onetime]['charge']); ?></b>, by <b><?php echo e($user->isCreditCard()?'credit card':'direct debit'); ?></b> (last 4 digits <?php echo e($user->last_four); ?>).</p>
+			<p>Your cards will be available on <b><?php echo e($dates[$user->schedule_onetime]['delivery']); ?></b>.</p>
+		<?php endif; ?>
+
+		<?php if($user->schedule != 'none' || $user->schedule_onetime != 'none'): ?>
+			Supporting:
+			<ul style='list-style-type:none;padding-left:0;'>
+				<?php foreach($user->schoolclasses as $class): ?>
+					<li><b><a href="/tracking/<?php echo e($class->name); ?>"><?php echo e($class->name); ?></a></b></li>
+				<?php endforeach; ?>
+			</ul>
+			<p>
+				Your cards are being
+				<?php if($user->deliverymethod): ?>
+					<b>mailed to you</b> at<br/>
+					<span class="text-left">
+					<?php echo e($user->name); ?><br/>
+						<?php echo e($user->address1); ?><br/>
+						<?php echo e($user->address2?$user->address2 + '<br/>':''); ?>
+
+						<?php echo e($user->city); ?>,
+						<?php echo e($user->province); ?><br/>
+						<?php echo e($user->postal_code); ?>
+
+					</span>
+				<?php else: ?>
+					<b>picked up at the school</b> by you
+					<?php if(($user->pickupalt)): ?>
+							or by <b><?php echo e($user->pickupalt); ?></b>
+					<?php endif; ?>
+				<?php endif; ?>
+			</p>
+		<?php endif; ?>
+			<h2>Your order history</h2>
+			<table class="table text-left">
+				<tr>
+					<th>Date</th>
+					<th>Cards</th>
+					<th>Class(es)</th>
+				</tr>
+				<?php foreach($user->orders as $order): ?>
+					<tr>
+						<td>
+							<?php echo e($order->cutoffdate->deliverydate()->format('F jS Y')); ?>
+
+						</td>
+						<td>
+							<?php if($order->saveon + $order->saveon_onetime > 0): ?>
+								<?php echo e($order->saveon + $order->saveon_onetime); ?> Save-On
+							<?php endif; ?>
+							<?php if($order->coop + $order->coop_onetime > 0): ?>
+								<?php echo e($order->coop + $order->coop_onetime); ?> Co-Op
+							<?php endif; ?>
+						</td>
+						<td>
+							<?php foreach($order->schoolclasses as $class): ?>
+								<?php echo e($class->name); ?>: $<?php echo e($class->pivot->profit); ?><br/>
+							<?php endforeach; ?>
+						</td>
+					</tr>
+				<?php endforeach; ?>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="onetimeform" tabindex="-1" role="dialog" aria-labelledby="onetimeLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    	<?php echo $onetimeform; ?>
+
+    </div>
+  </div>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

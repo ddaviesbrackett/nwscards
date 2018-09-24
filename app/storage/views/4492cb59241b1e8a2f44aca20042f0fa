@@ -1,0 +1,32 @@
+<?php $__env->startSection('title'); ?>
+	Impersonate
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>Become Someone Else</h1>
+	<p>Click Impersonate to become another user</p>
+</div>
+<div class="container-fluid">
+	<p>
+		<br/>	
+		Impersonation allows you <em>to act as another user in every way</em> - see and change their order, see their order history, etc.
+		<b>Be sure you want to do this before you do it, and stop impersonating them as soon as you're done.</b>
+	</p>
+	<table class="table">
+		<tr>
+			<th>Name</th>
+			<th></th>
+		</tr>
+		<?php foreach( $users as $user): ?>
+		<tr>
+			<td><?php echo e($user->name); ?></td>
+			<td><a class="btn btn-default" href="/admin/impersonate/<?php echo e($user->id); ?>"><span class="glyphicon glyphicon-log-in"></span> Impersonate</a></td>
+		</tr>
+		<?php endforeach; ?>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
