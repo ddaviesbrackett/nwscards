@@ -1,0 +1,39 @@
+<?php $__env->startSection('title'); ?>
+	Log In
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>Thanks for your support!</h1>
+	<p>
+		Log in to see your order and to make changes.
+	</p>
+</div>
+<div class="container-fluid" style="margin-top:1em;">
+	<?php echo Form::open(['url'=>'/login', 'method'=>'POST', 'class'=>'form login']); ?>
+
+		<div class="row">
+		<div class="col-sm-4 col-sm-push-4">
+			<div class="callout" style='margin-top:20px;'>
+			  <span class="help-block error"><?php echo e($error); ?></span>
+			  <div class="form-group">
+			    <label for="email">Email address</label>
+			    <input type="email" class="form-control" id="email" name="email" placeholder="email">
+			  </div>
+			  <div class="form-group">
+			    <label for="password">Password</label>
+			    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+			  </div>
+			  <span class="help-block"><a href="<?php echo action('RemindersController@getRemind'); ?>">Forgot your password?</a></span>
+			  <button type="submit" class="btn btn-danger">Log in</button>
+			</div>
+		</div>
+		</div>
+	<?php echo Form::close(); ?>
+
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

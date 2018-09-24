@@ -1,0 +1,556 @@
+<?php $__env->startSection('title'); ?>
+	<?php if(isset($user)): ?>
+		Edit your order
+	<?php else: ?>
+		New Order
+	<?php endif; ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+	<link rel="stylesheet" href="/styles/new.css"/>
+
+	<script src="/script/new.js"></script>
+	<script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>
+			<?php if(isset($user)): ?>
+				Thank you for your continued support
+			<?php else: ?>
+				Your support means a lot
+			<?php endif; ?>
+	</h1>
+	<p>
+		Raise money for students and teachers at Nelson Waldorf without spending any extra money
+	</p>
+</div>
+<?php if(isset($user) && OrderController::IsBlackoutPeriod()): ?>
+<div class="container-fluid">
+	<h4 class="callout-title">Order being processed!</h4>
+		<span>
+			Orders are currently being processed and will be available for edit on <b><?php echo e(@OrderController::GetBlackoutEndDate()->format('l, F jS')); ?></b>
+		</span>
+</div>
+<?php endif; ?>
+<div class="container-fluid">
+	<?php echo Form::model($user, ['url' => [isset($user)?'edit':'new'], 'method'=>'POST', 'class'=>'form-horizontal new-order']); ?>
+
+		<div class="j-orderpanel">
+		<input type="hidden" id="visibleorder" name="visibleorder" value="<?php echo e($visibleorder); ?>" />
+		<div style="height:2em;"></div>
+		<ul class="nav nav-tabs responsive" role="tablist" id="ordertabs">
+  			<li role="presentation" class="<?php echo e($visibleorder == 'recurring'? 'active':''); ?>">
+  				<a href="#recurring" role="tab" data-toggle="tab">
+					<?php echo $errors->has("saveon")||$errors->has("coop")||$errors->has("schedule")?'<span class="glyphicon glyphicon-exclamation-sign" style="color:red;"></span>':""; ?>
+
+  					<?php if(isset($user)): ?>
+						Change Your Recurring Order
+					<?php else: ?>
+						Make a Recurring Order
+					<?php endif; ?>
+  				</a>
+  			</li>
+  			<li role="presentation" class="<?php echo e($visibleorder == 'onetime'? 'active':''); ?>">
+  				<a href="#onetime" role="tab" data-toggle="tab">
+  					<?php echo $errors->has("saveon_onetime")||$errors->has("coop_onetime")||$errors->has("schedule_onetime")?'<span class="glyphicon glyphicon-exclamation-sign" style="color:red;"></span>':""; ?>
+
+  					<?php if(isset($user)): ?>
+						Change Your One-Time Order
+					<?php else: ?>
+						Make a One-Time Order
+					<?php endif; ?>
+  				</a>
+  			</li>
+		</ul>
+		<div class="tab-content responsive <?php echo OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''; ?>">
+			<div role="tabpanel" id="recurring" class="callout order tab-pane <?php echo e($visibleorder == 'recurring'? 'active':''); ?>">
+				<div class='form-group<?php echo $errors->has("coop")?" has-error":"";; ?>'>
+					<label for='coop' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							<?php echo Form::input('number', 'coop', null, array('class' => 'form-control')); ?>
+
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12 text-warning'>
+						<?php if($errors->has('coop')): ?>
+							<span class='help-block'><?php echo e($errors->first('coop')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class='form-group<?php echo $errors->has("saveon")?" has-error":"";; ?>'>
+					<label for='saveon' class='col-sm-3 text-right'>Save-On:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							<?php echo Form::input('number', 'saveon', null, array('class' => 'form-control')); ?>
+
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12'>
+						<?php if($errors->has('saveon')): ?>
+							<span class='help-block'><?php echo e($errors->first('saveon')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class='form-group<?php echo $errors->has("schedule")?" has-error":"";; ?>'>
+					<label class="col-sm-3 text-right">Schedule:</label>
+					<div class="col-sm-8">
+						<div class="radio"><label>
+							<?php echo Form::radio('schedule', 'biweekly'); ?>
+
+							Every 2 weeks, starting <b><?php echo e($dates['biweekly']['delivery']); ?></b>
+						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							<?php echo Form::radio('schedule', 'monthly'); ?>
+
+							Once a month, starting <b><?php echo e($dates['monthly']['delivery']); ?></b>
+						</label></div>
+						<div class="radio"><label>
+							<?php echo Form::radio('schedule', 'monthly-second'); ?>
+
+							Once a month, starting <b><?php echo e($dates['monthly-second']['delivery']); ?></b>
+						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							<?php echo Form::radio('schedule', 'none', true, null); ?>
+
+							I don't want a recurring order
+						</label></div>
+						<?php if($errors->has('schedule')): ?>
+							<span class='help-block'><?php echo e($errors->first('schedule')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+			<div role="tabpanel" id="onetime" class="callout order tab-pane <?php echo e($visibleorder == 'onetime'? 'active':''); ?>">
+				<div class='form-group<?php echo $errors->has("coop_onetime")?" has-error":"";; ?>'>
+					<label for='coop_onetime' class='col-sm-3 text-right'>Kootenay Co-op:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							<?php echo Form::input('number', 'coop_onetime', null, array('class' => 'form-control')); ?>
+
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12 text-warning'>
+						<?php if($errors->has('coop_onetime')): ?>
+							<span class='help-block'><?php echo e($errors->first('coop_onetime')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class='form-group<?php echo $errors->has("saveon_onetime")?" has-error":"";; ?>'>
+					<label for='saveon_onetime' class='col-sm-3 text-right'>Save-On:</label>
+					<div class='col-sm-3'>
+						<div class="input-group">
+							<?php echo Form::input('number', 'saveon_onetime', null, array('class' => 'form-control')); ?>
+
+							<span class="input-group-addon">x $100</span>
+						</div>
+					</div>
+					<div class='col-sm-6'>
+						<div class="alert alert-warning alert-dismissible hidden" role="alert">
+						  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						  That's $<span class="amt"></span>00 in cards!
+						</div>
+					</div>
+					<div class='col-sm-12'>
+						<?php if($errors->has('saveon_onetime')): ?>
+							<span class='help-block'><?php echo e($errors->first('saveon_onetime')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+				<div class='form-group<?php echo $errors->has("schedule_onetime")?" has-error":"";; ?>'>
+					<label class="col-sm-3 text-right">Date:</label>
+					<div class="col-sm-8">
+						<div class="radio"><label>
+							<?php echo Form::radio('schedule_onetime', 'monthly'); ?>
+
+							On <b><?php echo e($dates['monthly']['delivery']); ?></b>
+						</label></div>
+						<div class="radio"><label>
+							<?php echo Form::radio('schedule_onetime', 'monthly-second'); ?>
+
+							On <b><?php echo e($dates['monthly-second']['delivery']); ?></b>
+						</label></div>
+						<div class="radio" style="margin-top:1em;"><label>
+							<?php echo Form::radio('schedule_onetime', 'none', true); ?>
+
+							I don't want a one-time order
+						</label></div>
+						<?php if($errors->has('schedule_onetime')): ?>
+							<span class='help-block'><?php echo e($errors->first('schedule_onetime')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<h4 class="callout-title">
+			<?php if(isset($user)): ?>
+				Change Your Information
+			<?php else: ?>
+				Enter Your Information
+			<?php endif; ?>
+		</h4>
+		<div class="callout">
+			<div class='form-group<?php echo $errors->has("name")?" has-error":"";; ?>'>
+				<label for='name' class='col-sm-3 text-right'>Name:</label>
+				<div class='col-sm-8'>
+					<?php echo Form::text('name', null, array('class' => 'form-control', 'placeholder' => 'your name') ); ?>
+
+					<?php if($errors->has('name')): ?>
+						<span class='help-block'><?php echo e($errors->first('name')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class='form-group<?php echo e($errors->has("email")?" has-error":""); ?>'>
+				<label for='email' class='col-sm-3 text-right'>Email:</label>
+				<div class='col-sm-8'>
+				<?php echo Form::text('email', null, array('class' => 'form-control', 'placeholder' => 'someone@somewhere.com') ); ?>
+
+				<?php if($errors->has('email')): ?>
+					<span class='help-block'><?php echo e($errors->first('email')); ?></span>
+				<?php endif; ?>
+				</div>
+			</div>
+			<div class='form-group<?php echo $errors->has("phone")?" has-error":"";; ?>'>
+				<label for='phone' class='col-sm-3 text-right'>Phone Number:</label>
+				<div class='col-sm-8'>
+					<?php echo Form::input('tel','phone', null, array('class' => 'form-control', 'placeholder' => '(250) 555-5555') ); ?>
+
+					<?php if($errors->has('phone')): ?>
+						<span class='help-block'><?php echo e($errors->first('phone')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class='form-group<?php echo $errors->has("address1")?" has-error":"";; ?>'>
+				<label for='address1' class='col-sm-3 text-right'>Address:</label>
+				<div class='col-sm-8'>
+					<?php echo Form::text('address1', null, array('class' => 'form-control', 'placeholder' => 'your mailing address') ); ?>
+
+					<?php if($errors->has('address1')): ?>
+						<span class='help-block'><?php echo e($errors->first('address1')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class='form-group<?php echo $errors->has("address2")?" has-error":"";; ?>'>
+				<label for='address2' class='col-sm-3 text-right'>Address 2:</label>
+				<div class='col-sm-8'>
+					<?php echo Form::text('address2', null, array('class' => 'form-control') ); ?>
+
+					<?php if($errors->has('address2')): ?>
+						<span class='help-block'><?php echo e($errors->first('address2')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<div class='form-group<?php echo $errors->has("city") || $errors->has("postal_code")?" has-error":"";; ?>'>
+				<label for='city' class='col-sm-3 text-right'>City:</label>
+				<div class='col-sm-3'>
+					<?php echo Form::text('city', null, array('class' => 'form-control', 'placeholder' => 'Nelson? Ymir? Salmo? Slocan?') ); ?>
+
+					<?php if($errors->has('city')): ?>
+						<span class='help-block'><?php echo e($errors->first('city')); ?></span>
+					<?php endif; ?>
+				</div>
+				<label for='postal_code' class='col-sm-3 text-right'>Postal Code:</label>
+				<div class='col-sm-2'>
+					<?php echo Form::text('postal_code', null, array('class' => 'form-control', 'placeholder' => 'V1A 1A1') ); ?>
+
+					<?php if($errors->has('postal_code')): ?>
+						<span class='help-block'><?php echo e($errors->first('postal_code')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+			<?php if(!isset($user)): ?>
+				<div class='form-group<?php echo $errors->has("password")?" has-error":"";; ?>'>
+					<label for='password' class='col-sm-3 text-right'>Password:</label>
+					<div class='col-sm-8'>
+						<?php echo Form::input('password', 'password', null, array('class' => 'form-control') ); ?>
+
+						<?php if($errors->has('password')): ?>
+							<span class='help-block'><?php echo e($errors->first('password')); ?></span>
+						<?php endif; ?>
+						<span class='help-block'>please choose a new, strong password between 6 to 15 characters. You'll be able to change your order with it.</span>
+					</div>
+				</div>
+				<div class='form-group<?php echo $errors->has("password-repeat")?" has-error":"";; ?>'>
+					<label for='password' class='col-sm-3 text-right'>Password (again):</label>
+					<div class='col-sm-8'>
+						<?php echo Form::input('password', 'password-repeat', null, array('class' => 'form-control') ); ?>
+
+						<?php if($errors->has('password-repeat')): ?>
+							<span class='help-block'><?php echo e($errors->first('password-repeat')); ?></span>
+						<?php endif; ?>
+					</div>
+				</div>
+			<?php endif; ?>
+		</div>
+		<h4 class="callout-title">
+			<?php if(isset($user)): ?>
+				Change who you Support
+			<?php else: ?>
+				Decide who to Support
+			<?php endif; ?>
+		
+		</h4>
+		<div class="callout">
+			<div class="form-group">
+				<div class="col-sm-12">
+					<div class="radio"><label>
+						<?php echo Form::radio('indiv-class', 'school', null, array('id' => 'indiv-class-school')); ?>
+
+						Whole School
+					</label></div>
+					<div class="radio"><label>
+						<?php echo Form::radio('indiv-class', 'class', null, array('id' => 'indiv-class-classes')); ?>
+
+						<strong>Class(es)</strong> and whole school
+					</label></div>
+				</div>
+			</div>
+			<span class='help-block individual-classes'>If you select more than one class, proceeds will be divided equally between the classes.</span>
+			
+			<div class="form-group individual-classes">
+				<?php for($i = 0; $i < count($classes); $i++): ?>
+					<div class="col-sm-offset-2 col-sm-4"><div class="checkbox"><label>
+						<?php echo Form::checkbox($classes[$i]['bucketname'], 1, Form::getValueAttribute($classes[$i]['bucketname'], isset($user) && in_array($classes[$i]['id'], $user->schoolclasses->lists('id')))); ?>
+
+						<?php echo $classes[$i]['name']; ?>
+
+					</label></div></div>
+				<?php endfor; ?>
+			</div>
+			<div class="form-group individual-classes" style="margin-top:10px;">
+				<label for="referrer" class="col-sm-3 text-right">Referring Family:</label>
+				<div class="col-sm-8">
+					<?php echo Form::text('referrer', null, array('class' => 'form-control', 'placeholder' => 'optional - who told you about this program?') ); ?>
+
+				</div>
+			</div>
+		</div>
+ 		<h4 class="callout-title">
+ 			<?php if(isset($user)): ?>
+				Change Your Payment Method
+			<?php else: ?>
+ 				Choose Payment
+			<?php endif; ?>
+
+ 		</h4>
+		<div class="callout <?php echo OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''; ?>">
+			<span class="help-block info">You will be charged 2 business days before delivery.</span>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<?php if( isset($user) ): ?>
+						<div class="radio"><label><input type="radio" name="payment" id="payment_keep" value="keep" checked/>
+							Keep existing payment information
+						</label></div>			
+					<?php endif; ?>
+					<div class="radio <?php echo OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''; ?>"><label><input type="radio" name="payment" id="payment_debit" value="debit" <?php echo Form::getValueAttribute('payment', '') == 'debit'?'checked':''; ?>/>
+						<?php if(isset($user) && $user->isCreditCard()): ?>
+							Switch to direct debit (and raise more money)
+						<?php elseif(isset($user) && ! $user->isCreditCard()): ?>
+							Update debit information
+						<?php else: ?>
+							Direct Debit (we make more money with debit)
+						<?php endif; ?>
+					</label></div>
+					<div class="payment debit <?php echo OrderController::IsBlackoutPeriod() && isset($user) ? 'blackoutPeriod' : ''; ?>">
+						<div class="form-group">
+							<div class="col-sm-offset-2">
+								<img src="images/void_cheque.gif" alt="Void Cheque showing location of branch, institution, and account numbers" class="img-thumbnail img-responsive"/>
+							</div>
+						</div>
+						<div class='debitnumbers form-group<?php echo $errors->has("debit-transit") || $errors->has("debit-institution") || $errors->has("debit-account")?" has-error":"";; ?>'>
+							<label class="col-sm-2 text-right" for="debit-transit">Branch Number:</label>
+							<div class="col-sm-2">
+								<input type='text' class='form-control' placeholder='' id='debit-transit' name='debit-transit' value="<?php echo Form::getValueAttribute('debit-transit', ''); ?>">
+							</div>
+							<label class="col-sm-2 text-right" for="debit-institution">Institution Number:</label>
+							<div class="col-sm-2">
+								<input type='text' class='form-control' placeholder='' id='debit-institution' name='debit-institution' value="<?php echo Form::getValueAttribute('debit-institution', ''); ?>">
+							</div>
+							<label style="padding-left:5px;" class="col-sm-1 text-right" for="debit-account">Account Number:</label>
+							<div class="col-sm-3">
+								<input type='text' class='form-control' placeholder='' id='debit-account' name='debit-account' value="<?php echo Form::getValueAttribute('debit-account', ''); ?>">
+							</div>
+							<div style="clear:both;"></div>
+							<div class="col-sm-4">
+								<?php if($errors->has('debit-transit')): ?>
+									<div class='help-block text-right'><?php echo e($errors->first('debit-transit')); ?></div>
+								<?php endif; ?>
+							</div>
+							<div class="col-sm-4">
+								<?php if($errors->has('debit-institution')): ?>
+									<div class='help-block text-right'><?php echo e($errors->first('debit-institution')); ?></div>
+								<?php endif; ?>
+							</div>
+							<div class="col-sm-4">
+								<?php if($errors->has('debit-account')): ?>
+									<div class='help-block text-right'><?php echo e($errors->first('debit-account')); ?></div>
+								<?php endif; ?>
+							</div>
+						</div>
+						<div class="form-group<?php echo $errors->has('debitterms')?' has-error ':''; ?>">
+							<div class="col-sm-offset-1 col-sm-11">
+								<div class="checkbox"><label><input type='checkbox' name='debitterms' <?php echo Form::getValueAttribute('debitterms', '') == 'on'?'checked':''; ?>/>I have read and agree to the <a data-toggle="modal" data-target="#debitterms">terms of the Payor's Personal Pre-Authorized Debit (PAD) Agreement</a></label></div>
+								<?php if($errors->has('debit-account')): ?>
+									<div class='help-block'><?php echo e($errors->first('debitterms')); ?></div>
+								<?php endif; ?>
+							</div>
+						</div>
+					</div>
+					<div class="radio <?php echo (OrderController::IsBlackoutPeriod() && isset($user) && !$user->isCreditCard()) ? 'blackoutPeriod' : ''; ?>"><label><input type="radio" name="payment" id="payment_credit" value="credit" <?php echo Form::getValueAttribute('payment', '') == 'credit'?'checked':''; ?>/>
+						<?php if(isset($user) && $user->isCreditCard()): ?>
+							Update credit card
+						<?php elseif(isset($user) && ! $user->isCreditCard()): ?>
+							Switch to credit card
+						<?php else: ?>
+							Credit Card
+						<?php endif; ?>
+					</label></div>
+					<div class="payment credit row">
+						<div class="col-sm-6 col-sm-offset-3">
+							<div class="form-group has-error payment-errors-group">
+								<div class='help-block payment-errors'></div>
+							</div>
+							<div class="form-group">
+			                    <label>Cardholder's Name</label>
+			                    <input type="text" class="form-control" value="">
+			                </div>
+			                <div class="form-group">
+			                    <label>Card Number</label>
+			                    <input type="text" class="form-control" data-stripe="number" value="">
+			                </div>
+			                <div class="form-group cc-smallnumbers">
+			                    <div class="col-sm-4">
+			                            <label>Exp Month</label>
+			                            <input type="text" class="form-control" placeholder="MM" data-stripe="exp-month" value="">
+			                    </div>
+			                    <div class="col-sm-4">
+			                            <label>Exp Year</label>
+			                            <input type="text" class="form-control" placeholder="YYYY" data-stripe="exp-year" value="">
+			                    </div>
+			                    <div class="col-sm-4">
+			                            <label>CVC</label>
+			                            <input type="text" class="form-control" placeholder="Ex. 331" data-stripe="cvc" value="">
+			                    </div>
+			                </div>
+		                </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<h4 class="callout-title">
+			<?php if(isset($user)): ?>
+				Change Delivery Method
+			<?php else: ?>
+				Choose Delivery
+			<?php endif; ?>
+		</h4>
+		<div class="callout <?php echo OrderController::IsBlackoutPeriod() && isset($user)? 'blackoutPeriod' : ''; ?>">
+			<div class='form-group<?php echo $errors->has("deliverymethod")?" has-error":"";; ?>'>
+				<div class="col-sm-12">
+					<div class="radio"><label>
+						<!-- 
+							TODO: figure out how to use laravel form binding for these. problem was that laravel was taking the value in the db to be the state of both of these. 
+							so if deliverymethod=1 they are both checked, else neither is.	
+						-->
+						<input type="radio" name="deliverymethod" id="deliverymethod_pickup" value="pickup" <?php echo (Input::old('deliverymethod') == 'pickup' || (isset($user) && $user->deliverymethod == 0)) ? 'checked':''; ?> />
+						Pickup at the Nelson Waldorf School
+					</label></div>
+					<div class="deliverymethod pickup form-group">
+						<div class="col-sm-12">
+							<?php echo Form::text('pickupalt', null, array('class' => 'form-control', 'placeholder' => 'Is someone else picking up your order?') ); ?>
+
+							<span class="help-block">You'll have to sign for your cards.  If someone else can sign for them, enter their name here.</span>
+						</div>
+						<div class="col-sm-12"><div class="checkbox"><label>
+							<?php echo Form::checkbox('employee'); ?>
+
+							I or my alternate am employed by the school
+						</label></div></div>
+					</div>
+					<div class="radio"><label>
+						<input type="radio" name="deliverymethod" id="deliverymethod_mail" value="mail" <?php echo (Input::old('deliverymethod') == 'mail' || (isset($user) && $user->deliverymethod == 1)) ? 'checked':''; ?> />
+						Mail to address above
+					</label></div>
+					<div class="deliverymethod mail form-group<?php echo $errors->has('mailwaiver')?' has-error':'';; ?>">
+						<div class="col-sm-12">
+							<div class="checkbox"><label>
+								<?php echo Form::checkbox('mailwaiver', 'value', (isset($user) && $user->deliverymethod == 1)); ?>
+
+								I hereby release NWS PAC of any liability regarding sending my ordered grocery cards by regular mail.</label></div>
+							<?php if($errors->has('mailwaiver')): ?>
+								<span class='help-block'>You must agree to this waiver to complete your order.</span>
+							<?php endif; ?>
+						</div>
+					</div>
+					<?php if($errors->has('deliverymethod')): ?>
+						<span class='help-block'><?php echo e($errors->first('deliverymethod')); ?></span>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12 text-center" style="padding-top:3em; padding-bottom:3em;">
+				<button type='submit' class='btn btn-danger btn-lg'>
+						<?php if(isset($user)): ?>
+							Save changes
+						<?php else: ?>
+							Sign Me Up!
+						<?php endif; ?>
+				</button>
+			</div>
+		</div>
+	<?php echo Form::close(); ?>
+
+
+	<div class='blackoutPeriodError'>
+		<p class="messageBox">
+			Sorry, you can't change your order right now. Orders are currently being processed.
+		</p>
+	</div>
+</div>
+<script>
+	Stripe.setPublishableKey('<?php echo e($stripeKey); ?>');
+</script>
+
+<div class="modal fade" id="debitterms" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Terms and Conditions</h4>
+      </div>
+      <div class="modal-body">
+      	<?php echo $__env->make('partial.debitterms', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

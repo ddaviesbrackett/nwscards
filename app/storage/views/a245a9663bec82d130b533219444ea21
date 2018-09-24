@@ -1,8 +1,8 @@
 		<p>
        	I authorize the Nelson Waldorf School Parent Council (hereinafter “PC”) to make pre-authorized debits (PAD) from my account with my financial institution as detailed in my order on my account page @ grocerycards@nelsonwaldorf.org, either:
        	<ul>
-	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 4, 2018</li>
-	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 4, 2018</li>
+	       	<li>bi-weekly, commencing on <?php echo e($dates['biweekly']['charge']); ?> and ending on September 4, 2018</li>
+	       	<li>monthly, commencing on <?php echo e($dates['monthly']['charge']); ?> and ending on September 4, 2018</li>
        	</ul>
        as selected on the order form on my account page at grocerycards@nelsonwaldorf.org. 
        <p>This is a variable PAD: For each withdrawal my account will be debited for the total amount on my order form (recurring order plus any one-time order) as ordered for each scheduled order at grocerycards@nelsonwaldorf.org. I agree that PC may reduce the standard period of pre-notification for variable amount PADs. PC will send me notice of the amount of each PAD at least 4 calendar days before the PAD is due.  </p>

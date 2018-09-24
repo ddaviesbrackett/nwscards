@@ -11,7 +11,6 @@
 	</p>
 	<p>
 		Thank you for your support,<br/>
-		Snow Colbeck<br/>
 	<p>NWS Grocery Cards Committee</p>
 	</p>
 </body>

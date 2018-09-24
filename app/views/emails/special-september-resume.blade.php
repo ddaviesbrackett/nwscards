@@ -25,7 +25,7 @@ Class 8 would love your support for their graduating year. Remember, it doesn't 
 <p>If you have any questions send me an email at <a href="mailto:grocerycards@nelsonwaldorf.org">grocerycards@nelsonwaldorf.org</a>.
 
 	<p>Thank you for your support,<br/>
-	Snow Colbeck & the Grocery Card Fairies</p>
+	The Grocery Card Fairies</p>
 
 </body>
 </html>

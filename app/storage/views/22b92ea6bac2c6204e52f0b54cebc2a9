@@ -1,0 +1,29 @@
+<?php $__env->startSection('title'); ?>
+	Profit Leaderboard
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>We've raised $<?php echo e($total); ?> so far</h1>
+</div>
+<div class="container-fluid">
+<table class='table'>
+	<tr>
+		<th></th>
+		<th>Amount Raised</th>
+		<th>Supporters</th>
+	</tr>
+	<?php foreach($buckets as $name => $vals): ?>
+		<tr>
+			<td><a href="/tracking/<?php echo $name; ?>"><?php echo e($vals['nm']); ?></a></td>
+			<td><?php echo e(money_format('$%n',$vals['amount'])); ?></td>
+			<td><?php echo e($vals['count']); ?></td>
+		</tr>
+	<?php endforeach; ?>
+</table>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

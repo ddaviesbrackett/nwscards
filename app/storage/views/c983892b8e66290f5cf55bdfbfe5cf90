@@ -1,0 +1,63 @@
+<?php $__env->startSection('title'); ?>
+	CAFT entry form
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1>CAFT entry form</h1>
+</div>
+<div class="container-fluid">
+<?php $totalRows = 0;?>
+<?php foreach($model as $name => $bucket): ?>
+<?php $totalRows += count($bucket);?>
+	<h2><?php echo e($name); ?></h2>
+	<table class='table'>
+		<tr>
+			<th>Account</th>
+			<th>Institution</th>
+			<th>Transit</th>
+			<th>Name</th>
+			<th>Amount</th>
+			<th>Frequency</th>
+			<th>Has One-Time Order?</th>
+		</tr>
+		<?php foreach($bucket as $info): ?>
+			<tr>
+				<td><?php echo e($info['acct']); ?></td>
+				<td><?php echo e($info['institution']); ?></td>
+				<td><?php echo e($info['transit']); ?></td>
+				<td><?php echo e($info['order']->user->name); ?></td>
+				<td>$<?php echo e($info['order']->totalCards()); ?>00</td>
+				<td><?php echo e($info['order']->user->schedule); ?></td>
+				<td><?php echo e($info['order']->hasOnetime()?'YES':''); ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+<?php endforeach; ?>
+<p>
+	Total rows: <?php echo e($totalRows); ?>
+
+</p>
+<p>
+	Total amount: <?php echo e($total); ?>00
+</p>
+<h3>Download CAFT file for upload to C1</h3>
+<p>
+	<form method="GET" action="/admin/caftfile/<?php echo e($cutoff); ?>" class="form">
+	<div class="form-group">
+		<label for="filenum">File Number</label>
+		<input name="filenum" type="text"/>
+	</div>
+	<div class="form-group">
+		<button type='submit' class='btn btn-danger btn-lg'>
+			Get CAFT File
+		</button>
+		</div>
+	</form>
+</p>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

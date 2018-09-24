@@ -1,0 +1,62 @@
+<?php $__env->startSection('title'); ?>
+	Profit Leaderboard
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('head-extra'); ?>
+<?php $__env->stopSection(); ?>
+
+<?php $__env->startSection('content'); ?>
+<div class="masthead">
+	<h1><?php echo e(money_format( '$%n', $sum)); ?> raised for <?php echo e($name); ?> so far</h1>
+	<h3><?php echo e($name); ?> currently has <?php echo e($currentSupporters); ?> supporters.</h3>
+</div>
+<div class="container-fluid">
+<h4>Funds Raised</h4>
+<table class='table'>
+	<tr>
+		<th>Order</th>
+		<th>Amount Raised</th>
+	</tr>
+	<?php if(! empty($profitMap)): ?>
+		<?php foreach($profitMap as $cutoffdateid => $profit): ?>
+			<tr>
+				<td><?php echo e(CutoffDate::find($cutoffdateid)->deliverydate()->format('F jS')); ?></td>
+				<td><?php echo e(money_format('$%n',$profit)); ?></td>
+			</tr>
+		<?php endforeach; ?>
+	<?php endif; ?>
+</table>
+<?php if( ! empty($pointsales) && count($pointsales) > 0): ?>
+	<h4>Amount Raised by Point Sales</h4>
+	<table class='table'>
+		<tr>
+			<th>Sale</th>
+			<th>Profit</th>
+		</tr>
+		<?php foreach($pointsales as $pointsale): ?>
+			<tr>
+				<td><?php echo e($pointsale->saledate->format('F jS')); ?></td>
+				<td><?php echo e(money_format('$%n', $pointsale->pivot->profit)); ?></td>
+			</tr>
+		<?php endforeach; ?>
+	</table>
+<?php endif; ?>
+<?php if(! empty($expenses) && count($expenses) > 0): ?>
+	<h4>Funds Paid Out</h4>
+	<table class='table'>
+		<tr>
+			<th>Payout</th>
+			<th>Amount</th>
+		</tr>
+			<?php foreach($expenses as $expense): ?>
+				<tr>
+					<td><?php echo e($expense->expense_date->format('F jS')); ?></td>
+					<td><?php echo e(money_format('$%n',$expense->amount)); ?></td>
+				</tr>
+			<?php endforeach; ?>
+	</table>
+<?php endif; ?>
+<p>Total available: <?php echo e(money_format( '$%n', $sum - $expenses->sum('amount'))); ?></p>
+</div>
+<?php $__env->stopSection(); ?>
+<?php echo $__env->make('layout', array_except(get_defined_vars(), array('__data', '__path')))->render(); ?>

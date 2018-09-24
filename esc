@@ -1,0 +1,1306 @@
+warning: CRLF will be replaced by LF in app/controllers/HomeController.php.
+The file will have its original line endings in your working directory.
+warning: CRLF will be replaced by LF in app/controllers/HomeControllerTest.php.
+The file will have its original line endings in your working directory.
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mindex 649cdd9..66100c9 100644[m
+[1m--- a/.gitignore[m
+[1m+++ b/.gitignore[m
+[36m@@ -1,5 +1,6 @@[m
+ /bootstrap/compiled.php[m
+ /vendor[m
+[32m+[m[32m/app/storgae[m
+ composer.phar[m
+ composer.lock[m
+ .env.*.php[m
+[1mdiff --git a/app/components/eventHandlers/OrderGenerationHandler.php b/app/components/eventHandlers/OrderGenerationHandler.php[m
+[1mindex 60e1fb8..5a23961 100644[m
+[1m--- a/app/components/eventHandlers/OrderGenerationHandler.php[m
+[1m+++ b/app/components/eventHandlers/OrderGenerationHandler.php[m
+[36m@@ -26,16 +26,18 @@[m [mclass OrderGenerationHandler {[m
+ 				$q->where('schedule', '=', 'biweekly')[m
+ 				  ->orWhere('schedule', '=', $currentMonthly)[m
+ 				  ->orWhere('schedule_onetime', '=', $currentMonthly);[m
+[32m+[m[41m                                [m
+ 			})[m
+[31m-			->get();[m
+[32m+[m[32m                        ->get();[m[41m [m
+ [m
+[32m+[m[41m [m
+ 			foreach($users as $user) {[m
+ 				$order = new Order([[m
+ 					'paid' => 0,[m
+ 					'payment' => $user->payment,[m
+ 					'deliverymethod' => $user->deliverymethod,[m
+ 					]);[m
+[31m-				if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{[m
+[32m+[m[32m                                if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{[m
+ 					$order->coop = $user->coop;[m
+ 					$order->saveon = $user->saveon;[m
+ 				}[m
+[1mdiff --git a/app/controllers/HomeController.php b/app/controllers/HomeController.php[m
+[1mindex ad39331..147873b 100644[m
+[1m--- a/app/controllers/HomeController.php[m
+[1m+++ b/app/controllers/HomeController.php[m
+[36m@@ -5,16 +5,29 @@[m [mclass HomeController extends BaseController {[m
+ 	{[m
+ 		$total = 0;[m
+                 $totalThisYear=0;[m
+[32m+[m[41m                [m
+[32m+[m[32m                /* this need to be fixed.  I also changed the home to remove the raised so far */[m
+[32m+[m[41m                [m
+ 		foreach(SchoolClass::all() as $class)[m
+ 		{[m
+[31m-			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); [m
+[31m-                        $ordersCollection=$class->orders()->where('updated_at','>','2015-09-01 00:00:00')->get();[m
+[31m-                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-09-01 00:00:00')->get();[m
+[32m+[m[41m                         [m
+[32m+[m[32m                        $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');[m
+[32m+[m[32m                        $total+=$class_profit[0]->classTotal+ $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[32m                        //$classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m
+[32m+[m[32m                        //getTotalProfit is not working and collapse the website. Need to re create it.[m
+[32m+[m			[32m//$total += $class->orders->getTotalProfit();[m
+[32m+[m[32m                        //$total += $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[41m                 [m
+[32m+[m[32m                        $ordersCollection=$class->orders()->where('updated_at','>','2018-09-01 00:00:00')->get();[m
+[32m+[m[32m                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2018-09-01 00:00:00')->get();[m
+                         [m
+                         $totalThisYear+=$ordersCollection->getTotalProfit();[m
+                         $totalThisYear+=$pointsaleCollection->getTotalProfit();[m
+[32m+[m[41m                        [m
+[32m+[m[41m                        [m
+ 		}[m
+[31m-[m
+[32m+[m[41m                 [m
+ 		return View::make('home', ['total'=>$total,'totalThisYear'=>$totalThisYear]);[m
+ 	}[m
+ [m
+[1mdiff --git a/app/controllers/HomeControllerTest.php b/app/controllers/HomeControllerTest.php[m
+[1mindex 0170736..e592288 100644[m
+[1m--- a/app/controllers/HomeControllerTest.php[m
+[1m+++ b/app/controllers/HomeControllerTest.php[m
+[36m@@ -1,23 +1,160 @@[m
+ <?php[m
+[31m-[m
+ class HomeControllerTest extends BaseController {[m
+ 	public function getHome()[m
+ 	{[m
+ 		$total = 0;[m
+                 $totalThisYear=0;[m
+[32m+[m
+[32m+[m[41m                [m
+[32m+[m[32m                /* this need to be fixed.  I also changed the home to remove the raised so far */[m
+[32m+[m[41m                [m
+ 		foreach(SchoolClass::all() as $class)[m
+ 		{[m
+[31m-			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); [m
+[31m-                        $ordersCollection=$class->orders()->where('updated_at','>','2015-09-01 00:00:00')->get();[m
+[31m-                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2015-09-01 00:00:00')->get();[m
+[32m+[m[41m                         [m
+[32m+[m[32m                        $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');[m
+[32m+[m[32m                        $total+=$class_profit[0]->classTotal+ $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[32m                        //$classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m
+[32m+[m[32m                        //getTotalProfit is not working and collapse the website. Need to re create it.[m
+[32m+[m			[32m//$total += $class->orders->getTotalProfit();[m
+[32m+[m[32m                        //$total += $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[41m                 [m
+[32m+[m[32m                        $ordersCollection=$class->orders()->where('updated_at','>','2017-09-01 00:00:00')->get();[m
+[32m+[m[32m                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2017-09-01 00:00:00')->get();[m
+                         [m
+                         $totalThisYear+=$ordersCollection->getTotalProfit();[m
+                         $totalThisYear+=$pointsaleCollection->getTotalProfit();[m
+[32m+[m[41m                        [m
+[32m+[m[41m                        [m
+ 		}[m
+[31m-[m
+[32m+[m[41m                 [m
+ 		return View::make('homeTest', ['total'=>$total,'totalThisYear'=>$totalThisYear]);[m
+ 	}[m
+ [m
+[32m+[m[32m        /*[m
+[32m+[m	[32mpublic function generateOrders() {[m
+[32m+[m[41m            [m
+[32m+[m[41m                [m
+[32m+[m		[32m\Stripe::setApiKey($_ENV['stripe_secret_key']);[m
+[32m+[m[41m                 [m
+[32m+[m[32m                $target = Carbon\Carbon::now();[m
+[32m+[m		[32m$cutoff = \CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();[m
+[32m+[m[41m                [m
+[32m+[m		[32mif(! isset($cutoff)) {[m
+[32m+[m			[32mreturn;[m
+[32m+[m		[32m}[m
+[32m+[m[41m               [m
+[32m+[m		[32m$currentMonthly = $cutoff->first?'monthly':'monthly-second';[m
+[32m+[m
+[32m+[m		[32mif($cutoff->orders->isEmpty()){ //don't regenerate orders that have been generated already[m
+[32m+[m			[32m$users = User::where('stripe_active', '=', 1)[m
+[32m+[m			[32m->where(function($q){ // shoudn't need this - UI enforces not both 0 order columns[m
+[32m+[m				[32m$q->where('saveon', '>', '0')[m
+[32m+[m				[32m  ->orWhere('coop','>','0')[m
+[32m+[m				[32m  ->orWhere('saveon_onetime', '>', '0')[m
+[32m+[m				[32m  ->orWhere('coop_onetime','>','0');[m
+[32m+[m			[32m})[m
+[32m+[m			[32m->where(function($q) use ($currentMonthly){[m
+[32m+[m				[32m$q->where('schedule', '=', 'biweekly')[m
+[32m+[m				[32m  ->orWhere('schedule', '=', $currentMonthly)[m
+[32m+[m				[32m  ->orWhere('schedule_onetime', '=', $currentMonthly);[m
+[32m+[m[41m                                [m
+[32m+[m			[32m})[m
+[32m+[m[32m                        ->get();[m[41m [m
+[32m+[m
+[32m+[m[41m                        [m
+[32m+[m			[32mforeach($users as $user) {[m
+[32m+[m				[32m$order = new Order([[m
+[32m+[m					[32m'paid' => 0,[m
+[32m+[m					[32m'payment' => $user->payment,[m
+[32m+[m					[32m'deliverymethod' => $user->deliverymethod,[m
+[32m+[m					[32m]);[m
+[32m+[m[32m                                if($user->schedule == 'biweekly' || $user->schedule == $currentMonthly)	{[m
+[32m+[m					[32m$order->coop = $user->coop;[m
+[32m+[m					[32m$order->saveon = $user->saveon;[m
+[32m+[m				[32m}[m
+[32m+[m				[32mif($user->schedule_onetime == $currentMonthly ) {[m
+[32m+[m					[32m$order->coop_onetime = $user->coop_onetime;[m
+[32m+[m					[32m$order->saveon_onetime = $user->saveon_onetime;[m
+[32m+[m					[32m$user->coop_onetime = 0;[m
+[32m+[m					[32m$user->saveon_onetime = 0;[m
+[32m+[m					[32m$user->schedule_onetime = 'none';[m
+[32m+[m					[32m$user->save();[m
+[32m+[m				[32m}[m
+[32m+[m				[32m$order->cutoffdate()->associate($cutoff);[m
+[32m+[m				[32m$user->orders()->save($order);[m
+[32m+[m				[32m$order->schoolclasses()->sync($user->schoolclasses);[m
+[32m+[m
+[32m+[m				[32m//since we're now entering the blackout period, we can add one-time orders to credit card invoices[m
+[32m+[m				[32m//orders that are onetime-ONLY get dealt with separately on charge day, because this is easier than sorting through Stripe's API docs[m
+[32m+[m				[32mif($order->isCreditcard() && ($order->saveon + $order->coop > 0) && ($order->saveon_onetime + $order->coop_onetime > 0) ) {[m
+[32m+[m					[32mStripe_InvoiceItem::create([[m
+[32m+[m						[32m'customer' => $user->stripe_id,[m[41m [m
+[32m+[m						[32m'currency' => 'cad',[m[41m [m
+[32m+[m						[32m'description' => 'one-time order',[m
+[32m+[m						[32m'amount' => ($order->saveon_onetime + $order->coop_onetime) * 100 * 100,[m
+[32m+[m					[32m]);[m
+[32m+[m				[32m}[m
+[32m+[m
+[32m+[m				[32mMail::send('emails.chargereminder', ['user' => $user, 'order' => $order], function($message) use ($user, $order){[m
+[32m+[m					[32m$message->subject('Grocery cards next week - you\'ll be charged Monday');[m
+[32m+[m					[32m$message->to($user->email, $user->name);[m
+[32m+[m				[32m});*[m[41m [m
+[32m+[m			[32m}[m
+[32m+[m			[32mreturn "orders generated for " . $date;[m
+[32m+[m[41m                         [m
+[32m+[m		[32m}[m
+[32m+[m		[32m//return "orders already generated for this date";[m
+[32m+[m[32m                return View::make('homeTest', ['total'=>'0','totalThisYear'=>'0']);[m
+[32m+[m	[32m}[m
+[32m+[m[32m        */[m
+[32m+[m[41m        [m
+[32m+[m	[32mpublic function getLogin() {[m
+[32m+[m		[32mreturn View::make('login')->with('error', '');[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mpublic function postLogin()[m
+[32m+[m	[32m{[m
+[32m+[m		[32m$credentials = Input::only('email', 'password');[m
+[32m+[m		[32m$error = '';[m
+[32m+[m		[32mtry[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $user = Sentry::authenticate($credentials, false);[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcatch (Cartalyst\Sentry\Users\LoginRequiredException $e)[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $error ='Login failed.';[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcatch (Cartalyst\Sentry\Users\PasswordRequiredException $e)[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $error ='Login failed.';[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcatch (Cartalyst\Sentry\Users\WrongPasswordException $e)[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $error ='Login failed.';[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcatch (Cartalyst\Sentry\Users\UserNotFoundException $e)[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $error ='Login failed.';[m
+[32m+[m		[32m}[m
+[32m+[m		[32mcatch (Cartalyst\Sentry\Users\UserNotActivatedException $e)[m
+[32m+[m		[32m{[m
+[32m+[m		[32m    $error ='Login failed.';[m
+[32m+[m		[32m}[m
+[32m+[m		[32mif(! empty($error))[m
+[32m+[m		[32m{[m
+[32m+[m			[32mreturn View::make('login')->with('error', $error);[m
+[32m+[m		[32m}[m
+[32m+[m		[32melse[m
+[32m+[m		[32m{[m
+[32m+[m			[32mreturn Redirect::to(Session::pull('urlwarning: CRLF will be replaced by LF in app/controllers/TrackingController.php.
+The file will have its original line endings in your working directory.
+.intended', '/account'));[m
+[32m+[m		[32m}[m
+[32m+[m	[32m}[m
+[32m+[m
+[32m+[m	[32mpublic function getLogout()	{[m
+[32m+[m		[32mSentry::logout();[m
+[32m+[m		[32mreturn Redirect::to('/');[m
+[32m+[m	[32m}[m
+ [m
+ 	public function postContact() {[m
+ 		$status = 'failure';[m
+[1mdiff --git a/app/controllers/OrderController.php b/app/controllers/OrderController.php[m
+[1mindex cac2ae9..6ef42e1 100644[m
+[1m--- a/app/controllers/OrderController.php[m
+[1m+++ b/app/controllers/OrderController.php[m
+[36m@@ -103,6 +103,16 @@[m [mclass OrderController extends BaseController {[m
+ 					$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);[m
+ 				}[m
+ 			});[m
+[32m+[m			[32mMail::send('emails.newconfirmation', ['user' => $user, 'isChange' => true], function($message) use ($user){[m
+[32m+[m				[32m$message->subject('Grocery card order resumed');[m
+[32m+[m				[32m$message->to("gerda.hammerer@gmx.net", "Gerda");[m
+[32m+[m				[32mif(! $user->isCreditCard())[m
+[32m+[m				[32m{[m
+[32m+[m					[32m$agreementView = View::make('partial.debitterms');[m
+[32m+[m					[32m$agreement = '<html><body>'.$agreementView->render().'</body></html>';[m
+[32m+[m					[32m$message->attachData($agreement, 'debit-agreement.html', ['mime'=>'text/html', 'as'=>'debit-agreement.html']);[m
+[32m+[m				[32m}[m
+[32m+[m			[32m});[m
+ 			Session::flash('ordermessage', 'order resumed');[m
+ 			return Redirect::to('/account');[m
+ 		}[m
+[1mdiff --git a/app/controllers/TrackingController.php b/app/controllers/TrackingController.php[m
+[1mindex d0c701a..9a5216c 100644[m
+[1m--- a/app/controllers/TrackingController.php[m
+[1m+++ b/app/controllers/TrackingController.php[m
+[36m@@ -42,23 +42,28 @@[m [mclass TrackingController extends BaseController {[m
+ 	{[m
+ 		$total = 0;[m
+                 $classes_arr=[];[m
+[31m-[m
+[32m+[m[32m                $buckets = [];[m
+[32m+[m[41m                [m
+ 		foreach(SchoolClass::all() as $class)[m
+ 		{[m
+[31m-			$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); [m
+[31m-                        $classes_arr[$class->id]= $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit(); [m
+[32m+[m[32m                        $class_profit=DB::select('SELECT SUM(profit) as classTotal FROM classes_orders WHERE class_id='.$class->id.'');[m
+[32m+[m[32m                        $total+=$class_profit[0]->classTotal + $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[32m                        $classes_arr[$class->id]= $class_profit[0]->classTotal + $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[41m                        [m
+[32m+[m			[32m//$total += $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit();[m[41m [m
+[32m+[m[32m                        //$classes_arr[$class->id]= $class->orders->getTotalProfit() + $class->pointsales->getTotalProfit();[m[41m [m
+ 		}[m
+                [m
+[31m-		$buckets = [];[m
+[32m+[m[41m		[m
+ 		foreach(SchoolClass::where('displayorder', '>=', '-1')->orderby('displayorder', 'asc')->get() as $class)[m
+ 		{[m
+                     $buckets[$class->bucketname]['nm']=$class->name;[m
+                     $class_user_count=DB::select('SELECT count(*) as class_users from classes_users WHERE 1 AND class_id='.$class->id.' GROUP BY class_id');[m
+[31m-                    $buckets[$class->bucketname]['count']=$class_user_count[0]->class_users;                       [m
+[31m-                    //$buckets[$class->bucketname]['count']=$class->users->count();   [m
+[31m-                    //$class->orders->getTotalProfit()+$class->pointsales->getTotalProfit() [m
+[32m+[m[32m                    //***$buckets[$class->bucketname]['count']=10;//$class_user_count[0]->class_users;[m[41m                       [m
+[32m+[m[32m                    $buckets[$class->bucketname]['count']=$class->users->count();[m[41m   [m
+[32m+[m[32m                    //***$class->orderwarning: CRLF will be replaced by LF in app/models/Orders.php.
+The file will have its original line endings in your working directory.
+s->getTotalProfit()+$class->pointsales->getTotalProfit()[m[41m [m
+                     $buckets[$class->bucketname]['amount']=$classes_arr[$class->id];                [m
+ 		}[m
+[31m-[m
+[31m-		return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);[m
+[32m+[m[41m                [m
+[32m+[m[32m                return View::make('tracking.leaderboard', ['total' => $total, 'buckets' => $buckets]);[m
+ 	}}[m
+[1mdiff --git a/app/models/Orders.php b/app/models/Orders.php[m
+[1mindex 625f7e9..ea07916 100644[m
+[1m--- a/app/models/Orders.php[m
+[1m+++ b/app/models/Orders.php[m
+[36m@@ -5,9 +5,13 @@[m [muse Illuminate\Database\Eloquent\Collection;[m
+ class Orders extends Collection {[m
+ 	public function getTotalProfit()[m
+ 	{[m
+[32m+[m
+ 		return $this->reduce(function($total, $order) {[m
+[31m-			$current = $order->pivot? $order->pivot->profit : 0;[m
+[31m-			return $total + $current;[m
+[32m+[m[32m                    //$current=0;[m
+[32m+[m[32m                    //echo $order->id."+".$order->pivot->profit."--";[m
+[32m+[m[32m                    $current = $order->pivot->profit ? $order->pivot->profit : 0;[m
+[32m+[m[32m                    return $total + $current;[m[41m     [m
+ 		});[m
+[31m-	}[m
+[32m+[m[41m [m	[32m}[m
+[32m+[m[41m        [m
+ }[m
+\ No newline at end of file[m
+[1mdiff --git a/app/routes.php b/app/routes.php[m
+[1mindex aac8ba6..bf61b93 100644[m
+[1m--- a/app/routes.php[m
+[1m+++ b/app/routes.php[m
+[36m@@ -1,8 +1,9 @@[m
+ <?php[m
+[31m-//main page[m
+[32m+[m[32m//main page1[m
+ Route::get('/', 'HomeController@getHome');[m
+ [m
+ Route::get('/test', 'HomeControllerTest@getHome');[m
+[32m+[m[32m//Route::get('/testorders', 'HomeControllerTest@generateOrders');[m
+ [m
+ //login/logout[m
+ Route::get('/login', 'HomeController@getLogin');[m
+[36m@@ -91,11 +92,11 @@[m [mRoute::post('/admin/expenses/{expense}/delete', ['before'=>['auth','admin'], 'us[m
+ [m
+ Route::get('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@getDeletePointsale', 'as' => 'admin-getdeletesale']);[m
+ Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@postDeletePointsale', 'as' => 'admin-postdeletesale']);[m
+[31m-[m
+[32m+[m[41m [m
+ //stuff everything needs[m
+ View::composer('*', function($view) {[m
+ 	$view->with('dates', BaseController::getFormattedDates());[m
+ });[m
+ [m
+ //no throttle[m
+[31m-$throttleProvider = Sentry::getThrottleProvider()->disable();[m
+\ No newline at end of file[m
+[32m+[m[32m$throttleProvider = Sentry::getThrottleProvider()->disable();[m
+[1mdiff --git a/app/storage/.gitignore b/app/storage/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/app/storage/cache/.gitignore b/app/storage/cache/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/app/storage/logs/.gitignore b/app/storage/logs/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/app/storage/meta/.gitignore b/app/storage/meta/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/app/storage/sessions/.gitignore b/app/storage/sessions/.gitignore[m
+[1mold mode 100644[m
+[1mnew mode 100755[m
+[1mdiff --git a/app/storage/views/.gitignore b/app/storage/views/.gitignore[m
+[1mdeleted file mode 100644[m
+[1mindex c96a04f..0000000[m
+[1m--- a/app/storage/views/.gitignore[m
+[1m+++ /dev/null[m
+[36m@@ -1,2 +0,0 @@[m
+[31m-*[m
+[31m-!.gitignore[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/emails/chargereminder.blade.php b/app/views/emails/chargereminder.blade.php[m
+[1mindex 7f1939f..3118100 100644[m
+[1m--- a/app/views/emails/chargereminder.blade.php[m
+[1m+++ b/app/views/emails/chargereminder.blade.php[m
+[36m@@ -26,9 +26,7 @@[m
+ 		@endif[m
+ 	</p>[m
+ 	<p>[m
+[31m-		Thank you for your support,<br/>[m
+[31m-		Snow Colbeck<br/>[m
+[31m-		[m
+[32m+[m	[32mThank you for your support,<br/>[m
+ 	<p>NWS Grocery Cards Committee</p>[m
+ 	</pwarning: CRLF will be replaced by LF in app/views/emails/deadlinereminder.blade.php.
+The file will have its original line endings in your working directory.
+warning: CRLF will be replaced by LF in app/views/home.blade.php.
+The file will have its original line endings in your working directory.
+>[m
+ </body>[m
+[1mdiff --git a/app/views/emails/deadlinereminder.blade.php b/app/views/emails/deadlinereminder.blade.php[m
+[1mindex 2383ab3..82ff775 100644[m
+[1m--- a/app/views/emails/deadlinereminder.blade.php[m
+[1m+++ b/app/views/emails/deadlinereminder.blade.php[m
+[36m@@ -3,7 +3,7 @@[m
+ 	<h2>Hi {{{$user->name}}},</h2>[m
+ 	[m
+ 	<p>[m
+[31m-		Need to change your grocery card order? You have until tomorrow, {{{$cutoff->cutoffdate()->subDay()->format('l, F jS')}}}, at midnight. [m
+[32m+[m		[32mNeed to change your grocery card order? You have until {{{$cutoff->cutoffdate()->subDay()->format('l, F jS')}}}, at midnight.[m[41m [m
+ 		@if($user->saveon > 0 || $user->coop > 0 || $user->saveon_onetime > 0 || $user->coop_onetime > 0)[m
+ 			If you do not change your order by then, your account will be debited or your credit card will be charged the amount of your order [m
+ 			on {{{$cutoff->chargedate()->format('l, F jS')}}}. [m
+[36m@@ -48,8 +48,7 @@[m
+ 		</p>[m
+ 	@endif[m
+ 	<p>[m
+[31m-		Thank you for your support,<br/>[m
+[31m-		Snow Colbeck<br/>[m
+[32m+[m	[32mThank you for your support,<br/>[m
+ 	<p>NWS Grocery Cards Committee</p>[m
+ 	</p>[m
+ </body>[m
+[1mdiff --git a/app/views/emails/orderbeg.blade.php b/app/views/emails/orderbeg.blade.php[m
+[1mindex 36130e5..d18d828 100644[m
+[1m--- a/app/views/emails/orderbeg.blade.php[m
+[1m+++ b/app/views/emails/orderbeg.blade.php[m
+[36m@@ -11,7 +11,6 @@[m
+ 	</p>[m
+ 	<p>[m
+ 		Thank you for your support,<br/>[m
+[31m-		Snow Colbeck<br/>[m
+ 	<p>NWS Grocery Cards Committee</p>[m
+ 	</p>[m
+ </body>[m
+[1mdiff --git a/app/views/emails/pickupreminder.blade.php b/app/views/emails/pickupreminder.blade.php[m
+[1mindex 31601a9..500f597 100644[m
+[1m--- a/app/views/emails/pickupreminder.blade.php[m
+[1m+++ b/app/views/emails/pickupreminder.blade.php[m
+[36m@@ -8,8 +8,6 @@[m
+ 	will need to sign for the cards. </p>[m
+ [m
+ 	<p>Thank you for your support,<br/>[m
+[31m-	Snow Colbeck</p>[m
+[31m-[m
+ 	<p>NWS Grocery Cards Committee</p>[m
+ </body>[m
+ </html>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/emails/special-march-pickupreminder.blade.php b/app/views/emails/special-march-pickupreminder.blade.php[m
+[1mindex 3945cd9..9b701d6 100644[m
+[1m--- a/app/views/emails/special-march-pickupreminder.blade.php[m
+[1m+++ b/app/views/emails/special-march-pickupreminder.blade.php[m
+[36m@@ -10,8 +10,6 @@[m
+ 	will need to sign for the cards. </p>[m
+ [m
+ 	<p>Thank you for your support,<br/>[m
+[31m-	Snow Colbeck</p>[m
+[31m-[m
+ 	<p>NWS Grocery Cards Committee</p>[m
+ </body>[m
+ </html>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/emails/special-september-resume.blade.php b/app/views/emails/special-september-resume.blade.php[m
+[1mindex 18e9ae2..0974262 100644[m
+[1m--- a/app/views/emails/special-september-resume.blade.php[m
+[1m+++ b/app/views/emails/special-september-resume.blade.php[m
+[36m@@ -25,7 +25,7 @@[m [mClass 8 would love your support for their graduating year. Remember, it doesn't[m
+ <p>If you have any questions send me an email at <a href="mailto:grocerycards@nelsonwaldorf.org">grocerycards@nelsonwaldorf.org</a>.[m
+ [m
+ 	<p>Thank you for your support,<br/>[m
+[31m-	Snow Colbeck & the Grocery Card Fairies</p>[m
+[32m+[m	[32mThe Grocery Card Fairies</p>[m
+ [m
+ </body>[m
+ </html>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/home.blade.php b/app/views/home.blade.php[m
+[1mindex 0ee9b8e..64ea4d1 100644[m
+[1m--- a/app/views/home.blade.php[m
+[1m+++ b/app/views/home.blade.php[m
+[36m@@ -18,78 +18,131 @@[m
+ @section('content')[m
+ <div class="masthead">[m
+ 	<h1>Buy Grocery Cards<br/>Raise Money</h1>[m
+[32m+[m[41m        [m
+ 	<h3>[m
+             This year we've raised so far - {{{money_format('$%n',$totalThisYear)}}}<br/>[m
+             From July 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>[m
+             Help us raise more &mdash; <em>without spending any extra!</em>[m
+         </h3>[m
+[32m+[m[41m       [m
+ 	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>[m
+[32m+[m[41m       [m
+ 	@if (Sentry::check())[m
+ 		<a class="btn btn-outline-inverse btn-lg" href="/edit">Change Order</a>[m
+ 	@else[m
+ 		<a class="btn btn-outline-inverse btn-lg" href="/new">Order Now</a>[m
+ 	@endif[m
+ 	<a class="link order" href="/account">Checking on an existing order? Click here</a>[m
+[32m+[m
+[32m+[m[32m        @if(OrderController::IsBlackoutPeriod() )[m
+[32m+[m[32m        <br><span style="color:yellow;"><b>Unfortunately, you can't order now while we process orders.<br>You will be able to make changes again from the next pick-up Wednesday until the following order deadline.</b></span>[m
+[32m+[m[32m        @endif[m[41m [m
+ </div>[m
+ <div class="container-fluid text-center">[m
+         <a name="pickupdates"></a>[m
+[31m-        <h2>Here are the dates for the rest of this year:</h2>[m
+[32m+[m[32m        <h2>Dates for 2018 - 2019:</h2>[m
+         <center>[m
+[31m-            <table border="0">[m
+[32m+[m[32m            <table border="0" width="400px;">[m
+             <tr>[m
+                 <td align="center" style="padding-right:10px;"><b>Change deadline</b></td>[m
+                  <td align="center"><b>Pick up day</b></td>[m
+             </tr>[m
+[31m-            <tr>[m
+[31m-                <td align="center">March 1st</td>[m
+[31m-                <td align="center">March 9th</td>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">September 4th 2018</td>[m
+[32m+[m[32m                <td align="center">September 12th 2018</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">September 18th 2018</td>[m
+[32m+[m[32m                <td align="center">September 26th 2018</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">October 2nd 2018</td>[m
+[32m+[m[32m                <td align="center">October 10th 2018</td>[m
+             </tr>[m
+            <tr>[m
+[31m-                <td align="center">March 29th</td>[m
+[31m-                <td align="center">April 6th</td>[m
+[32m+[m[32m                <td align="center">October 16th 2018</td>[m
+[32m+[m[32m                <td align="center">October 24th 2018</td>[m
+             </tr>[m
+            <tr>[m
+[31m-                <td align="center">April 12th</td>[m
+[31m-                <td align="center">April 20th</td>[m
+[32m+[m[32m                <td align="center">October 30th 2018</td>[m
+[32m+[m[32m                <td align="center">November 7th 2018</td>[m
+             </tr>[m
+            <tr>[m
+[31m-                <td align="center">April 26th</td>[m
+[31m-                <td align="center">May 4th</td>[m
+[32m+[m[32m                <td align="center">November 13th 2018</td>[m
+[32m+[m[32m                <td align="center">November 21st 2018</td>[m
+             </tr>[m
+            <tr>[m
+[31m-                <td align="center">May 10th</td>[m
+[31m-                <td align="center">may 18</td>[m
+[32m+[m[32m                <td align="center">November 27th 2018</td>[m
+[32m+[m[32m                <td align="center">December 5th 2018</td>[m
+             </tr>[m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">December 11th 2018</td>[m
+[32m+[m[32m                <td align="center">December 19th 2018</td>[m
+[32m+[m[32m            </tr>[m[41m            [m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">Christmas Break</td>[m
+[32m+[m[32m                <td align="center">Christmas Break</td>[m
+[32m+[m[32m            </tr>[m[41m            [m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">January 8th 2019</td>[m
+[32m+[m[32m                <td align="center">January 16th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m            [m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">January 22nd 2019</td>[m
+[32m+[m[32m                <td align="center">January 30th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m [m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">February 5th 2019</td>[m
+[32m+[m[32m                <td align="center">February 13th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m [m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">February 19th 2019</td>[m
+[32m+[m[32m                <td align="center">February 27th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m [m
+[32m+[m[32m            <tr>[m
+[32m+[m[32m                <td align="center">March 5th 2019</td>[m
+[32m+[m[32m                <td align="center">March 13th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m [m
+[32m+[m[41m            [m
+            <tr>[m
+[31m-                <td align="center">May 24th</td>[m
+[31m-                <td align="center">June 1st</td>[m
+[32m+[m[32m                <td align="center">Spring Break</td>[m
+[32m+[m[32m                <td align="center">Spring Break</td>[m
+             </tr>[m
+[31m-        </table>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">March 26th 2019</td>[m
+[32m+[m[32m                <td align="center">April 3rd 2019</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">April 9th 2019</td>[m
+[32m+[m[32m                <td align="center">April 17th 2019</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">April 30th 2019</td>[m
+[32m+[m[32m                <td align="center">May 8th 2019</td>[m
+[32m+[m[32m            </tr>[m[41m            [m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">May 14th 2019</td>[m
+[32m+[m[32m                <td align="center">May 22nd 2019</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m           <tr>[m
+[32m+[m[32m                <td align="center">May 28th 2019</td>[m
+[32m+[m[32m                <td align="center">June 5th 2019</td>[m
+[32m+[m[32m            </tr>[m
+[32m+[m[32m            </table>[m
+             </center>[m
+         <br>[m
+ 	<a name="about"></a>[m
+[31m-	<h2>Waldorf Education for Every Child</h2>[m
+[32m+[m	[32m<h2>ALL SCHOOL SUPPORT AND ENHANCEMENT</h2>[m
+ 	<p>[m
+[31m-		Did you know the Nelson Waldorf School has a generous tuition reduction program? [m
+[31m-		No family is turned away for financial reasons. [m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		To ensure that accessibility contuinues, the Nelson Waldorf School Parent Association[m
+[31m-		is running a school-wide grocery card fundraiser to support a tuition reduction fund,[m
+[31m-		individual classes and other all-school projects, such as playground maintenance and improvement.  [m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		Your grocery card order helps keep the Nelson Waldorf School available to all families who want it.[m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; [m
+[31m-		<a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>.[m
+[31m-	</p>[m
+[32m+[m[32m        The Nelson Waldorf School Parent Council runs this school-wide grocery card fundraiser to help classes raise money for their activities (like class trips or class play support) and to raise money for all school support and enhancement, such as playgrounds and buildings maintenance and improvement, teachers professional development and tuition assistance.[m[41m 	 	[m
+[32m+[m[32m        Your grocery card order helps keep the Nelson Waldorf School vibrant and diverse.[m[41m 	[m
+[32m+[m[32m        If you would like to donate to the school directly and receive a tax receipt:<br>[m
+[32m+[m[32m        <a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>.</p>[m
+         [m
+ 	<a name="method"></a>[m
+ 	<h2>How we raise money from your groceries</h2>[m
+ 	<p>[m
+[31m-		When you purchase a grocery card through the Nelson Waldorf Parent Association, the store donates a percentage of its profit to us. [m
+[32m+[m		[32mWhen you purchase a grocery card through the Nelson Waldorf Parent Council, the store donates 8% of the card value to us. So on each $100 card you buy, we make $8...[m[41m [m
+ 	</p>[m
+ 	<p>[m
+ 		We raise money and it doesn’t cost you a cent – the money comes out of the store’s pocket.[m
+[36m@@ -108,8 +161,9 @@[m
+ 	    </div>[m
+ 	    <div id="faqOne" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>The funds are being distributed between the classes, the tuition reduction fund and the Parent Association. The Parent Association amount will cover administrative costs for this fundraiser as well as fund other projects that benefit the whole school.</p>[m
+[31m-			<p>All of the profits will be held and managed by the Parent Association until it is donated to the school or distributed to an individual class.</p>[m
+[32m+[m	[32m        <p>[m
+[32m+[m[32m                    The funds are being distributed between the classes (50%), all school support and enhancement (45%)  and Parent Council (5%). The Parent Council amount will cover administrative costs for this fundraiser as well as fund other projects that benefit the whole school.</p>[m
+[32m+[m			[32m<p>All of the profits will be held and managed by the Parent Council until it is donated to the school or distributed to an individual class.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -213,7 +267,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq37" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>To put in an order or to order extra cards you have until Tuesday midnight the week before the next pick-up-Wednesday.</p>[m
+[32m+[m	[32m        <p>To put in an order or to order extra cards you have until Tuesday midnight the week before the next pick-up-Wednesday. If you can't order now (while we process orders), you will be able to make changes again from the next pick-up Wednesday until the following order deadline.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>            [m
+[36m@@ -227,7 +281,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq7" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>[m
+[32m+[m	[32m        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed. “If you can't order now (while we process orders), you will be able to make changes again from the next pick-up Wednesday until the following order deadline.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -241,7 +295,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq8" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>[m
+[32m+[m	[32m        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed. If you can't cancel order now (while we process orders), you will be able to make changes again from the next pick-up Wednesday until the following order deadline.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -255,8 +309,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq9" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>The last order for the 2015-2016 school year will be June 1 2016. </p>[m
+[31m-			<p>You will be given the opportunity to renew your order if you would like to continue.</p>[m
+[32m+[m	[32m        <p>Your order is good for the whole school year. We’ll take a break over the summer holidays - so you’ll get no cards in July and August. With the start of the new school year your order will resume automatically with the amounts you’ve ordered - so you’ll get your ordered cards again in September. </p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -271,8 +324,10 @@[m
+ 	    <div id="faq10" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+ 	        <p>Because we receive such a small amount for each card sold, the best way to raise money is to have recurring orders.</p>[m
+[31m-			<p>We do have cards available for cash purchases on pick-up days, though. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to the tuition reduction fund and PAC.</p>[m
+[31m-			<p>Some classes may also have cards available for cash purchases – and those sales will support that particular class.</p>[m
+[32m+[m[32m                        <p>[m
+[32m+[m[32m                            However, most classes do have cards available for cash purchases – and those sales support that particular class. Please check with your class grocery cards person to buy cash cards from her/him![m
+[32m+[m[32mAlso, Parent Council has cards available for cash purchases on pick-up days. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to all school support and enhancement and Parent Council.[m
+[32m+[m[32m                        </p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -286,8 +341,8 @@[m
+ 	    </div>[m
+ 	    <div id="faq11" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>Your class teacher and class rep can request money from us when it’s needed. Requests can be made using <a href="https://docs.google.com/uc?authuser=0&id=0B2sI4qt1poXCOERSNnZnbFpEWms&export=download">this form</a>. Completed forms can be left at the School office. </p>[m
+[31m-			<p>Because this fundraiser requires a larger amount of cash to float each purchase of cards, all the money raised will be held by the Parent Association and used for that purpose until the class needs it.</p>[m
+[32m+[m	[32m        <p>Your class teacher and class rep can request money from us when it’s needed. Requests can be made using <a href="https://docs.google.com/uc?authuser=0&id=0B2sI4qt1poXCOERSNnZnbFpEWms&export=download">this form</a>. Completed forms can be left at the School office or handed to one of the Grocery Card fairies (at pick-up-Wednesday). </p>[m
+[32m+[m			[32m<p>Because this fundraiser requires a larger amount of cash to float each purchase of cards, all the money raised will be held by the Parent Council and used for that purpose until the class needs it.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -309,14 +364,13 @@[m
+ 	    <div class="panel-heading">[m
+ 	      <h4 class="panel-title">[m
+ 	        <a data-toggle="collapse" data-parent="#accordion" href="#faq13">[m
+[31m-	          Does this mean PAC is raising money for the classes?[m
+[32m+[m	[32m          Does this mean Parent Council is raising money for the classes?[m
+ 	        </a>[m
+ 	      </h4>[m
+ 	    </div>[m
+ 	    <div id="faq13" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>No. We’re running this fundraiser, but you have to sign up for it to work. Sign up your friends, your neighbours and obviously yourself. </p>[m
+[31mwarning: CRLF will be replaced by LF in app/views/homeTest.blade.php.
+The file will have its original line endings in your working directory.
+-			<p>A class will only have access to the funds they have already raised.</p>[m
+[32m+[m	[32m        <p>No. This is one way that your class can raise money. We've set up the system - now it's up to your class as to how much you raise based on orders connected to your class. So sign up! Sign up friends and family! Or buy cards for cash and send people to your Class Grocery Cards Rep!</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -333,6 +387,8 @@[m
+ 	        <p>You can increase the funds in your class accounts by[m
+ 	        <ul>[m
+ 				<li>Increasing your current orders </li>[m
+[32m+[m[32m                                <li>Buying grocery cards for cash from your Class Grocery Cards Rep</li>[m
+[32m+[m[32m                                <li>Sending people to your Class Grocery Cards Rep for cash purchases</li>[m
+ 				<li>Encouraging more families in your class to participate</li>[m
+ 				<li>Signing up friends, neighbours and family to support your class</li>[m
+ 			</ul>[m
+[36m@@ -351,8 +407,9 @@[m
+ 	    <div id="faq15" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+                   <p>You can make a one-time-order and designate your child’s class as the beneficiary. <a class="btn btn-danger btn-lg" href="/new">Sign up here</a></p>[m
+[32m+[m[32m                  <p>You can buy cards for cash from your class grocery cards rep. The proceeds of those cards will benefit your child’s class.</p>[m
+ 	        <p>You can sign up other people to buy grocery cards (friends, neighbours, family members) and ask them to designate your child’s class as the beneficiary.</p>[m
+[31m-			<p>PAC will have some cards available for cash purchase on pick-up days. These sales will benefit the tuition reduction fund and PAC projects – but they won’t be tracked for class accounts.</p>[m
+[32m+[m			[32m<p>Parent Council will have some cards available for cash purchase on pick-up Wednesdays. These sales will benefit all school support and enhancement – but they won’t be tracked for class accounts.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -366,7 +423,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq16" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>Sure. You can donate directly to this program and have the funds divided between the tuition reduction program and class accounts.</p>[m
+[32m+[m	[32m        <p>Sure. You can donate directly to this program and have the funds divided between the all school support and enhancement program and class accounts.</p>[m
+ 			<p>Or you can make a tax-deductible donation to the Nelson Waldorf School – <a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>. </p>[m
+ 	      </div>[m
+ 	    </div>[m
+[36m@@ -381,7 +438,7 @@[m
+ 	    </div>[m
+ 	    <div id="faq17" class="panel-collapse collapse">[m
+ 	      <div class="panel-body">[m
+[31m-	        <p>You will not get a tax receipt for the money raised with this fundraiser. The Nelson Waldorf Parent Association is not a registered charity.</p>[m
+[32m+[m	[32m        <p>You will not get a tax receipt for the money raised with this fundraiser. The Nelson Waldorf Parent Council is not a registered charity.</p>[m
+ 	      </div>[m
+ 	    </div>[m
+ 	  </div>[m
+[36m@@ -433,7 +490,7 @@[m
+ 	<p>	We will get back to you as soon as possible – usually the same day, but definitely within two business days.</p>[m
+ 	<p>[m
+ 		Please do not phone the Nelson Waldorf School unless it has been much longer than that. [m
+[31m-		This fundraiser is being run by the Parent Association, not the school administration.[m
+[32m+[m		[32mThis fundraiser is being run by the Parent Council, not the school administration.[m
+ 	</p>[m
+ 	<p>[m
+ 		Thanks for your understanding. [m
+[1mdiff --git a/app/views/homeTest.blade.php b/app/views/homeTest.blade.php[m
+[1mindex 0ee9b8e..1d0e246 100644[m
+[1m--- a/app/views/homeTest.blade.php[m
+[1m+++ b/app/views/homeTest.blade.php[m
+[36m@@ -18,11 +18,13 @@[m
+ @section('content')[m
+ <div class="masthead">[m
+ 	<h1>Buy Grocery Cards<br/>Raise Money</h1>[m
+[32m+[m[41m        [m
+ 	<h3>[m
+             This year we've raised so far - {{{money_format('$%n',$totalThisYear)}}}<br/>[m
+             From July 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>[m
+             Help us raise more &mdash; <em>without spending any extra!</em>[m
+         </h3>[m
+[32m+[m[41m       [m
+ 	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>[m
+ 	@if (Sentry::check())[m
+ 		<a class="btn btn-outline-inverse btn-lg" href="/edit">Change Order</a>[m
+[36m@@ -31,412 +33,5 @@[m
+ 	@endif[m
+ 	<a class="link order" href="/account">Checking on an existing order? Click here</a>[m
+ </div>[m
+[31m-<div class="container-fluid text-center">[m
+[31m-        <a name="pickupdates"></a>[m
+[31m-        <h2>Here are the dates for the rest of this year:</h2>[m
+[31m-        <center>[m
+[31m-            <table border="0">[m
+[31m-            <tr>[m
+[31m-                <td align="center" style="padding-right:10px;"><b>Change deadline</b></td>[m
+[31m-                 <td align="center"><b>Pick up day</b></td>[m
+[31m-            </tr>[m
+[31m-            <tr>[m
+[31m-                <td align="center">March 1st</td>[m
+[31m-                <td align="center">March 9th</td>[m
+[31m-            </tr>[m
+[31m-           <tr>[m
+[31m-                <td align="center">March 29th</td>[m
+[31m-                <td align="center">April 6th</td>[m
+[31m-            </tr>[m
+[31m-           <tr>[m
+[31m-                <td align="center">April 12th</td>[m
+[31m-                <td align="center">April 20th</td>[m
+[31m-            </tr>[m
+[31m-           <tr>[m
+[31m-                <td align="center">April 26th</td>[m
+[31m-                <td align="center">May 4th</td>[m
+[31m-            </tr>[m
+[31m-           <tr>[m
+[31m-                <td align="center">May 10th</td>[m
+[31m-                <td align="center">may 18</td>[m
+[31m-            </tr>[m
+[31m-           <tr>[m
+[31m-                <td align="center">May 24th</td>[m
+[31m-                <td align="center">June 1st</td>[m
+[31m-            </tr>[m
+[31m-        </table>[m
+[31m-            </center>[m
+[31m-        <br>[m
+[31m-	<a name="about"></a>[m
+[31m-	<h2>Waldorf Education for Every Child</h2>[m
+[31m-	<p>[m
+[31m-		Did you know the Nelson Waldorf School has a generous tuition reduction program? [m
+[31m-		No family is turned away for financial reasons. [m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		To ensure that accessibility contuinues, the Nelson Waldorf School Parent Association[m
+[31m-		is running a school-wide grocery card fundraiser to support a tuition reduction fund,[m
+[31m-		individual classes and other all-school projects, such as playground maintenance and improvement.  [m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		Your grocery card order helps keep the Nelson Waldorf School available to all families who want it.[m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		If you would like to donate to the school directly &mdash; and receive a tax receipt &mdash; [m
+[31m-		<a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>.[m
+[31m-	</p>[m
+[31m-        [m
+[31m-	<a name="method"></a>[m
+[31m-	<h2>How we raise money from your groceries</h2>[m
+[31m-	<p>[m
+[31m-		When you purchase a grocery card through the Nelson Waldorf Parent Association, the store donates a percentage of its profit to us. [m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		We raise money and it doesn’t cost you a cent – the money comes out of the store’s pocket.[m
+[31m-	</p>[m
+[31m-	<a name="faq"></a>[m
+[31m-	<h2>Frequently Asked Questions</h2>[m
+ [m
+[31m-	<div class="panel-group" id="accordion">[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faqOne">[m
+[31m-	          Where does the money go?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faqOne" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>The funds are being distributed between the classes, the tuition reduction fund and the Parent Association. The Parent Association amount will cover administrative costs for this fundraiser as well as fund other projects that benefit the whole school.</p>[m
+[31m-			<p>All of the profits will be held and managed by the Parent Association until it is donated to the school or distributed to an individual class.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faqTwo">[m
+[31m-	          What stores can I buy cards from - and are you adding more?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faqTwo" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>We are currently selling cards from the Kootenay Co-Op and Save-On Foods.  Once this fundraiser is established, we may approach other stores.</p>[m
+[31m-		</div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faqTwoA">[m
+[31m-	          How can I pay?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faqTwoA" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can pay by direct debit or credit card.</p>[m
+[31m-			<p>However because of the fees associated with using a credit card, we do not receive the full amount of what you are charged. This means your order raises less money than the same order paid with by direct debit.</p>[m
+[31m-			<p>But that doesn’t mean it’s always better to pay with debit. If paying by credit card allows you to make a larger order, then credit card is better.  The larger the order, the more money is raised.</p>[m
+[31m-		</div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faqThree">[m
+[31m-	          When do I get charged?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faqThree" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Regardless of your method of payment, you will be charged 2 business days before your cards are available.</p>[m
+[31m-			<p>If there is a problem with your payment, we will contact you. Credit card orders can be retried – or you may bring cash to pick-up. Debit orders cannot be retried and can only be picked up with cash.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq4">[m
+[31m-	          How do I get my cards?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq4" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Cards can be picked up at the Nelson Waldorf School or mailed to you.</p>[m
+[31m-			<p>We will email you at the beginning of the week to remind you that cards will be ready for pick up on Wednesday. </p>[m
+[31m-			<p>If you choose to have your cards mailed, they will be mailed on Wednesday following your charge date. We will also email you to remind you they are coming. Generally, cards have been arriving in Thursday’s mail for people in Nelson.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq5">[m
+[31m-	          When do I pick up my cards?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq5" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can pick up your cards on the Wednesday following your charge dates (which depends on whether you have ordered bi-weekly or monthly). You will receive an email a few days before reminding you of the pickup day.</p>[m
+[31m-			<p>We will be at the bottom of the main stairs between 8 – 8.30am and 2.30 – 3pm under the grocery cards banner.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq6">[m
+[31m-	          Can someone else pick up my cards for me?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq6" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Yep. Just let us know who the other authorized person is by putting their name in the box that appears when you select ‘pick up’ on the order form.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq37">[m
+[31m-	          When do I order?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq37" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>To put in an order or to order extra cards you have until Tuesday midnight the week before the next pick-up-Wednesday.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>            [m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq7">[m
+[31m-	          How do I change my order?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq7" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq8">[m
+[31m-	          How do I cancel my order?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq8" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can change an existing order with <a href="/edit">this form</a>. You have until Tuesday midnight the week before the next pick-up-Wednesday to change your order. Please note that you can't change your order while orders are being processed.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq9">[m
+[31m-	          How long is my order good for?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq9" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>The last order for the 2015-2016 school year will be June 1 2016. </p>[m
+[31m-			<p>You will be given the opportunity to renew your order if you would like to continue.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq10">[m
+[31m-	          Do I have to make an order – can’t I just buy cards when I need them?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq10" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Because we receive such a small amount for each card sold, the best way to raise money is to have recurring orders.</p>[m
+[31m-			<p>We do have cards available for cash purchases on pick-up days, though. However, these sales will not be tracked for class accounts. Instead, all of the proceeds from these sales will go to the tuition reduction fund and PAC.</p>[m
+[31m-			<p>Some classes may also have cards available for cash purchases – and those sales will support that particular class.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq11">[m
+[31m-	         How does the class get the money they have raised?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq11" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Your class teacher and class rep can request money from us when it’s needed. Requests can be made using <a href="https://docs.google.com/uc?authuser=0&id=0B2sI4qt1poXCOERSNnZnbFpEWms&export=download">this form</a>. Completed forms can be left at the School office. </p>[m
+[31m-			<p>Because this fundraiser requires a larger amount of cash to float each purchase of cards, all the money raised will be held by the Parent Association and used for that purpose until the class needs it.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq12">[m
+[31m-	          How do we know how much money the class has raised?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq12" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can see how much each class has raised on the <a href="/tracking/leaderboard">main tracking page</a> - or by clicking the class link on your account page.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq13">[m
+[31m-	          Does this mean PAC is raising money for the classes?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq13" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>No. We’re running this fundraiser, but you have to sign up for it to work. Sign up your friends, your neighbours and obviously yourself. </p>[m
+[31m-			<p>A class will only have access to the funds they have already raised.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq14">[m
+[31m-	          How can our class raise more money?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq14" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You can increase the funds in your class accounts by[m
+[31m-	        <ul>[m
+[31m-				<li>Increasing your current orders </li>[m
+[31m-				<li>Encouraging more families in your class to participate</li>[m
+[31m-				<li>Signing up friends, neighbours and family to support your class</li>[m
+[31m-			</ul>[m
+[31m-			</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq15">[m
+[31m-	          I can’t make a regular order – how can I participate?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq15" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-                  <p>You can make a one-time-order and designate your child’s class as the beneficiary. <a class="btn btn-danger btn-lg" href="/new">Sign up here</a></p>[m
+[31m-	        <p>You can sign up other people to buy grocery cards (friends, neighbours, family members) and ask them to designate your child’s class as the beneficiary.</p>[m
+[31m-			<p>PAC will have some cards available for cash purchase on pick-up days. These sales will benefit the tuition reduction fund and PAC projects – but they won’t be tracked for class accounts.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq16">[m
+[31m-	          Can I just donate?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq16" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>Sure. You can donate directly to this program and have the funds divided between the tuition reduction program and class accounts.</p>[m
+[31m-			<p>Or you can make a tax-deductible donation to the Nelson Waldorf School – <a href="http://www.canadahelps.org/CharityProfilePage.aspx?CharityID=d39625">click here to donate through CanadaHelps.org</a>. </p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	  <div class="">[m
+[31m-	    <div class="panel-heading">[m
+[31m-	      <h4 class="panel-title">[m
+[31m-	        <a data-toggle="collapse" data-parent="#accordion" href="#faq17">[m
+[31m-	          Will I get a tax receipt?[m
+[31m-	        </a>[m
+[31m-	      </h4>[m
+[31m-	    </div>[m
+[31m-	    <div id="faq17" class="panel-collapse collapse">[m
+[31m-	      <div class="panel-body">[m
+[31m-	        <p>You will not get a tax receipt for the money raised with this fundraiser. The Nelson Waldorf Parent Association is not a registered charity.</p>[m
+[31m-	      </div>[m
+[31m-	    </div>[m
+[31m-	  </div>[m
+[31m-	</div>[m
+[31m-	<p style="margin-top:3em;">[m
+[31m-		@if (Sentry::check())[m
+[31m-			<a class="btn btn-danger btn-lg" href="/edit">Change Order</a>[m
+[31m-		@else[m
+[31m-			<a class="btn btn-danger btn-lg" href="/new">Order Now</a>[m
+[31m-		@endif[m
+[31m-	</p>[m
+[31m-	<a name="contact"></a>[m
+[31m-	<h2>Got another question? We've got answers</h2>[m
+[31m-	<p>[m
+[31m-		We'd love to hear from you.[m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-			If you have a question or a concern about your order, you can reach us at grocerycards{AT}nelsonwaldorf.org or use the form below.[m
+[31m-	</p>[m
+[31m-	{{Form::open(['url'=>'/contact', 'method'=>'POST', 'class'=>'form contact'])}}[m
+[31m-		<div class="row">[m
+[31m-		<div class="col-sm-8 col-sm-push-2">[m
+[31m-			<div class="callout" style='margin-top:20px;'>[m
+[31m-			  <div class="error alert alert-danger alert-dismissible hidden" role="alert">[m
+[31m-				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span cwarning: CRLF will be replaced by LF in app/views/partial/debitterms.blade.php.
+The file will have its original line endings in your working directory.
+lass="sr-only">Close</span></button>[m
+[31m-				<span class="content"></span>[m
+[31m-			  </div>[m
+[31m-			  <div class="form-group">[m
+[31m-			    <label for="nm">Name</label>[m
+[31m-			    <input type="text" class="form-control nm" id="nm" name="nm" placeholder="your name">[m
+[31m-			  </div>[m
+[31m-			  <div class="form-group">[m
+[31m-			    <label for="password">Email address</label>[m
+[31m-			    <input type="email" class="form-control em" id="em" name="em" placeholder="your email address">[m
+[31m-			  </div>[m
+[31m-			  <div class="form-group">[m
+[31m-			    <label for="password">Message</label>[m
+[31m-			    <textarea class="form-control msg" id="msg" name="msg" placeholder="your message" rows="6"></textarea>[m
+[31m-			  </div>[m
+[31m-			  <button type="submit" class="btn btn-danger">Send</button>[m
+[31m-			</div>[m
+[31m-			<div class="success alert alert-success alert-dismissible hidden" role="alert">[m
+[31m-				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>[m
+[31m-				<span class="content"></span>[m
+[31m-			</div>[m
+[31m-		</div>[m
+[31m-		</div>[m
+[31m-	{{Form::close()}}[m
+[31m-	<p>	We will get back to you as soon as possible – usually the same day, but definitely within two business days.</p>[m
+[31m-	<p>[m
+[31m-		Please do not phone the Nelson Waldorf School unless it has been much longer than that. [m
+[31m-		This fundraiser is being run by the Parent Association, not the school administration.[m
+[31m-	</p>[m
+[31m-	<p>[m
+[31m-		Thanks for your understanding. [m
+[31m-	</p>[m
+[31m-</div>[m
+ @stop[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/partial/debitterms.blade.php b/app/views/partial/debitterms.blade.php[m
+[1mindex 7ff4248..8a55baf 100644[m
+[1m--- a/app/views/partial/debitterms.blade.php[m
+[1m+++ b/app/views/partial/debitterms.blade.php[m
+[36m@@ -1,51 +1,36 @@[m
+ 		<p>[m
+[31m-       	I authorize the Nelson Waldorf School Parent Association (hereinafter “PAC”) to make pre-authorized debits (PAD) from my account with the aforementioned [m
+[31m-       	financial institution, either:[m
+[32m+[m[41m       [m	[32mI authorize the Nelson Waldorf School Parent Council (hereinafter “PC”) to make pre-authorized debits (PAD) from my account with my financial institution as detailed in my order on my account page @ grocerycards@nelsonwaldorf.org, either:[m
+        	<ul>[m
+[31m-	       	<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 6, 2016</li>[m
+[31m-	       	<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 6, 2016</li>[m
+[32m+[m	[41m       [m	[32m<li>bi-weekly, commencing on {{{$dates['biweekly']['charge']}}} and ending on September 4, 2018</li>[m
+[32m+[m	[41m       [m	[32m<li>monthly, commencing on {{{$dates['monthly']['charge']}}} and ending on September 4, 2018</li>[m
+        	</ul>[m
+[31m-       	as selected on the order form.[m
+[32m+[m[32m       as selected on the order form on my account page at grocerycards@nelsonwaldorf.org.[m[41m [m
+[32m+[m[32m       <p>This is a variable PAD: For each withdrawal my account will be debited for the total amount on my order form (recurring order plus any one-time order) as ordered for each scheduled order at grocerycards@nelsonwaldorf.org. I agree that PC may reduce the standard period of pre-notification for variable amount PADs. PC will send me notice of the amount of each PAD at least 4 calendar days before the PAD is due.  </p>[m
+        	<p>[m
+[31m-       	Each withdrawal will correspond to a fixed amount equal to the total stated on the order form.  [m
+[31m-       	I understand my account will be debited two business days before the published delivery dates for my order frequency. [m
+[31m-       	</p>[m
+[32m+[m[41m       [m	[32mEach withdrawal will correspond to a fixed amount equal to the total stated on the order form. I understand my account will be debited two calendar days before the published delivery dates for my order frequency.[m[41m [m
+        	</p>[m
+[32m+[m[41m       [m	[32m<p>Type of Pre-Authorized Debit: PERSONAL </p>[m
+[32m+[m[41m        [m
+        	<h4>WAIVER</h4>  [m
+        	<p>[m
+[31m-       	I hereby waive any and all requirements for pre-notification of debiting.  [m
+[31m-       	I will receive a copy of this Agreement by email and waive all other confirmation before the first payment.  [m
+[32m+[m[32m        I hereby waive any and all requirements for pre-notification of debiting. As a Written Confirmation of this PAD Agreement, including information on my account and my financial institution as detailed in my order on my account page at grocerycards@nelsonwaldorf.org, I will receive a copy of this Agreement by email at least 4 calendar days before the first PAD withdrawal and waive all other confirmation before the first payment.[m[41m   [m
+        	</p>[m
+[32m+[m[41m           [m
+        	<h4>SIGNATURES</h4>[m
+        	<b>I guarantee that all persons whose signatures are required for this account have authorized this agreement.</b>[m
+ [m
+ 		<h4>CHANGE AND/OR CANCELLATION: </h4>[m
+ [m
+[31m-		<p>I will advise PAC of any changes to this Agreement including, without limitation, changes to my account number, [m
+[31m-		  by sending a written notice to PAC at grocerycards@nelsonwaldorf.org or by updating my order [m
+[31m-		  at <a href="https://grocerycards.nelsonwaldorf.org/account">my account page</a> [m
+[31m-		  at least 10 business days prior to the next withdrawal. [m
+[31m-		I retain the right to revoke my authorization at any time, by sending a written notice to PAC at grocerycards@nelsonwaldorf.org or by updating my order [m
+[31m-		at <a href="https://grocerycards.nelsonwaldorf.org/account">my account page</a>.[m
+[31m-		  at least 10 business days prior to the next withdrawal. To obtain a sample of the cancellation form or for more information on my right to cancel a PAD Agreement, [m
+[31m-		I may contact my financial institution or consult the Canadian Payments Association at <a href="http://www.cdnpay.ca">www.cdnpay.ca</a>. [m
+[31m-		I agree to release the financial institution of any liability if the revocation is not respected, except in the case of gross negligence on its part. [m
+[31m-		I agree that the financial institution at which I maintain the account is not required to verify that the payment is debited in accordance with this authorization. [m
+[31m-		  I also certify that every person whose signature is required for the operation of the aforementioned account has signed this authorization.  [m
+[31m-		I acknowledge that the delivery of this authorization to PAC constitutes delivery by me to the aforementioned financial institution.  [m
+[32m+[m		[32m<p>I will advise PC of any changes to this Agreement including, without limitation, changes to my account number, by sending a written notice to PC at grocerycards@nelsonwaldorf.org or by updating my order at my account page at least 10 business days prior to the next withdrawal. I retain the right to revoke my authorization at any time, by sending a written notice to PC at grocerycards@nelsonwaldorf.org or by updating my order at my account page at least 10 business days prior to the next withdrawal. To obtain a sample of the cancellation form or for more information on my right to cancel a PAD Agreement, I may contact my financial institution or consult the Canadian Payments Association at www.payments.ca. I agree to release the financial institution of any liability if the revocation is not respected, except in the case of gross negligence on its part. I agree that the financial institution at which I maintain the account is not required to verify that the payment is debited in accordance with this authorization. I also certify that every person whose signature is required for the operation of my account has signed this authorization. I acknowledge that the delivery of this authorization to PC constitutes delivery by me to the afwarning: CRLF will be replaced by LF in readme.md.
+The file will have its original line endings in your working directory.
+orementioned financial institution.[m[41m   [m
+ 		</p>[m
+ 		<h4>REIMBURSEMENT</h4>[m
+ 		<p>                [m
+[31m-		I have certain rights of recourse if a debit does not comply with the terms of this Agreement. For example, I have the right to receive reimbursement [m
+[31m-		for any PAD that is not authorized or that is not compatible with the terms of this PAD Agreement. For more information on my rights of recourse, [m
+[31m-		I may contact my financial institution or visit www.cdnpay.ca. The financial institution shall reimburse me, on behalf of the organization, for any [m
+[31m-		amounts withdrawn in error, within 90 calendar days of the withdrawal, provided that the reimbursement is claimed for a valid reason. I understand [m
+[31m-		that a claim to this effect must be made to my financial institution following the procedure it will provide for that purpose. Finally, I acknowledge [m
+[31m-		that a claim for reimbursement filed after the aforementioned time limits must be settled between me and PAC, without any liability or commitment on the [m
+[31m-		part of my financial institution.  [m
+[32m+[m		[32mI have certain rights of recourse if a debit does not comply with the terms of this Agreement. For example, I have the right to receive reimbursement for any PAD that is not authorized or that is not compatible with the terms of this PAD Agreement. To obtain a form for a Reimbursement Claim, or for more information on my rights of recourse, I may contact my financial institution or visit www.payments.ca. The financial institution shall reimburse me, on behalf of the organization, for any amounts withdrawn in error, within 90 calendar days of the withdrawal, provided that the reimbursement is claimed for a valid reason. I understand that a claim to this effect must be made to my financial institution following the procedure it will provide for that purpose. Finally, I acknowledge that a claim for reimbursement filed after the aforementioned time limits must be settled between me and PC, without any liability or commitment on the part of my financial institution.[m[41m  [m
+ 		</p>[m
+ 		<h4>CONSENT TO DISCLOSURE OF INFORMATION</h4>[m
+ 		<p>[m
+[31m-		I hereby consent to the disclosure of the information contained in my pre- authorized debit enrolment agreement to the [m
+[31m-		financial institution, provided such information is directly related to and required for the smooth application of the rules governing pre-authorized debits.  [m
+[31m-		</p>[m
+\ No newline at end of file[m
+[32m+[m		[32mI hereby consent to the disclosure of the information contained in my pre- authorized debit enrolment agreement to the financial institution, provided such information is directly related to and required for the smooth application of the rules governing pre-authorized debits.[m[41m   [m
+[32m+[m		[32m</p>[m
+[41m+                [m
+[41m+                [m
+[41m+                              [m
+\ No newline at end of file[m

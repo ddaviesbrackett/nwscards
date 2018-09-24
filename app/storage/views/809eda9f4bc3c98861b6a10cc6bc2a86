@@ -1,0 +1,9 @@
+<html>
+<body>
+<ul>
+	<?php foreach($model as $result): ?> 
+		<li><?php echo e($result); ?></li>
+	<?php endforeach; ?>
+</ul>
+</body>
+</html>

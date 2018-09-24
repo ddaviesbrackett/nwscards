@@ -10,8 +10,6 @@
 	will need to sign for the cards. </p>
 
 	<p>Thank you for your support,<br/>
-	Snow Colbeck</p>
-
 	<p>NWS Grocery Cards Committee</p>
 </body>
 </html>
