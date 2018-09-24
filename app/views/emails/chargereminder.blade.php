@@ -26,9 +26,7 @@
 		@endif
 	</p>
 	<p>
-		Thank you for your support,<br/>
-		Snow Colbeck<br/>
-		
+	Thank you for your support,<br/>
 	<p>NWS Grocery Cards Committee</p>
 	</p>
 </body>
