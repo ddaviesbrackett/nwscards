@@ -1,10 +1,7 @@
 /bootstrap/compiled.php
 /vendor
-<<<<<<< HEAD
-/app/storgae
-=======
 /nbproject
->>>>>>> 099ad75a98639d584c40b7d9be5266b5371dbd2f
+/app/start/dream.php
 composer.phar
 composer.lock
 .env.*.php

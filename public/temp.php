@@ -6,7 +6,7 @@
  * and open the template in the editor.
  */
 
-//echo "hello world";
+//echo "hello world"; 
 
 
 $servername = "mysql.nelsonwaldorf.org";
