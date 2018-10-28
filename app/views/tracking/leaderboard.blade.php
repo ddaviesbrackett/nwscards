@@ -16,12 +16,16 @@
 		<th></th>
 		<th>Amount Raised</th>
 		<th>Supporters</th>
+                <th>Expenses</th>
+                <th>Funds Available</th>
 	</tr>
 	@foreach($buckets as $name => $vals)
 		<tr>
 			<td><a href="/tracking/{{$name}}">{{{$vals['nm']}}}</a></td>
 			<td>{{{money_format('$%n',$vals['amount'])}}}</td>
 			<td>{{{$vals['count']}}}</td>
+                        <td>{{{money_format('$%n',$vals['expenses'])}}}</td>
+                        <td>{{{money_format('$%n',$vals['fundsAvailable'])}}}</td>
 		</tr>
 	@endforeach
 </table>
