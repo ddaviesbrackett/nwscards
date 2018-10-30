@@ -216,7 +216,7 @@ class AdminController extends BaseController {
 			
 			//stripe takes its cut
 			if($order->isCreditCard()) {
-				$profit -= ($saveon + $coop) * 2.2;
+				$profit -= ($saveon + $coop) * 2.38;
 				$profit -= 0.30;
 			}
 			$order->profit = $profit;
