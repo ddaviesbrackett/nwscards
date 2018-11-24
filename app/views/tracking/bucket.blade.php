@@ -21,7 +21,7 @@
 	@if (! empty($profitMap))
 		@foreach($profitMap as $cutoffdateid => $profit)
 			<tr>
-				<td>{{{CutoffDate::find($cutoffdateid)->deliverydate()->format('F jS')}}}</td>
+				<td>{{{CutoffDate::find($cutoffdateid)->deliverydate()->format('F jS Y')}}}</td>
 				<td>{{{money_format('$%n',$profit)}}}</td>
 			</tr>
 		@endforeach
