@@ -36,7 +36,7 @@
 		</tr>
 		@foreach($pointsales as $pointsale)
 			<tr>
-				<td>{{{$pointsale->saledate->format('F jS')}}}</td>
+				<td>{{{$pointsale->saledate->format('F jS Y')}}}</td>
 				<td>{{{money_format('$%n', $pointsale->pivot->profit)}}}</td>
 			</tr>
 		@endforeach
@@ -51,7 +51,7 @@
 		</tr>
 			@foreach($expenses as $expense)
 				<tr>
-					<td>{{{$expense->expense_date->format('F jS')}}}</td>
+					<td>{{{$expense->expense_date->format('F jS Y')}}}</td>
 					<td>{{{money_format('$%n',$expense->amount)}}}</td>
 				</tr>
 			@endforeach
