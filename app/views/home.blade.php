@@ -24,7 +24,10 @@
             From July 2014 we've raised - {{{money_format('$%n',$total)}}}<br/>
             Help us raise more &mdash; <em>without spending any extra!</em>
         </h3>
-       
+        <br>
+        <img src="https://grocerycards.nelsonwaldorf.org/images/saveon-logo.jpg" title="Save On Foods">&nbsp;&nbsp;&nbsp;<img src="https://grocerycards.nelsonwaldorf.org/images/coop-logo.jpg" title="Kootenay Coop">
+        <br>
+        
 	<p>Generously supported by our store partners The Kootenay Co-Op and Save-On Foods</p>
        
 	@if (Sentry::check())
@@ -40,7 +43,7 @@
 </div>
 <div class="container-fluid text-center">
         <a name="pickupdates"></a>
-        <h2>Dates for 2018 - 2019:</h2>
+        <h2>Dates for 2019 - 2020:</h2>
         <center>
             <table border="0" width="400px;">
             <tr>
@@ -48,60 +51,60 @@
                  <td align="center"><b>Pick up day</b></td>
             </tr>
            <tr>
-                <td align="center">September 4th 2018</td>
-                <td align="center">September 12th 2018</td>
+                <td align="center">September 3rd 2019</td>
+                <td align="center">September 11th 2019</td>
             </tr>
            <tr>
-                <td align="center">September 18th 2018</td>
-                <td align="center">September 26th 2018</td>
+                <td align="center">September 17th 2019</td>
+                <td align="center">September 25th 2019</td>
             </tr>
            <tr>
-                <td align="center">October 2nd 2018</td>
-                <td align="center">October 10th 2018</td>
+                <td align="center">October 1st 2019</td>
+                <td align="center">October 9th 2019</td>
             </tr>
            <tr>
-                <td align="center">October 16th 2018</td>
-                <td align="center">October 24th 2018</td>
+                <td align="center">October 15th 2019</td>
+                <td align="center">October 23rd 2019</td>
             </tr>
            <tr>
-                <td align="center">October 30th 2018</td>
-                <td align="center">November 7th 2018</td>
+                <td align="center">October 29th 2019</td>
+                <td align="center">November 6th 2019</td>
             </tr>
            <tr>
-                <td align="center">November 13th 2018</td>
-                <td align="center">November 21st 2018</td>
+                <td align="center">November 12th 2019</td>
+                <td align="center">November 20th 2019</td>
             </tr>
            <tr>
-                <td align="center">November 27th 2018</td>
-                <td align="center">December 5th 2018</td>
+                <td align="center">November 26th 2019</td>
+                <td align="center">December 4th 2019</td>
             </tr>
             <tr>
-                <td align="center">December 11th 2018</td>
-                <td align="center">December 19th 2018</td>
+                <td align="center">December 10th 2019</td>
+                <td align="center">December 18th 2019</td>
             </tr>            
            <tr>
                 <td align="center">Christmas Break</td>
                 <td align="center">Christmas Break</td>
             </tr>            
             <tr>
-                <td align="center">January 8th 2019</td>
-                <td align="center">January 16th 2019</td>
+                <td align="center">January 7th 2020</td>
+                <td align="center">January 15th 2020</td>
             </tr>            
             <tr>
-                <td align="center">January 22nd 2019</td>
-                <td align="center">January 30th 2019</td>
+                <td align="center">January 21st 2020</td>
+                <td align="center">January 29th 2020</td>
             </tr> 
             <tr>
-                <td align="center">February 5th 2019</td>
-                <td align="center">February 13th 2019</td>
+                <td align="center">February 4th 2020</td>
+                <td align="center">February 12th 2020</td>
             </tr> 
             <tr>
-                <td align="center">February 19th 2019</td>
-                <td align="center">February 27th 2019</td>
+                <td align="center">February 18th 2020</td>
+                <td align="center">February 26th 2020</td>
             </tr> 
             <tr>
-                <td align="center">March 5th 2019</td>
-                <td align="center">March 13th 2019</td>
+                <td align="center">March 3rd 2020</td>
+                <td align="center">March 11th 2020</td>
             </tr> 
             
            <tr>
@@ -109,24 +112,24 @@
                 <td align="center">Spring Break</td>
             </tr>
            <tr>
-                <td align="center">March 26th 2019</td>
-                <td align="center">April 3rd 2019</td>
+                <td align="center">March 31st 2020</td>
+                <td align="center">April 8th 2020</td>
             </tr>
            <tr>
-                <td align="center">April 9th 2019</td>
-                <td align="center">April 17th 2019</td>
+                <td align="center">April 14th 2020</td>
+                <td align="center">April 22nd 2020</td>
             </tr>
            <tr>
-                <td align="center">April 30th 2019</td>
-                <td align="center">May 8th 2019</td>
+                <td align="center">April 28th 2020</td>
+                <td align="center">May 6th 2020</td>
             </tr>            
            <tr>
-                <td align="center">May 14th 2019</td>
-                <td align="center">May 22nd 2019</td>
+                <td align="center">May 12th 2020</td>
+                <td align="center">May 20th 2020</td>
             </tr>
            <tr>
-                <td align="center">May 28th 2019</td>
-                <td align="center">June 5th 2019</td>
+                <td align="center">May 26th 2020</td>
+                <td align="center">June 3rd 2020</td>
             </tr>
             </table>
             </center>

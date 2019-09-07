@@ -7,7 +7,8 @@
  */
 
 //echo "hello world"; 
-
+//phpinfo(); 
+/*
 
 $servername = "mysql.nelsonwaldorf.org";
 $username = "nwsgrocerycards";
@@ -59,7 +60,7 @@ if ($result->num_rows > 0) {
 }
 $conn->close();
 
-
+*/
 
 /*
  *         //$sql1="SELECT id, coop_onetime, saveon_onetime FROM orders_back1 WHERE 1 AND user_id='".$row["id"]."' AND cutoff_date_id=81";

@@ -29,7 +29,7 @@ class BaseController extends Controller {
 			return array_map(function($d){
 				return $d->format('l, F jS');
 			}, $dts);
-		}, BaseController::getCutoffs());
+		}, BaseController::getCutoffsNew());
 	}
 
 	/*
@@ -40,6 +40,7 @@ class BaseController extends Controller {
 			$target = (new \Carbon\Carbon('America/Los_Angeles'))->format('Y-m-d');
 		}
 		$ret = array();
+
 		$cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(2)->get();
 		$cutoff = $cutoffs[0];
 		$ret['biweekly'] = ['cutoff' => $cutoff->cutoffdate(), 'charge' => $cutoff->chargedate(), 'delivery' => $cutoff->deliverydate()];
@@ -52,6 +53,41 @@ class BaseController extends Controller {
 			$ret['monthly-second'] = ['cutoff' => $cutoff->cutoffdate(), 'charge' => $cutoff->chargedate(), 'delivery' =>  $cutoff->deliverydate()];
 			$ret['monthly'] = ['cutoff' => $cutoffs[1]->cutoffdate(), 'charge' => $cutoffs[1]->chargedate(), 'delivery' =>  $cutoffs[1]->deliverydate()];
 		}
+                 
 		return $ret;
 	}
+	/*
+	* cutoff dates are the last day on which we can accept an order
+	*/
+	public static function getCutoffsNew( $target = NULL ) {;
+		if(is_null($target)){
+			$target = (new \Carbon\Carbon('America/Los_Angeles'))->format('Y-m-d');
+		}
+		$ret = array();
+
+		$cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(3)->get();
+		$cutoffUpcoming = $cutoffs[0];
+                $cutoffNext = $cutoffs[1];
+                $cutoffNextNext = $cutoffs[2];
+                
+		$ret['biweekly'] = ['cutoff' => $cutoffUpcoming->cutoffdate(), 'charge' => $cutoffUpcoming->chargedate(), 'delivery' => $cutoffUpcoming->deliverydate()];
+                
+		if($cutoffUpcoming->first) {
+			$ret['monthly'] = ['cutoff' => $cutoffUpcoming->cutoffdate(), 'charge' => $cutoffUpcoming->chargedate(), 'delivery' =>  $cutoffUpcoming->deliverydate()];
+                        if (!$cutoffNext->first)
+                            $ret['monthly-second'] = ['cutoff' => $cutoffNext->cutoffdate(), 'charge' => $cutoffNext->chargedate(), 'delivery' =>  $cutoffNext->deliverydate()];
+                        else
+                            $ret['monthly-second'] = ['cutoff' => $cutoffNextNext->cutoffdate(), 'charge' => $cutoffNextNext->chargedate(), 'delivery' =>  $cutoffNextNext->deliverydate()];
+		}
+		else
+		{
+			$ret['monthly-second'] = ['cutoff' => $cutoffUpcoming->cutoffdate(), 'charge' => $cutoffUpcoming->chargedate(), 'delivery' =>  $cutoffUpcoming->deliverydate()];
+                        if ($cutoffNext->first)
+                            $ret['monthly'] = ['cutoff' => $cutoffNext->cutoffdate(), 'charge' => $cutoffNext->chargedate(), 'delivery' =>  $cutoffNext->deliverydate()];
+                        else
+                           $ret['monthly'] = ['cutoff' => $cutoffNextNext->cutoffdate(), 'charge' => $cutoffNextNext->chargedate(), 'delivery' =>  $cutoffNextNext->deliverydate()]; 
+		}
+                
+		return $ret;
+	}        
 }

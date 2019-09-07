@@ -92,7 +92,9 @@ Route::post('/admin/expenses/{expense}/delete', ['before'=>['auth','admin'], 'us
 
 Route::get('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@getDeletePointsale', 'as' => 'admin-getdeletesale']);
 Route::post('/admin/pointsale/{sale}/delete', ['before'=>['auth','admin'], 'uses' => 'AdminController@postDeletePointsale', 'as' => 'admin-postdeletesale']);
- 
+
+//Route::get('/manualevents/generate-orders', array('before' => 'auth', 'uses' => 'ManualEventsController@OrderGeneration'));
+
 //stuff everything needs
 View::composer('*', function($view) {
 	$view->with('dates', BaseController::getFormattedDates());
