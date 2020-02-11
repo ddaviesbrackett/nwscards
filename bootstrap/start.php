@@ -29,7 +29,7 @@ $env = $app->detectEnvironment(array(
 	'local' => array('homestead'),
 	'blue' => array('box903.bluehost.com'),
 	'dream' => array('benjamin-harrison'),
-	'inmotion' => array('vps32365'),
+	'inmotion' => array('vps32365.inmotionhosting.com'),
 ));
 
 /*
