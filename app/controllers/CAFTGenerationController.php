@@ -33,7 +33,7 @@ class CAFTGenerationController extends BaseController {
 		$filenumber = sprintf('%04.4d', Input::get('filenum'));
 		$originatorinfo = $originatorID . $filenumber;
 		//caft magic
-		$content = 'A000000001' . $originatorinfo . Carbon\Carbon::now()->formatLocalized('0%y%j') . '86900' . $this->spaces(20) . 'CAD' . $this->spaces(1406);
+		$content = 'A000000001' . $originatorinfo . Carbon\Carbon::now('America/Los_Angeles')->formatLocalized('0%y%j') . '86900' . $this->spaces(20) . 'CAD' . $this->spaces(1406);
 		$total = 0;
 		$skipped = 0;
 

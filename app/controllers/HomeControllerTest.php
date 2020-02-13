@@ -37,7 +37,7 @@ class HomeControllerTest extends BaseController {
                 
 		\Stripe::setApiKey($_ENV['stripe_secret_key']);
                  
-                $target = Carbon\Carbon::now();
+                $target = Carbon\Carbon::now('America/Los_Angeles');
 		$cutoff = \CutoffDate::where('cutoff', '=', $target->format('Y-m-d'))->orderby('cutoff', 'desc')->first();
                 
 		if(! isset($cutoff)) {

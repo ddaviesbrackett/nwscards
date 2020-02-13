@@ -38,6 +38,8 @@ class NightlyProcessing extends Command {
 	 */
 	public function fire()
 	{
+
+            
 		$date = Carbon::parse($this->argument('date'), 'America/Los_Angeles');
 		
 		$eventResults = array_where(\Event::fire('timed.nightly', [$date]), function($k, $v) {
@@ -52,6 +54,12 @@ class NightlyProcessing extends Command {
 				});
 			}	
 		}
+                
+            $to      = 'yshaool@gmail.com';
+            $subject = 'Nightly processing';
+            $message = 'Running nightly processing';
+            $headers = 'From: webmaster@example.com' . "\r\n" .'Reply-To: webmaster@example.com' . "\r\n" .'X-Mailer: PHP/' . phpversion();
+            mail($to, $subject, $message, $headers);                
 		
 	}
 
