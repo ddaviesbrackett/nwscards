@@ -54,7 +54,8 @@ return array(
 	|
 	*/
 
-	'from' => array('address' => 'grocerycards@nelsonwaldorf.org', 'name' => 'Nelson Waldorf Grocery Cards'),
+	//'from' => array('address' => 'grocerycards@nelsonwaldorf.org', 'name' => 'Nelson Waldorf Grocery Cards'),
+	'from' => array('address' => 'nwsgrocerycards@gmail.com', 'name' => 'Nelson Waldorf Grocery Cards'),
 
 	/*
 	|--------------------------------------------------------------------------
