@@ -108,18 +108,21 @@
 				<div class='form-group{{$errors->has("schedule")?" has-error":"";}}'>
 					<label class="col-sm-3 text-right">Schedule:</label>
 					<div class="col-sm-8">
+                                                    <!--
 						<div class="radio"><label>
 							{{ Form::radio('schedule', 'biweekly') }}
 							Every 2 weeks, starting <b>{{{$dates['biweekly']['delivery']}}}</b>
-						</label></div>
+						</label></div>-->
 						<div class="radio" style="margin-top:1em;"><label>
 							{{ Form::radio('schedule', 'monthly') }}
 							Once a month, starting <b>{{{$dates['monthly']['delivery']}}}</b>
 						</label></div>
+                                                    <!--
 						<div class="radio"><label>
 							{{ Form::radio('schedule', 'monthly-second') }}
 							Once a month, starting <b>{{{$dates['monthly-second']['delivery']}}}</b>
 						</label></div>
+                                                    -->
 						<div class="radio" style="margin-top:1em;"><label>
 							{{ Form::radio('schedule', 'none', true, null) }}
 							I don't want a recurring order

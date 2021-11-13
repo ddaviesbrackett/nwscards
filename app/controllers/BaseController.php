@@ -59,13 +59,15 @@ class BaseController extends Controller {
 	/*
 	* cutoff dates are the last day on which we can accept an order
 	*/
-	public static function getCutoffsNew( $target = NULL ) {;
+	public static function getCutoffsNew( $target = NULL ) {
+            $ret = array();
+           
 		if(is_null($target)){
 			$target = (new \Carbon\Carbon('America/Los_Angeles'))->format('Y-m-d');
 		}
-		$ret = array();
+                
+                    $cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(3)->get();
 
-		$cutoffs = CutoffDate::where('cutoff','>=',$target)->orderBy('cutoff','asc')->take(3)->get();
 		$cutoffUpcoming = $cutoffs[0];
                 $cutoffNext = $cutoffs[1];
                 $cutoffNextNext = $cutoffs[2];
@@ -87,7 +89,6 @@ class BaseController extends Controller {
                         else
                            $ret['monthly'] = ['cutoff' => $cutoffNextNext->cutoffdate(), 'charge' => $cutoffNextNext->chargedate(), 'delivery' =>  $cutoffNextNext->deliverydate()]; 
 		}
-                
 		return $ret;
 	}        
 }

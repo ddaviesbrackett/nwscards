@@ -21,8 +21,8 @@ class HomeController extends BaseController {
                         //$total += $class->pointsales->getTotalProfit(); 
                  
 
-                        $ordersCollection=$class->orders()->where('updated_at','>','2019-09-01 00:00:00')->get();
-                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2019-09-01 00:00:00')->get();
+                        $ordersCollection=$class->orders()->where('updated_at','>','2021-09-01 00:00:00')->get();
+                        $pointsaleCollection=$class->pointsales()->where('updated_at','>','2021-09-01 00:00:00')->get();
                         
                         $totalThisYear+=$ordersCollection->getTotalProfit();
                         $totalThisYear+=$pointsaleCollection->getTotalProfit();
